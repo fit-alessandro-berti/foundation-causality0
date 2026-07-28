@@ -1,0 +1,21 @@
+{
+  "benchmark_version": "1.0.0",
+  "calibration_reps": 19,
+  "finished_unix": 1785230260.4708326,
+  "method": "latent_variable_determination2",
+  "n_failed": 0,
+  "n_records": 75,
+  "n_success": 75,
+  "peak_memory_mb": 211.46875,
+  "runtime_seconds": 66.06000280380249,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "stability_reps": 5,
+  "started_unix": 1785230194.4108303,
+  "status": "completed"
+}
