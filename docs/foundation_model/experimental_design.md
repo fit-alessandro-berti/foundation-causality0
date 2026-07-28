@@ -8,6 +8,16 @@ A convincing study should be designed so that classical methods are expected to 
 
 The numerical expectations below are **informed forecasts, not experimental results or formal power calculations**. Package values are taken from the existing [benchmark report](sandbox:/mnt/data/foundation_causality_full/foundation-causality0-main/REPORT.md).
 
+> **Execution note (2026-07-28).** A preregistered-scale study covering all
+> stages below has not been claimed. A runnable Phase-I reference experiment
+> now covers the architecture document's initial static-effect,
+> observed-regime, and network-interference scope with 14 scenarios, 30 held-out
+> seeds per scenario, and 360 separate calibration episodes. Its measured
+> outcomes—including negative results—are in
+> [experimental_results.md](experimental_results.md). The larger replication,
+> continuous-stress, OOD, process-event, and real-data stages below remain the
+> design for a confirmatory study.
+
 ---
 
 ## 1. Main hypotheses
