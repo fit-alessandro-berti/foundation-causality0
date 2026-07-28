@@ -1,6 +1,6 @@
 # Synthetic data benchmarks
 
-This package implements the generators and evaluations specified by the five
+This package implements the generators and evaluations specified by the six
 proposal documents in `docs/data`.
 
 Run the recorded evaluation:
@@ -11,10 +11,11 @@ python -m docs.data.benchmark.run \
   --seeds 5 \
   --calibration-reps 19 \
   --stability-reps 5 \
+  --inference-reps 29 \
   --timeout-seconds 1200
 ```
 
-Each of the five components runs in a separate subprocess. The parent kills a
+Each of the six components runs in a separate subprocess. The parent kills a
 component after 1,200 seconds (20 minutes), records `timed_out` in its
 `run_status.json`, and retains any per-seed data and metrics written before the
 timeout.

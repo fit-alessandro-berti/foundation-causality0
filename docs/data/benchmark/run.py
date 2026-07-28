@@ -14,6 +14,7 @@ from .common import process_memory_mb, write_json
 
 METHODS = {
     "causal_model_determination": "causal_model",
+    "causal_interference_detection": "causal_interference",
     "latent_variable_determination": "latent_variable",
     "latent_variable_determination2": "latent_graph",
     "temporal_split_detection": "temporal_split",
@@ -36,11 +37,18 @@ def _run_internal(args: argparse.Namespace) -> int:
             "seeds": seeds,
             "calibration_reps": args.calibration_reps,
             "stability_reps": args.stability_reps,
+            "inference_reps": args.inference_reps,
             "benchmark_version": __version__,
         },
     )
     try:
-        if args.method == "causal_model_determination":
+        if args.method == "causal_interference_detection":
+            from .causal_interference import run
+
+            records = run(
+                data_root, metrics_root, seeds, args.inference_reps
+            )
+        elif args.method == "causal_model_determination":
             from .causal_model import run
 
             records = run(
@@ -85,6 +93,7 @@ def _run_internal(args: argparse.Namespace) -> int:
                 "seeds": seeds,
                 "calibration_reps": args.calibration_reps,
                 "stability_reps": args.stability_reps,
+                "inference_reps": args.inference_reps,
                 "peak_memory_mb": process_memory_mb(),
                 "benchmark_version": __version__,
             },
@@ -129,6 +138,8 @@ def _run_all(args: argparse.Namespace) -> int:
             str(args.calibration_reps),
             "--stability-reps",
             str(args.stability_reps),
+            "--inference-reps",
+            str(args.inference_reps),
             "--internal",
         ]
         started = time.time()
@@ -226,6 +237,12 @@ def parse_args() -> argparse.Namespace:
         help="Conditional bootstrap replicates for stability summaries.",
     )
     parser.add_argument(
+        "--inference-reps",
+        type=int,
+        default=29,
+        help="Cluster-bootstrap repetitions for causal-interference inference.",
+    )
+    parser.add_argument(
         "--timeout-seconds",
         type=int,
         default=1200,
@@ -237,6 +254,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("--seeds must be positive")
     if args.calibration_reps < 1:
         parser.error("--calibration-reps must be positive")
+    if args.inference_reps < 2:
+        parser.error("--inference-reps must be at least 2")
     if args.timeout_seconds < 1:
         parser.error("--timeout-seconds must be positive")
     return args
