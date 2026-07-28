@@ -1,0 +1,40 @@
+{
+  "benchmark_version": "1.0.0",
+  "components": [
+    {
+      "method": "causal_model_determination",
+      "returncode": 0,
+      "runtime_seconds": 110.10590291023254,
+      "status": "completed"
+    },
+    {
+      "method": "latent_variable_determination",
+      "returncode": 0,
+      "runtime_seconds": 27.28937530517578,
+      "status": "completed"
+    },
+    {
+      "method": "latent_variable_determination2",
+      "returncode": 0,
+      "runtime_seconds": 67.28614711761475,
+      "status": "completed"
+    },
+    {
+      "method": "temporal_split_detection",
+      "returncode": 0,
+      "runtime_seconds": 47.222949743270874,
+      "status": "completed"
+    },
+    {
+      "method": "temporal_split_detection_method",
+      "returncode": 0,
+      "runtime_seconds": 61.756301403045654,
+      "status": "completed"
+    }
+  ],
+  "finished_unix": 1785230369.70506,
+  "runtime_seconds": 313.6621744632721,
+  "started_unix": 1785230056.0428863,
+  "status": "completed",
+  "timeout_seconds_per_component": 1200
+}

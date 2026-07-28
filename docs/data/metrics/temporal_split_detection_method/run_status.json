@@ -1,0 +1,21 @@
+{
+  "benchmark_version": "1.0.0",
+  "calibration_reps": 19,
+  "finished_unix": 1785230625.803758,
+  "method": "temporal_split_detection_method",
+  "n_failed": 0,
+  "n_records": 80,
+  "n_success": 80,
+  "peak_memory_mb": 192.625,
+  "runtime_seconds": 109.68360590934753,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "stability_reps": 5,
+  "started_unix": 1785230516.1201525,
+  "status": "completed"
+}
