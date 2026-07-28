@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "checkpoint": "artifacts/cwfm/checkpoint.pt",
+  "checkpoint_sha256": "a650686f05787e9d65126758b54283c0de77f70732e314cef874a792f8412017",
+  "source_sha256": {
+    "cwfm/model.py": "d24986e047e94e4604550bb696ea432c6da4735b90b66650e49cfe5ab1ed23cf",
+    "cwfm/data.py": "4a1c658a147e44289748abaf23b2e4c869b50520050351b9777bd557d97b468d",
+    "cwfm/baselines.py": "777dc15a153dca5d3bc64e2b2fd9a1c5edf4b7407b26c125702e82afde40ede6",
+    "cwfm/train.py": "4360afcbccd8ebdde11cb15735db1241a41d0a3764031f01d66901029c17d6fc",
+    "cwfm/experiment.py": "ab4936e1fb8192610366c73a79d4204a4f57f7e17ef3de71b85e25b81d586867",
+    "requirements.txt": "bd2b3f5d0634a5e633a6faf257e5d61d7be5ccf522ce5e8bc38a8489a43dd207"
+  },
+  "checkpoint_training": {
+    "seed": 1729,
+    "steps": 1600,
+    "batch_size": 24,
+    "runtime_seconds": 95.36489987373352,
+    "torch_version": "2.13.0+cu130"
+  },
+  "evaluation_seed_start": 20000000,
+  "seeds_per_scenario": 30,
+  "scenarios": [
+    "static_ate:linear",
+    "static_ate:nonlinear",
+    "static_ate:randomized",
+    "static_ate:poor_overlap",
+    "static_ate:hidden_confounding",
+    "observed_regime:linear_split",
+    "observed_regime:weak_split",
+    "observed_regime:stationary_nonlinear",
+    "observed_regime:null",
+    "network_interference:linear",
+    "network_interference:threshold",
+    "network_interference:null",
+    "network_interference:poor_support",
+    "network_interference:hidden_confounding"
+  ],
+  "calibration_episodes": 360,
+  "calibration": {
+    "static_ate": {
+      "CWFM-Calibrated": 0.6793433307728873,
+      "Linear g-computation": 0.28775371965370106,
+      "Random forest g-computation": 0.8830833684389249,
+      "AIPW": 0.3866970838706882
+    },
+    "network_interference": {
+      "CWFM-Calibrated": 0.7082446665548181,
+      "Linear g-computation": 0.4949743252118866,
+      "Random forest g-computation": 0.4435909261392604
+    }
+  },
+  "paired_comparisons": {
+    "Linear g-computation": {
+      "mean_paired_mae_difference": 0.10203445589321654,
+      "ci95": [
+        0.07368988765920716,
+        0.13256218074103757
+      ]
+    },
+    "Random forest g-computation": {
+      "mean_paired_mae_difference": -0.058078619246826155,
+      "ci95": [
+        -0.09353016423815039,
+        -0.0251148527248671
+      ]
+    },
+    "AIPW": {
+      "mean_paired_mae_difference": 0.12300687489731499,
+      "ci95": [
+        0.07662646037798432,
+        0.16914042436069904
+      ]
+    }
+  },
+  "runtime_seconds": 60.31646680831909,
+  "device": "cuda",
+  "python": "3.12.3",
+  "torch": "2.13.0+cu130",
+  "numpy": "2.5.1",
+  "pandas": "3.0.5"
+}

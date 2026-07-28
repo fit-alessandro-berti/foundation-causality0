@@ -1,0 +1,58 @@
+task,scenario,method,absolute_error_mean,absolute_error_std,absolute_error_count,covered_mean,covered_std,covered_count,correct_mean,correct_std,correct_count,answered_mean,answered_std,answered_count,split_predicted_mean,split_predicted_std,split_predicted_count
+network_interference,interference_hidden_confounding,CWFM-Calibrated,,,0,,,0,,,0,0.0,0.0,30,,,0
+network_interference,interference_hidden_confounding,CWFM-Direct,0.27491315540275685,0.24424420564565247,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_hidden_confounding,Linear g-computation,0.15941101736901725,0.18183293739017328,30,0.9333333333333333,0.2537081317024624,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_hidden_confounding,Random forest g-computation,0.20624251473874955,0.16857375877761405,30,0.9333333333333333,0.2537081317024624,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_linear,CWFM-Calibrated,0.15590399894173437,0.1093487864929815,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_linear,CWFM-Direct,0.23345467731369066,0.15150812046627152,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_linear,Linear g-computation,0.09650720374771374,0.07140177000724311,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_linear,Random forest g-computation,0.20706138008095645,0.12510284211095965,30,0.9666666666666667,0.18257418583505536,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_null,CWFM-Calibrated,0.05685691060825913,0.04744072296889248,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_null,CWFM-Direct,0.054922465095296504,0.035824994162866615,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_null,Linear g-computation,0.08990310955171783,0.07188880812931427,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_null,Random forest g-computation,0.05451908300825129,0.04955864190716756,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_poor_support,CWFM-Calibrated,,,0,,,0,,,0,0.0,0.0,30,,,0
+network_interference,interference_poor_support,CWFM-Direct,0.26674176509529895,0.19023221631774132,30,0.9,0.30512857662936466,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_poor_support,Linear g-computation,0.26673027882154293,0.30320839494056084,30,0.9,0.3051285766293647,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_poor_support,Random forest g-computation,0.2669432090948916,0.18697422967708135,30,0.7666666666666667,0.43018306715207627,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_threshold,CWFM-Calibrated,0.44221274924732384,0.23629649943323464,30,0.8,0.40683810217248617,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_threshold,CWFM-Direct,0.5678498687349266,0.30723677858703957,30,0.7333333333333333,0.44977644510880355,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_threshold,Linear g-computation,0.31053900952165386,0.19513567081190686,30,0.8333333333333334,0.3790490217894517,30,,,0,1.0,0.0,30,,,0
+network_interference,interference_threshold,Random forest g-computation,0.35135487050568043,0.21066374511043112,30,0.7666666666666667,0.43018306715207627,30,,,0,1.0,0.0,30,,,0
+observed_regime,regime_linear_split,CWFM-Calibrated,,,0,,,0,0.06666666666666667,0.2537081317024624,30,1.0,0.0,30,0.06666666666666667,0.2537081317024624,30
+observed_regime,regime_linear_split,CWFM-Direct,,,0,,,0,0.06666666666666667,0.2537081317024624,30,1.0,0.0,30,0.06666666666666667,0.2537081317024624,30
+observed_regime,regime_linear_split,MOB-like,,,0,,,0,0.8,0.40683810217248617,30,1.0,0.0,30,0.8333333333333334,0.3790490217894517,30
+observed_regime,regime_null,CWFM-Calibrated,,,0,,,0,1.0,0.0,30,1.0,0.0,30,0.0,0.0,30
+observed_regime,regime_null,CWFM-Direct,,,0,,,0,1.0,0.0,30,1.0,0.0,30,0.0,0.0,30
+observed_regime,regime_null,MOB-like,,,0,,,0,1.0,0.0,30,1.0,0.0,30,0.0,0.0,30
+observed_regime,regime_stationary_nonlinear,CWFM-Calibrated,,,0,,,0,0.9666666666666667,0.18257418583505536,30,1.0,0.0,30,0.03333333333333333,0.18257418583505536,30
+observed_regime,regime_stationary_nonlinear,CWFM-Direct,,,0,,,0,0.9666666666666667,0.18257418583505536,30,1.0,0.0,30,0.03333333333333333,0.18257418583505536,30
+observed_regime,regime_stationary_nonlinear,MOB-like,,,0,,,0,0.0,0.0,30,1.0,0.0,30,1.0,0.0,30
+observed_regime,regime_weak_split,CWFM-Calibrated,,,0,,,0,0.0,0.0,30,1.0,0.0,30,0.0,0.0,30
+observed_regime,regime_weak_split,CWFM-Direct,,,0,,,0,0.0,0.0,30,1.0,0.0,30,0.0,0.0,30
+observed_regime,regime_weak_split,MOB-like,,,0,,,0,0.03333333333333333,0.18257418583505536,30,1.0,0.0,30,0.03333333333333333,0.18257418583505536,30
+static_ate,ate_hidden_confounding,AIPW,1.116014136465576,0.2765787366338046,30,0.0,0.0,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_hidden_confounding,CWFM-Calibrated,,,0,,,0,,,0,0.0,0.0,30,,,0
+static_ate,ate_hidden_confounding,CWFM-Direct,0.7733047120878448,0.4992512267083826,30,0.7666666666666667,0.4301830671520764,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_hidden_confounding,Linear g-computation,1.219217207715844,0.31858803846293643,30,0.0,0.0,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_hidden_confounding,Random forest g-computation,0.905357980470822,0.3701011163577397,30,0.4666666666666667,0.5074162634049248,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_linear,AIPW,0.18792659201014708,0.11932215393967313,30,0.8666666666666667,0.3457459036417604,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_linear,CWFM-Calibrated,0.31389208701205396,0.2234031323448667,30,0.9333333333333333,0.2537081317024624,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_linear,CWFM-Direct,0.5436802903115557,0.4408265227590026,30,0.6333333333333333,0.490132517853561,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_linear,Linear g-computation,0.15964370725009763,0.0956220610101502,30,0.8333333333333334,0.3790490217894517,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_linear,Random forest g-computation,0.4122422896352065,0.293003332976771,30,0.9666666666666667,0.18257418583505536,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_nonlinear,AIPW,0.2424176969640283,0.18325885827787652,30,0.8,0.4068381021724861,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_nonlinear,CWFM-Calibrated,0.3476777009469813,0.26670385997021073,30,0.8333333333333334,0.3790490217894517,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_nonlinear,CWFM-Direct,0.5822383290829009,0.49883044646816005,30,0.6666666666666666,0.47946330148538413,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_nonlinear,Linear g-computation,0.21767194868414902,0.15542971884559859,30,0.7333333333333333,0.44977644510880355,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_nonlinear,Random forest g-computation,0.5019289815106182,0.3342821771341801,30,0.8666666666666667,0.3457459036417604,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_poor_overlap,AIPW,0.4571972959837345,0.3112427739453776,30,0.43333333333333335,0.5040069329937309,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_poor_overlap,CWFM-Calibrated,,,0,,,0,,,0,0.0,0.0,30,,,0
+static_ate,ate_poor_overlap,CWFM-Direct,0.6383384198604681,0.3276055062575694,30,0.7666666666666667,0.4301830671520763,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_poor_overlap,Linear g-computation,0.23173363728257756,0.1304836584853741,30,0.6666666666666666,0.4794633014853842,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_poor_overlap,Random forest g-computation,0.5589739606925656,0.39671073515698635,30,0.7666666666666667,0.43018306715207627,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_randomized,AIPW,0.17346157614445637,0.13556939680636318,30,0.9666666666666667,0.18257418583505536,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_randomized,CWFM-Calibrated,0.3112567018515414,0.22827565191505397,30,0.9333333333333333,0.2537081317024624,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_randomized,CWFM-Direct,0.5620070143189223,0.44186015279518165,30,0.6,0.4982728791224398,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_randomized,Linear g-computation,0.14132843449326257,0.12719826208572688,30,0.8666666666666667,0.3457459036417604,30,,,0,1.0,0.0,30,,,0
+static_ate,ate_randomized,Random forest g-computation,0.44916525934813817,0.23747741955996962,30,1.0,0.0,30,,,0,1.0,0.0,30,,,0
