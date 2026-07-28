@@ -1,0 +1,27 @@
+{
+  "breakpoint_convention": "break after one-indexed row tau; arrays split at Python index tau",
+  "correct_nonlinear_basis": false,
+  "feature_names": [
+    "X1",
+    "X2",
+    "X3",
+    "X4",
+    "X5",
+    "X6",
+    "X7",
+    "X8"
+  ],
+  "method": "temporal_split_detection",
+  "outcome_names": [
+    "Y1",
+    "Y2",
+    "Y3"
+  ],
+  "scenario": "complete_null",
+  "seed": 1,
+  "transition_window": null,
+  "x_process": {
+    "feature_distribution_break": null,
+    "phi": 0.35
+  }
+}
