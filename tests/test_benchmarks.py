@@ -11,6 +11,12 @@ from docs.data.benchmark.causal_model import (
     evaluate_pair as evaluate_causal,
     generate_pair as generate_causal,
 )
+from docs.data.benchmark.causal_interference import (
+    SCENARIOS as INTERFERENCE_SCENARIOS,
+    compute_exposure,
+    evaluate_pair as evaluate_interference,
+    generate_pair as generate_interference,
+)
 from docs.data.benchmark.common import match_breakpoints, save_dataset
 from docs.data.benchmark.latent_graph import (
     SCENARIOS as GRAPH_SCENARIOS,
@@ -41,6 +47,13 @@ class GeneratorContractTests(unittest.TestCase):
             pair = generate_causal(scenario, 0, 140, 160)
             self.assertEqual(pair.discovery["X"].shape[0], 140)
             self.assertEqual(pair.evaluation["Y"].shape[0], 160)
+        for scenario in INTERFERENCE_SCENARIOS:
+            pair = generate_interference(scenario, 0, 8, 12)
+            self.assertEqual(pair.discovery["X"].shape[0], 96)
+            self.assertTrue(
+                np.allclose(np.diag(pair.discovery["W_observed"]), 0)
+            )
+            self.assertIn("W_true_discovery", pair.truth)
         for scenario in LATENT_SCENARIOS:
             pair = generate_latent(scenario, 0, 140, 160)
             self.assertEqual(pair.truth["Z_discovery"].shape[0], 140)
@@ -83,6 +96,13 @@ class GeneratorContractTests(unittest.TestCase):
         self.assertEqual(len(response), 4)
         self.assertFalse(np.any((design[:, 0] == 2) & (response[:, 0] == 3)))
 
+    def test_interference_exposure_excludes_own_treatment(self) -> None:
+        w = np.ones((4, 4)) - np.eye(4)
+        a = np.asarray([1, 0, 0, 0])
+        exposure = compute_exposure(a, w, "unweighted")
+        self.assertEqual(exposure[0], 0.0)
+        self.assertTrue(np.allclose(exposure[1:], 1 / 3))
+
     def test_breakpoint_matching_is_one_to_one(self) -> None:
         matching = match_breakpoints([100, 110], [105], tolerance=10)
         self.assertEqual(len(matching.pairs), 1)
@@ -90,9 +110,12 @@ class GeneratorContractTests(unittest.TestCase):
 
 
 class EvaluationSmokeTests(unittest.TestCase):
-    def test_all_five_evaluators_return_metrics(self) -> None:
+    def test_all_six_evaluators_return_metrics(self) -> None:
         results = [
             evaluate_causal(generate_causal("clean_one_split", 2, 180, 200), 2, 3, 2),
+            evaluate_interference(
+                generate_interference("linear_spillover", 2, 9, 12), 2, 3
+            ),
             evaluate_latent(generate_latent("clean_balanced_groups", 2, 180, 200), 2, 2),
             evaluate_graph(generate_graph("chain", 2, 180, 200), 2, 2),
             evaluate_temporal(generate_temporal("one_coefficient_break", 2, 280), 2, 3),
