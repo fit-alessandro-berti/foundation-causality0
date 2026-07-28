@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated Causal World Foundation Model checkpoints
+/artifacts/cwfm/checkpoint.pt
+/artifacts/cwfm/checkpoint.history.json

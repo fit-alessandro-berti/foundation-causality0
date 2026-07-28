@@ -13,6 +13,21 @@ Recent causal foundation-model work already demonstrates individual components o
 
 I will call the proposed architecture the **Causal World Foundation Model**, or **CWFM**.
 
+> **Executable implementation status (2026-07-28).** The `cwfm` Python
+> package now implements the first scope recommended at the end of this
+> document: static tabular effects, observed regimes, and network
+> interference. It contains typed cell and schema embeddings, alternating
+> variable/sample attention, relation-matrix messages, sparse top-2
+> mechanism experts, eight weighted causal-world particles, graph and regime
+> heads, direct and compiled effect paths, and formal identification/support
+> gates. The runnable configuration is intentionally smaller than the
+> full-scale proposal: hidden dimension 96, three axial blocks, four experts,
+> and eight world particles. Temporal decoding, latent slots, PAG/ADMG
+> identification, sensitivity bounds, and process-event adapters remain
+> proposed extensions and are not implied by the current checkpoint. The
+> implementation is in `cwfm/model.py`; measured results and limitations are
+> reported in [experimental_results.md](experimental_results.md).
+
 ```text
                             FORMAL CAUSAL QUERY
                   treatment, outcome, intervention, target
