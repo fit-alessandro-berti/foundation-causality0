@@ -1,0 +1,22 @@
+{
+  "benchmark_version": "1.0.0",
+  "calibration_reps": 19,
+  "finished_unix": 1785232511.2742553,
+  "inference_reps": 29,
+  "method": "causal_interference_detection",
+  "n_failed": 0,
+  "n_records": 105,
+  "n_success": 105,
+  "peak_memory_mb": 220.41796875,
+  "runtime_seconds": 402.9485466480255,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "stability_reps": 5,
+  "started_unix": 1785232108.3257093,
+  "status": "completed"
+}
