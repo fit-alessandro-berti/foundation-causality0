@@ -22,6 +22,8 @@
 % Packages already loaded by mdpi.cls include: amsmath, amssymb,
 % graphicx, booktabs, natbib, hyperref, cleveref, amsthm, etc.
 % Add extra packages here if needed.
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 
 %=================================================================
 \Title{CWFM: A Foundation Model for Reliable Causal Inference}
@@ -82,11 +84,11 @@ The contributions of this paper are:
 
 Our assessment is organized around five research questions:
 \begin{itemize}
-\item[\textbf{RQ1}] \emph{Accuracy.} Can a single pretrained model match well-tuned task-specific estimators on causal questions that are answerable from the data?
-\item[\textbf{RQ2}] \emph{Safety.} Does the model avoid false causal claims when a question is not identifiable or not supported by the data?
-\item[\textbf{RQ3}] \emph{Structure.} Can the model detect genuine changes in a causal mechanism while rejecting spurious changes induced by model misspecification?
-\item[\textbf{RQ4}] \emph{Generalization.} How does the model behave on problem families that were held out from its pretraining distribution?
-\item[\textbf{RQ5}] \emph{Attribution.} Which components of the architecture are actually responsible for the observed performance?
+\item \textbf{RQ1} (\emph{accuracy}): Can a single pretrained model match well-tuned task-specific estimators on causal questions that are answerable from the data?
+\item \textbf{RQ2} (\emph{safety}): Does the model avoid false causal claims when a question is not identifiable or not supported by the data?
+\item \textbf{RQ3} (\emph{structure}): Can the model detect genuine changes in a causal mechanism while rejecting spurious changes induced by model misspecification?
+\item \textbf{RQ4} (\emph{generalization}): How does the model behave on problem families that were held out from its pretraining distribution?
+\item \textbf{RQ5} (\emph{attribution}): Which components of the architecture are actually responsible for the observed performance?
 \end{itemize}
 
 The experimental results can be summarized as follows. On answerable questions, CWFM matches the accuracy of the best task-specific estimator in each setting, without knowing in advance which setting it is in, and clearly outperforms a generic flexible baseline, with uncertainty intervals close to their nominal coverage (RQ1). It refuses every stress query that should be refused, while baseline estimators return a number in all of them (RQ2). It recovers genuine mechanism changes far more often than the previous version of the system and, unlike a standard model-based splitting baseline, largely resists the temptation to split a smooth nonlinear mechanism into fake regimes (RQ3). Generalization is good under moderate distribution shift but degrades sharply on one problem family that is qualitatively absent from pretraining, which we report as an honest limitation (RQ4). Finally, the gains are attributable to the estimator library, the risk-based routing, and the deterministic safety logic; the free-form neural components contribute little yet, which we also report openly (RQ5).
@@ -151,69 +153,154 @@ A learned network also outputs uncertainty, but a neural confidence value carrie
 
 %=================================================================
 \section{Approach}\label{sec:approach}
-% Core section. Motivate every component by a concrete failure mode from
-% Section 1 / the benchmarks; include the architecture block diagram (adapt the
-% ASCII figure from docs/foundation_model/initial_architecture.md) and the
-% "failure -> architectural response" mapping table.
+
+CWFM takes a dataset together with a formal causal question and returns either a calibrated causal answer or an explicit, explained refusal. This section presents the architecture step by step. Every component exists to prevent one of the failures described in the introduction, and we state this motivation as each component is introduced.
 
 \subsection{Design Principles and Overview}\label{sec:approach-overview}
-% Four principles: (1) one shared backbone, several task routes; (2) a
-% posterior over multiple causal worlds instead of one committed graph;
-% (3) a formal identification layer between structure and estimation;
-% (4) explicit support, calibration, and abstention. Figure 1: end-to-end
-% pipeline from causal episode to structured answer-or-refusal.
+
+Four principles shape the design.
+
+\begin{enumerate}
+\item \emph{Amortize the choice of method, not the method itself.} The model learns to select and combine well-understood classical estimators. It does not replace them with a free-form neural predictor.
+\item \emph{A learned component must never silently degrade a sound classical result.} Neural corrections are allowed only where they demonstrably help; when in doubt, the classical estimate stands.
+\item \emph{Decide whether the question is answerable before trying to answer it.} This decision is made by deterministic logic, not by the network.
+\item \emph{Report only uncertainty that carries a guarantee, and refuse rather than guess.} Intervals come from conformal calibration; unanswerable questions receive a refusal, never a number.
+\end{enumerate}
+
+Figure~\ref{fig:architecture} shows how these principles translate into a pipeline. The input is a \emph{causal episode} (the data plus everything known about it) and a formal query (Section~\ref{sec:approach-episode}). A typed encoder turns the episode into internal representations (Section~\ref{sec:approach-encoder}), from which structural heads propose hypotheses about the underlying causal structure (Section~\ref{sec:approach-worlds}). Before any estimation, two gates check whether the query is identifiable and supported by the data; if not, the pipeline exits with a structured refusal (Section~\ref{sec:approach-gates}). If the gates pass, a library of classical estimators produces the answer, weighted by a learned router and adjusted, at most slightly, by a gated neural correction (Section~\ref{sec:approach-estimation}). Finally, conformal calibration turns the answer into an interval with a coverage guarantee (Section~\ref{sec:approach-calibration}). Section~\ref{sec:approach-data} describes the data on which the model is trained and tested, and Section~\ref{sec:approach-training} explains how the system is pretrained on those data and how safety is enforced during model selection.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=3.2mm,
+  box/.style={draw, rounded corners, align=center, minimum width=62mm, minimum height=6.5mm, font=\small},
+  side/.style={draw, rounded corners, align=center, minimum width=34mm, minimum height=6.5mm, font=\small},
+  arr/.style={-{Stealth}, thick}
+]
+\node[box] (input) {Causal episode $+$ formal query};
+\node[box, below=of input] (enc) {Typed encoder with mechanism experts};
+\node[box, below=of enc] (worlds) {Structural heads: causal worlds and regimes};
+\node[box, below=of worlds] (gates) {Identification gate and support gate};
+\node[box, below=of gates] (est) {Estimator library $+$ router $+$ gated residual};
+\node[box, below=of est] (cal) {Conformal calibration};
+\node[box, below=of cal] (out) {Calibrated causal answer};
+\node[side, right=7mm of gates] (refuse) {Structured refusal\\with reason};
+\draw[arr] (input) -- (enc);
+\draw[arr] (enc) -- (worlds);
+\draw[arr] (worlds) -- (gates);
+\draw[arr] (gates) -- (est);
+\draw[arr] (est) -- (cal);
+\draw[arr] (cal) -- (out);
+\draw[arr] (gates) -- (refuse);
+\end{tikzpicture}
+\caption{The CWFM pipeline. A causal episode and a formal query enter at the top. The gates decide whether the question is answerable; unanswerable queries exit with a structured refusal, answerable ones proceed to estimation and calibration.}
+\label{fig:architecture}
+\end{figure}
+
+Table~\ref{tab:failures} summarizes how each failure from the introduction maps to a component of the architecture.
+
+\begin{table}[H]
+\caption{Failure modes of causal analysis and the CWFM component that addresses each.\label{tab:failures}}
+\begin{tabularx}{\textwidth}{Ll}
+\toprule
+\textbf{Failure mode} & \textbf{Component}\\
+\midrule
+The correct estimator is unknown in advance & Risk-routed estimator library (Section~\ref{sec:approach-estimation})\\
+False regimes found under misspecification & Structural heads and calibrated threshold (Sections~\ref{sec:approach-worlds}, \ref{sec:approach-calibration})\\
+Confident answers under hidden confounding & Identification gate (Section~\ref{sec:approach-gates})\\
+Extrapolation beyond the observed data & Support gate (Section~\ref{sec:approach-gates})\\
+A neural correction harms a sound estimate & Gated no-harm residual (Section~\ref{sec:approach-estimation})\\
+Unreliable neural uncertainty & Conformal calibration (Section~\ref{sec:approach-calibration})\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{Causal Episodes and the Formal Query Language}\label{sec:approach-episode}
-% Input = episode (data values, missingness, variable schema/roles, relation
-% matrix, background constraints) + a formal query (claim type, treatment,
-% outcome, estimand, contrast, target population). Motivate why the query must
-% be structured rather than natural language: wording must not silently change
-% the estimand; the claim type prevents relabelling association as causation.
+
+The input unit of CWFM is a \emph{causal episode}: the dataset together with everything relevant that is known about it. Concretely, an episode contains the observed values, indicators of which values are missing, a schema stating the type of each variable (continuous, binary, and so on), the role of each variable with respect to the question (treatment, outcome, or covariate), an optional relation matrix connecting the units when interference is possible, and declared design knowledge, for example that the treatment was randomized. Passing this context explicitly matters: whether an analysis is valid often depends less on the numbers than on how they were produced.
+
+The question itself is a \emph{formal query}, a small structured object stating the claim type (associational or interventional), the treatment and outcome variables, the causal quantity requested (for example the ATE, or a spillover contrast between two exposure levels), and the target population. We insist on a formal query rather than a natural-language question for two reasons. First, small changes of wording must not silently change the quantity being estimated; the formal object makes the estimand explicit and fixed. Second, the claim type prevents a quiet upgrade of an associational finding into a causal one: an interventional answer can only be produced for a query that requested one and passed the gates. A language model may translate a scientist's question into this format, but the causal core operates on the structured object only.
 
 \subsection{Typed Encoder and Mechanism Experts}\label{sec:approach-encoder}
-% Typed cell/schema embeddings (value, missingness, role, type); alternating
-% variable-axis and sample-axis attention; relation-aware messages for network
-% data; sparse top-2 mixture of mechanism experts with a simplicity prior
-% (motivated by: the simple linear estimator beats the flexible one when the
-% truth is linear, and vice versa for thresholds).
 
-\subsection{Posterior over Causal Worlds and Structural Decoders}\label{sec:approach-worlds}
-% Weighted world particles, each carrying graph, mechanism, and regime
-% hypotheses; separates structural uncertainty from finite-sample and outcome
-% uncertainty. Structural heads: graph decoder, hierarchical regime detection
-% (split? which variable? which threshold? which change type?).
+The encoder converts an episode into internal representations. Each cell of the data table is embedded from its value, its missingness indicator, the type of its variable, and the role of its variable in the query. There is deliberately no embedding of the column position: the meaning of a variable comes from its role and type, not from being column four, and permuting the columns of the input should permute the output accordingly.
+
+Attention, the basic operation of transformer models by which each part of the input gathers information from related parts, then alternates along two axes. Attention across variables, within one sample, lets the model relate treatment, outcome, and covariates to one another. Attention across samples, within one variable, lets it see distributional patterns such as skewness, subgroup structure, or outliers. When the episode contains a relation matrix, an additional message-passing step lets each unit see summaries of its neighbors, which is what a spillover analysis needs.
+
+The feed-forward layers are organized as a sparse \emph{mixture of mechanism experts}. Instead of one universal network, several small expert networks specialize in different mechanism families, and a learned router activates only the most relevant ones for each episode. The router carries a simplicity prior: flexible experts are used only when the data demand them. The motivation comes directly from our benchmarks, where a simple linear method beats a flexible one when the truth is linear, and the flexible method wins when the truth has a threshold. A model with a single, uniformly flexible pathway tends to blur exactly this distinction.
+
+\subsection{A Posterior over Causal Worlds}\label{sec:approach-worlds}
+
+A standard pipeline commits early to one causal structure and then treats it as true. CWFM instead maintains a small set of weighted \emph{world particles}. Each particle is one coherent hypothesis about the data-generating process: a graph over the variables, a mechanism family, and a regime hypothesis. The weights express how plausible each world is given the episode, so together the particles form an approximate posterior distribution over causal worlds; this gives the model its name. Maintaining several worlds separates two kinds of uncertainty that a single confidence interval would wrongly merge: uncertainty about \emph{which structure} generated the data, and uncertainty about \emph{parameter values} within a structure.
+
+Structural decoders read these representations and output probabilities rather than hard decisions. The regime decoder is hierarchical and mirrors how an analyst would reason: first, is there evidence of a mechanism change at all; if so, which variable separates the regimes; at which threshold; and what kind of change it is. Because the stationary nonlinear trap of Section~\ref{sec:prelim-regimes} is the known failure mode here, the decoder is trained on matched pairs of episodes in which one curved mechanism and two straight ones look predictively similar but differ structurally, so that predictive gain alone never triggers a split.
 
 \subsection{Identification and Support Gates}\label{sec:approach-gates}
-% The safety core. Deterministic identification logic over the declared
-% assumptions decides identified / partially identified / not identified /
-% unsupported; learned heads add empirical support and prior-mismatch
-% diagnostics. Non-identified or unsupported queries yield structured refusal,
-% never a point estimate. Motivated by the power-1.00/coverage-0.00
-% hidden-confounding failure.
 
-\subsection{Dual Estimation Path and Risk-Routed Estimator Library}\label{sec:approach-estimation}
-% Compiled path: library of query-correct classical estimators (linear,
-% interaction, spline, piecewise, randomized-design, null) with out-of-fold
-% nuisances; an episode-level risk-supervised router weights them. Neural path:
-% zero-initialized gated residual on top of the compiled anchor, trained under
-% a no-harm loss. Rationale: never let a free-form neural decoder degrade a
-% sound classical estimate.
+Before any estimate is produced, two gates decide whether the query should be answered at all.
 
-\subsection{Calibration Layer}\label{sec:approach-calibration}
-% Finite-sample split-conformal intervals from a dedicated calibration bank,
-% with normalized, estimator/disagreement-stratified scores; the regime
-% decision threshold is also calibrated, not learned end-to-end.
+The \emph{identification gate} checks whether the requested causal quantity is identified given the episode's declared assumptions and design knowledge, for example randomized assignment or the assumption that all relevant confounders are observed. This gate is deterministic logic, not a learned component, for a principled reason: identifiability is a property of the causal model and its assumptions, and it cannot be certified from data patterns alone. A learned score could only imitate the training prior and would produce exactly the confident wrong answers we aim to prevent. This gate is the direct response to the hidden-confounding failure of the introduction, where a conventional method detected an effect in every run while its estimate was severely biased.
 
-\subsection{Pretraining and Constraint-Based Checkpoint Selection}\label{sec:approach-training}
-% Online synthetic episode generator (randomized sample size, dimensionality,
-% mechanisms, graphs, overlap, missingness; ~38k episodes / 1,600 steps).
-% Staged curriculum: compiled+router first, then gated residual, then joint
-% fine-tuning. Checkpoint eligibility CONSTRAINTS (no harm to compiled
-% estimator, regime false-positive cap, zero false answers) before ranking by
-% OOD worst-group error -- selection encodes safety, not just average loss.
-% Close with the implemented scope: static tabular effects, observed regimes,
-% network interference; temporal/latent/PAG extensions are future work (be
-% explicit to avoid overclaiming).
+The \emph{support gate} checks whether the requested contrast is present in the data: are there comparable units observed under both treatment values, or both exposure levels, for the population in the query? If nobody in the data resembles the requested condition, any estimate would be extrapolation from the pretraining prior rather than evidence, and the gate blocks it.
+
+When either gate fails, CWFM returns a \emph{structured refusal} that names the failed condition and what would resolve it, for example an instrument, an experiment, or additional data in the unsupported region. Learned diagnostic heads accompany the gates with empirical signals such as estimated overlap and prior mismatch, but they can only add caution; they can never overrule a formal gate and force an answer.
+
+\subsection{A Risk-Routed Library of Classical Estimators}\label{sec:approach-estimation}
+
+When both gates pass, the answer is produced by classical statistics guided by the learned model, in three steps.
+
+First, every member of a \emph{library of estimators} is applied to the episode's data, each producing its own candidate estimate. Each member is a standard, well-understood method that is correct under a different mechanism class: linear g-computation, g-computation with interactions, a spline-based version, a piecewise exposure-response estimator for threshold spillovers, a design-based estimator for randomized episodes, and a null estimator that returns no effect. Internal regression fits use held-out folds (held-out clusters in network episodes), so that no observation contributes to a prediction about itself.
+
+Second, a learned \emph{router} predicts, from the episode representation, how risky each estimator is for this particular episode, and combines the library into a single weighted estimate. We call this the \emph{compiled estimate}. It is the answer classical statistics would give if an experienced analyst had chosen and blended the estimators; the router amortizes that choice.
+
+Third, a neural \emph{residual} may adjust the compiled estimate. It is initialized at zero, passes through a learned gate, and is trained with a no-harm objective that penalizes any adjustment that worsens the compiled estimate far more than it rewards an improvement. If the residual cannot prove its worth during training, the gate stays closed and the final answer equals the compiled estimate. This is the architectural embodiment of principle 2: the burden of proof is on the neural correction, never on the classical estimate.
+
+\subsection{Calibration}\label{sec:approach-calibration}
+
+All reported uncertainty comes from split-conformal calibration (Section~\ref{sec:prelim-amortized}). A dedicated bank of calibration episodes, never used for training, records how wrong the model's answers are in practice; intervals on new episodes are then widened until they cover this error distribution at the target level. The conformal scores are normalized and stratified, so intervals adapt to episode difficulty: an episode routed to a risky estimator, or one where the estimators disagree, receives a wider interval. The threshold at which the regime decoder declares a mechanism change is fitted on the same calibration bank rather than learned end to end, for the same reason: a decision with error-rate consequences should be set where its error rate can be measured.
+
+\subsection{Training and Evaluation Data}\label{sec:approach-data}
+
+The data deserve particular attention, because for a pretrained causal model the training distribution is not an implementation detail: it is part of the model's assumptions. Everything CWFM knows, it knows from this distribution. We therefore describe it precisely.
+
+All training and evaluation data are \emph{synthetic causal episodes} produced by a simulator, and this is a necessity rather than a convenience. Supervising a causal model requires labels that real data cannot provide: the true effect of an intervention, the true causal structure, and the true answer to the question ``should this query be refused?''. In a simulation these labels are known by construction. Each episode is created in three steps: first a complete causal world is sampled (a graph, mechanisms, an assignment process, and an effect size); then the world is run to produce an observed dataset; finally the ground-truth labels are recorded and hidden from the model, which must recover them from the data alone.
+
+Episodes come from three task families, matching the implemented scope:
+\begin{itemize}
+\item \emph{Static treatment effects.} Between 64 and 128 units are described by three to eight covariates; a binary treatment affects a continuous outcome. Scenarios include linear and nonlinear mechanisms with observed confounding, and randomized experiments.
+\item \emph{Regime determination.} Datasets with five to nine covariates whose outcome mechanism either is stationary, splits at a threshold of one covariate (with strong or deliberately weak shifts), or is a stationary smooth nonlinear mechanism, the hard negative of Section~\ref{sec:prelim-regimes}. Exact nulls are always included.
+\item \emph{Network interference.} Units are linked by a cluster-structured network and treated cluster by cluster with varying saturation; each unit's exposure is the treated fraction of its neighbors. Spillover mechanisms are linear, threshold-shaped, or exactly null.
+\end{itemize}
+Crucially, every family also generates \emph{unanswerable episodes} in which the correct output is a refusal: hidden confounding (an unobserved variable drives both treatment and outcome) and poor overlap or poor support (the requested contrast barely occurs in the data). These cases are mixed into training at substantial rates. A model never shown them would learn that producing an answer is always rewarded, which is precisely the behavior we must avoid.
+
+To prevent the model from learning superficial shortcuts, the presentation of every training episode is randomized: rows are shuffled, columns are permuted while preserving their declared roles, covariate scales are varied, and a random subset of covariate values (up to five percent) is masked as missing. The model must therefore rely on the declared roles and types of variables, never on their position or scale.
+
+Training and evaluation use five strictly separated streams, drawn from disjoint random-seed ranges so that no episode can appear in more than one stream. Table~\ref{tab:streams} summarizes them. Training episodes are generated online and never repeated: over 1,600 steps with 24 episodes per batch, the model sees 38,400 distinct episodes exactly once each. The final test bank is \emph{locked}: it is evaluated once, after all training, selection, and calibration decisions are frozen, and its 14 scenario cells with 30 seeds each are identical for CWFM and for every baseline.
+
+\begin{table}[H]
+\caption{The five separated data streams. Seed ranges are disjoint, so no episode appears in two streams.\label{tab:streams}}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Stream} & \textbf{Content} & \textbf{Used for}\\
+\midrule
+Online training & 38,400 fresh episodes, never repeated & Gradient updates only\\
+In-distribution development & Fixed bank, same families as training & Checkpoint eligibility and ranking\\
+Out-of-distribution development & Fixed bank, held-out families & Robustness constraint in selection\\
+Calibration & 360 fresh episodes & Conformal intervals and regime threshold\\
+Locked final test & 14 scenario cells $\times$ 30 seeds & One-time evaluation, reported in Section~\ref{sec:assessment}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The out-of-distribution development bank deserves a separate remark. It consists of entire mechanism and graph families that are excluded from training: hinge, multiplicative, and saturating outcome mechanisms; intercept, variance, and shifted regime changes; two random-network families unlike the cluster networks seen in training; and nonmonotone spillovers. Holding out whole families, rather than merely new random draws from familiar ones, is what allows Section~\ref{sec:assessment} to distinguish genuine generalization from memorization of the training prior.
+
+\subsection{Pretraining and Safety-Constrained Model Selection}\label{sec:approach-training}
+
+CWFM is pretrained on the online episode stream of Section~\ref{sec:approach-data}, and training proceeds in stages. The estimator library and the router are trained first, with the residual frozen, so that a sound compiled path exists before any neural correction is allowed. The gated residual is then trained under the no-harm objective, and finally the whole system is fine-tuned jointly at a low learning rate.
+
+Model selection enforces safety as \emph{hard constraints}, not as terms in a loss. A checkpoint is eligible only if it does not materially harm the compiled estimate, keeps the false-regime rate on stationary nonlinear episodes below a cap, and produces zero answers on queries that should be refused. Only the eligible checkpoints are then ranked, by their worst-group error on held-out mechanism families. A checkpoint with better average accuracy that violates any safety constraint is discarded. This ordering, safety first and accuracy second, is deliberate: it prevents the selection process itself from trading reliability for benchmark scores.
+
+Finally, we state the implemented scope explicitly. The reference implementation covers static tabular effects, observed-regime determination, and network interference. Temporal mechanism changes, latent-variable structure, and identification with partially specified graphs are part of the design but not of the implementation evaluated in Section~\ref{sec:assessment}, and no claim in this paper depends on them.
 
 %=================================================================
 \section{Assessment}\label{sec:assessment}
