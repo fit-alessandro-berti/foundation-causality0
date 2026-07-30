@@ -24,7 +24,10 @@
 % Add extra packages here if needed.
 
 %=================================================================
-\Title{Title}
+\Title{CWFM: A Causal World Foundation Model for Identification-Aware Amortized Causal Inference}
+% Model name: CWFM (Causal World Foundation Model), as in the repository.
+% Alternative subtitle if needed: "Amortizing Causal Effect Estimation with
+% Formal Identification, Support Diagnostics, and Calibrated Abstention".
 
 \newcommand{\orcidauthorA}{0000-0000-0000-000X}
 
@@ -38,62 +41,302 @@ $^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
 
 \corres{Correspondence: e-mail@e-mail.com}
 
-\abstract{A single paragraph of about 200 words maximum. For research articles, abstracts should give a pertinent overview of the work: background, methods, results, and conclusions.}
+\abstract{%
+% ~200 words. Background: causal analyses require choosing graph family,
+% estimator, exposure mapping, etc. before seeing the answer; wrong choices
+% produce confident but invalid conclusions (false regimes, biased effects under
+% hidden confounding). Methods: we introduce CWFM, a query-conditioned foundation
+% model pretrained on synthetic causal episodes; it combines a typed transformer
+% encoder, a posterior over "causal worlds", a deterministic identification and
+% support gate, a risk-routed library of compiled estimators with a gated neural
+% residual, and split-conformal calibration. Results: on a locked 30-seed
+% benchmark spanning static, randomized, and network-interference effects, CWFM
+% matches the best task-specific specialists (pooled MAE 0.166 vs. 0.167--0.169;
+% 90\% interval coverage 0.906) while answering zero of 120 non-identified or
+% unsupported queries; regime detection improves without new false positives.
+% Conclusion: a foundation model for causality should amortize estimator
+% selection and encode when NOT to answer, rather than always produce a number.
+Placeholder abstract; see the comment above for the intended content.}
 
-\keyword{keyword 1; keyword 2; keyword 3}
+\keyword{causal inference; foundation models; in-context learning; identification; abstention; conformal prediction; network interference}
 
 %=================================================================
 \begin{document}
 
-\section{Introduction}
+%=================================================================
+\section{Introduction}\label{sec:introduction}
+% GOAL: a reader with no causality background should grasp the problem, the
+% idea, the model name, the research questions, and the headline results from
+% this section alone.
+%
+% Para 1 (context): scientific and industrial questions are causal ("what
+% happens if we intervene?"), yet standard machine-learning models answer
+% predictive questions; explain in plain terms why good prediction does not
+% imply valid causal conclusions.
+%
+% Para 2 (problem): today's causal analyses require the analyst to pick many
+% things in advance (model class, estimator, adjustment strategy, exposure
+% mapping...); illustrate with two concrete failures from our benchmarks:
+% (i) a misspecified linear model "discovers" a regime change that does not
+% exist while improving test loss, and (ii) under hidden confounding a detector
+% reaches power 1.00 with severely biased estimates and zero interval coverage
+% -- confident and wrong.
+%
+% Para 3 (idea): introduce the Causal World Foundation Model (CWFM) -- a single
+% transformer pretrained on a large stream of synthetic causal episodes that,
+% given a dataset plus a FORMAL causal query, performs in-context (amortized)
+% inference. Emphasize the two defining design choices: (a) amortized estimator
+% selection instead of one universal estimator, and (b) a deterministic
+% identification/support gate so the model abstains or returns bounds instead
+% of unjustified point estimates.
+%
+% Para 4 (research questions): state RQ1-RQ5 explicitly; they structure the
+% assessment (Section 5):
+%   RQ1 (accuracy): can one pretrained model match well-tuned task-specific
+%        estimators on supported, identified queries?
+%   RQ2 (safety): does it avoid false causal claims on non-identified or
+%        poorly supported queries?
+%   RQ3 (structure): can it detect genuine mechanism/regime changes while
+%        rejecting spurious ones induced by misspecification?
+%   RQ4 (generalization): how does it behave on mechanism and graph families
+%        held out from pretraining?
+%   RQ5 (attribution): which architectural components actually produce the
+%        gains (compiled estimator library, router, neural residual, world
+%        posterior)?
+%
+% Para 5 (headline results + contributions bullet list): pooled effect MAE
+% 0.166 statistically indistinguishable from the best specialists and clearly
+% better than a random-forest baseline; zero false answers on 120 stress
+% queries; regime exact accuracy 0.617 with zero complete-null false positives;
+% honest negatives (uniform world particles, diffuse routing, OOD gap on
+% nonmonotone interference). Contributions: (1) architecture, (2) training and
+% constraint-based checkpoint-selection protocol, (3) reproducible benchmark
+% and evaluation with locked seeds, (4) open reference implementation.
+%
+% Para 6: paper outline.
 
-Briefly place the study in a broad context and highlight why it is important. Review the current state of the field and cite key publications~\cite{ref-journal}. State the main aim of the work and the principal conclusions.
+%=================================================================
+\section{Related Work}\label{sec:related}
+% Draw on docs/foundation_model/related_work.md; keep each subsection to 1-2
+% paragraphs; end with the explicit gap statement.
 
-\section{Materials and Methods}
+\subsection{Causal Inference and Causal Discovery}\label{sec:related-causal}
+% SCMs and potential outcomes (Pearl; Hernan & Robins); the three-way
+% distinction prediction / intervention / counterfactual. Classical discovery:
+% NOTEARS, invariant prediction, discovery from heterogeneous data, PCMCI;
+% interference and spillovers (Hudgens & Halloran). Point: every method embeds
+% assumptions chosen before the data are seen.
 
-Describe methods with sufficient detail to allow replication. Disclose any use of generative AI for non-superficial tasks (text generation, data analysis, study design, etc.). Grammar and spelling edits need not be declared.
+\subsection{Foundation Models for Causal Tasks}\label{sec:related-cfm}
+% Prior-data fitted networks (PFNs) and in-context learning as amortized
+% Bayesian inference. Effect estimation: CausalFM, Do-PFN, CausalPFN.
+% Discovery: Arrow, TabCausal, CDFM, partial-graph conditioning.
+% Temporal/longitudinal/sensitivity: CausalTimePrior, CausalLongPFN, amortized
+% sensitivity bounds. Common limitation: mostly synthetic evidence, and the
+% synthetic prior IS an assumption -- pretraining cannot make an unidentified
+% query identifiable.
 
-\section{Results}
+\subsection{Reliability, Calibration, and Abstention}\label{sec:related-reliability}
+% Formal identification theory vs. learned "identifiability scores" as
+% prior-dependent heuristics; self-compatibility as falsification without
+% ground truth; conformal inference (incl. under graph uncertainty); selective
+% prediction / abstention. Motivates our hybrid neural + deterministic design.
 
-Provide a concise description of the experimental results and their interpretation.
+\subsection{Positioning and Research Gap}\label{sec:related-gap}
+% Table or paragraph contrasting the families above: existing causal foundation
+% models amortize discovery OR estimation but always answer; classical
+% pipelines are identification-aware but not amortized. CWFM occupies the
+% intersection: amortized, query-conditioned estimation WITH formal
+% identification, query-specific support, and calibrated abstention as
+% first-class outputs.
 
-\subsection{Tables}
+%=================================================================
+\section{Preliminaries}\label{sec:preliminaries}
+% Keep this section SHORT (~1.5 pages): only the non-obvious concepts a general
+% scientific reader needs for Sections 4-5, each with a small running example.
 
-Tables should be cited in the text as Table~\ref{tab1}.
+\subsection{Structural Causal Models, Interventions, and Identification}\label{sec:prelim-scm}
+% SCM = variables + mechanisms + noise; do-operator; ATE as the canonical
+% estimand. Identification in one intuition: whether the query is computable
+% from the observed distribution under stated assumptions; hidden confounding
+% as the canonical failure. One-sentence notions of back-door adjustment and
+% g-computation (the estimators we compile).
 
-\begin{table}[H]
-\caption{Example table.\label{tab1}}
-\begin{tabularx}{\textwidth}{CCC}
-\toprule
-\textbf{Title 1} & \textbf{Title 2} & \textbf{Title 3}\\
-\midrule
-Entry 1 & Data & Data\\
-Entry 2 & Data & Data\\
-\bottomrule
-\end{tabularx}
-\end{table}
+\subsection{Network Interference and Exposure Mappings}\label{sec:prelim-interference}
+% Units connected by a relation matrix; a unit's outcome may depend on
+% neighbors' treatments (spillovers); exposure mapping (e.g., treated fraction
+% of neighbors) defines the estimand; overlap/positivity: the requested
+% contrast must actually occur in comparable data.
 
-\subsection{Equations}
+\subsection{Regimes and Mechanism Changes}\label{sec:prelim-regimes}
+% Observed-regime determination: does the outcome mechanism differ across
+% subpopulations defined by an observed variable/threshold? The key trap: a
+% single smooth nonlinear mechanism can be mistaken for two linear regimes --
+% predictive gain does not certify a structural split.
 
-\begin{equation}
-a = b + c.
-\end{equation}
+\subsection{Amortized Inference and Conformal Calibration}\label{sec:prelim-amortized}
+% PFN idea: pretrain on many synthetic problems with known ground truth, then
+% treat a new dataset as an in-context inference problem (no refitting).
+% Split-conformal prediction in three sentences: finite-sample valid intervals
+% from a held-out calibration bank; why we do not trust raw neural uncertainty.
 
-\begin{Theorem}
-Example theorem text. Theorems, propositions, and lemmas are numbered sequentially.
-\end{Theorem}
+%=================================================================
+\section{Approach}\label{sec:approach}
+% Core section. Motivate every component by a concrete failure mode from
+% Section 1 / the benchmarks; include the architecture block diagram (adapt the
+% ASCII figure from docs/foundation_model/initial_architecture.md) and the
+% "failure -> architectural response" mapping table.
 
-\begin{proof}
-Text of the proof.
-\end{proof}
+\subsection{Design Principles and Overview}\label{sec:approach-overview}
+% Four principles: (1) one shared backbone, several task routes; (2) a
+% posterior over multiple causal worlds instead of one committed graph;
+% (3) a formal identification layer between structure and estimation;
+% (4) explicit support, calibration, and abstention. Figure 1: end-to-end
+% pipeline from causal episode to structured answer-or-refusal.
 
-\section{Discussion}
+\subsection{Causal Episodes and the Formal Query Language}\label{sec:approach-episode}
+% Input = episode (data values, missingness, variable schema/roles, relation
+% matrix, background constraints) + a formal query (claim type, treatment,
+% outcome, estimand, contrast, target population). Motivate why the query must
+% be structured rather than natural language: wording must not silently change
+% the estimand; the claim type prevents relabelling association as causation.
 
-Discuss the results in the context of previous studies and working hypotheses. Highlight implications and future directions.
+\subsection{Typed Encoder and Mechanism Experts}\label{sec:approach-encoder}
+% Typed cell/schema embeddings (value, missingness, role, type); alternating
+% variable-axis and sample-axis attention; relation-aware messages for network
+% data; sparse top-2 mixture of mechanism experts with a simplicity prior
+% (motivated by: the simple linear estimator beats the flexible one when the
+% truth is linear, and vice versa for thresholds).
 
-\section{Conclusions}
+\subsection{Posterior over Causal Worlds and Structural Decoders}\label{sec:approach-worlds}
+% Weighted world particles, each carrying graph, mechanism, and regime
+% hypotheses; separates structural uncertainty from finite-sample and outcome
+% uncertainty. Structural heads: graph decoder, hierarchical regime detection
+% (split? which variable? which threshold? which change type?).
 
-Optional section if the discussion is long or complex.
+\subsection{Identification and Support Gates}\label{sec:approach-gates}
+% The safety core. Deterministic identification logic over the declared
+% assumptions decides identified / partially identified / not identified /
+% unsupported; learned heads add empirical support and prior-mismatch
+% diagnostics. Non-identified or unsupported queries yield structured refusal,
+% never a point estimate. Motivated by the power-1.00/coverage-0.00
+% hidden-confounding failure.
+
+\subsection{Dual Estimation Path and Risk-Routed Estimator Library}\label{sec:approach-estimation}
+% Compiled path: library of query-correct classical estimators (linear,
+% interaction, spline, piecewise, randomized-design, null) with out-of-fold
+% nuisances; an episode-level risk-supervised router weights them. Neural path:
+% zero-initialized gated residual on top of the compiled anchor, trained under
+% a no-harm loss. Rationale: never let a free-form neural decoder degrade a
+% sound classical estimate.
+
+\subsection{Calibration Layer}\label{sec:approach-calibration}
+% Finite-sample split-conformal intervals from a dedicated calibration bank,
+% with normalized, estimator/disagreement-stratified scores; the regime
+% decision threshold is also calibrated, not learned end-to-end.
+
+\subsection{Pretraining and Constraint-Based Checkpoint Selection}\label{sec:approach-training}
+% Online synthetic episode generator (randomized sample size, dimensionality,
+% mechanisms, graphs, overlap, missingness; ~38k episodes / 1,600 steps).
+% Staged curriculum: compiled+router first, then gated residual, then joint
+% fine-tuning. Checkpoint eligibility CONSTRAINTS (no harm to compiled
+% estimator, regime false-positive cap, zero false answers) before ranking by
+% OOD worst-group error -- selection encodes safety, not just average loss.
+% Close with the implemented scope: static tabular effects, observed regimes,
+% network interference; temporal/latent/PAG extensions are future work (be
+% explicit to avoid overclaiming).
+
+%=================================================================
+\section{Assessment}\label{sec:assessment}
+% Answer RQ1-RQ5 from the Introduction, one subsection each, after the design.
+% All numbers from docs/foundation_model/experimental_results.md and
+% artifacts/cwfm/results.
+
+\subsection{Experimental Design}\label{sec:assessment-design}
+% Five strictly separated episode streams (training / ID development / OOD
+% development / calibration / locked 30-seed final test) with disjoint seed
+% ranges; 14 scenario families (static linear, nonlinear, randomized; network
+% linear, threshold, null; regime and stress cells); 120 non-identified or
+% unsupported stress queries. Baselines: linear, interaction, spline,
+% piecewise, random-forest g-computation, MOB-like regime splitter; CWFM
+% variants (revised vs. compiled-only). Metrics: MAE, 90% interval coverage
+% and width, false-answer rate, regime exact accuracy, paired bootstrap CIs.
+% Reproducibility: pinned seeds, checkpoint SHA-256, result manifest.
+
+\subsection{RQ1: Effect-Estimation Accuracy and Calibration}\label{sec:assessment-rq1}
+% Main table (pooled + per-task MAE/coverage/width). Answer: CWFM is
+% statistically indistinguishable from the best specialists (paired MAE
+% difference vs. linear g-computation -0.0028, CI [-0.0132, 0.0080]) and
+% clearly better than random forest (-0.163); coverage ~0.906 near nominal;
+% 38.6% pooled-MAE improvement over the Phase-I prototype. Per-scenario table
+% shows each specialist still wins its home turf -- the value is not beating
+% specialists but matching them WITHOUT knowing the mechanism in advance.
+
+\subsection{RQ2: Safety on Non-Identified and Unsupported Queries}\label{sec:assessment-rq2}
+% Answer: 180/180 supported+identified queries answered, 0/120 stress queries
+% falsely answered; always-answer baselines return (biased) numbers in every
+% stress cell. Be transparent: the guarantee comes from deterministic gating
+% over declared assumptions; learned heads only add empirical diagnostics --
+% this is not learned detection of hidden confounding.
+
+\subsection{RQ3: Regime Detection without False Splits}\label{sec:assessment-rq3}
+% Regime table vs. MOB-like baseline. Answer: pooled exact accuracy 0.617 vs.
+% 0.458; strong-split recall 0.633 (up from 0.067 in Phase I); complete-null
+% false positives 0.000; the stationary-nonlinear hard negative -- where the
+% baseline splits 100% of the time -- is rejected 83.3% of the time. Remaining
+% weakness: weak splits (magnitude 0.18-0.38 at n=96) are still undetected.
+
+\subsection{RQ4: Out-of-Distribution Generalization}\label{sec:assessment-rq4}
+% Held-out mechanism and graph families (hinge, multiplicative, saturation,
+% Erdos-Renyi, small-world, nonmonotone interference). Answer: parameter-level
+% shifts transfer well (MAE 0.16-0.36) but the nonmonotone-interference family
+% fails badly (MAE 1.357) -- prior mismatch is a real, quantified limitation;
+% report this as a negative result supporting abstention-oriented design.
+
+\subsection{RQ5: Where Do the Gains Come From?}\label{sec:assessment-rq5}
+% Component attribution via diagnostics and the compiled-only comparison.
+% Answer: the gains are attributable to the query-correct estimator library,
+% risk-routed anchor, and deterministic safety logic; the gated neural residual
+% stays closed (mean gate 0.0067, final estimate equals the compiled anchor to
+% numerical precision) and the world-particle posterior remains uniform
+% (entropy ~ log 6) -- honest no-harm outcomes, not yet evidence of neural
+% value-add. Include robustness probes (row-permutation and affine invariance
+% exact; variable-order equivariance still poor).
+
+%=================================================================
+\section{Discussion}\label{sec:discussion}
+% Interpretation: what the results imply for the "foundation model for
+% causality" agenda -- amortization of METHOD SELECTION and encoded refusal
+% behavior are the demonstrated value, not raw neural estimation power.
+%
+% Limitations (be direct, mirror the report): (1) neural residual contributes
+% no measurable point-estimate gain; (2) routing is diffuse and leaves the
+% piecewise expert's headroom unused; (3) world particles are uninformative;
+% (4) OOD nonmonotone interference fails; (5) scope is the first implementation
+% slice (no temporal, latent-variable, or PAG/sensitivity machinery yet);
+% (6) all evidence is synthetic -- synthetic-to-real prior mismatch is the key
+% external-validity threat.
+%
+% What a causal foundation model CANNOT solve even in principle: hidden
+% confounding without extra assumptions, absent overlap, direction within an
+% equivalence class -- it moves assumptions into the pretraining prior, which
+% must be explicit and versioned.
+%
+% Future work: sharper risk prediction for the router, specialized world
+% particles, variable-order equivariance, temporal and latent extensions,
+% sensitivity bounds, evaluation on semi-synthetic and real data (e.g.,
+% process/event data as an application domain).
+
+%=================================================================
+\section{Conclusions}\label{sec:conclusion}
+% 2 paragraphs. Restate: CWFM shows that one pretrained, query-conditioned
+% model can match well-tuned specialists on identified, supported causal
+% queries while never answering the 120 queries it should refuse -- and that
+% constraint-based selection plus formal gating, not model capacity, delivered
+% this. Close with the acceptance-test framing: a causal foundation model that
+% detects an effect under hidden confounding with power 1.00 but zero coverage
+% has automated false confidence; CWFM is designed, trained, and selected to
+% fail safely instead.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \authorcontributions{Conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing---original draft preparation, X.X.; writing---review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y. All authors have read and agreed to the published version of the manuscript.}
@@ -104,7 +347,8 @@ Optional section if the discussion is long or complex.
 
 \informedconsent{Not applicable.}
 
-\dataavailability{No new data were created or analyzed in this study. Data sharing is not applicable to this article.}
+\dataavailability{The reference implementation, benchmark generators, locked evaluation seeds, and result manifests are available in the accompanying repository.}
+% Point to the public repository URL and the checkpoint SHA-256 once released.
 
 \acknowledgments{Optional acknowledgments.}
 
@@ -116,7 +360,12 @@ The following abbreviations are used in this manuscript:\\
 
 \noindent
 \begin{tabular}{@{}ll}
-MDPI & Multidisciplinary Digital Publishing Institute\\
+CWFM & Causal World Foundation Model\\
+SCM & Structural Causal Model\\
+ATE & Average Treatment Effect\\
+PFN & Prior-Data Fitted Network\\
+MAE & Mean Absolute Error\\
+OOD & Out-of-Distribution\\
 \end{tabular}
 }
 
@@ -125,6 +374,12 @@ MDPI & Multidisciplinary Digital Publishing Institute\\
 
 \reftitle{References}
 
+% Replace with the curated bibliography (docs/foundation_model/related_work.md
+% lists the central keys: pearl2009causality, hernan2020whatif,
+% peters2016invariant, zheng2018notears, runge2019pcmci, hudgens2008interference,
+% ma2025causalfm, robertson2025dopfn, balazadeh2025causalpfn, thompson2026arrow,
+% li2026tabcausal, qiao2026cdfm, reuter2026partialgraphs, thumm2026causaltimeprior,
+% zare2026causallongpfn, javurek2026sensitivitypfn, faller24selfcompatibility, ...).
 \begin{thebibliography}{999}
 \bibitem{ref-journal}
 Author~1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
