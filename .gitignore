@@ -226,3 +226,5 @@ paper/*.bbl
 paper/*.blg
 paper/*.out
 
+paper/*.pdf
+
