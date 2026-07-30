@@ -1,5 +1,15 @@
 # Synthetic causal-structure benchmark report
 
+## CWFM revision addendum — 2026-07-30
+
+The separate CWFM reference experiment has been redesigned and rerun. On its
+locked 30-seed supported/identified effect bank, pooled MAE improved from 0.271
+to 0.166 with 0.906 coverage for target-90% intervals. Strong regime-split
+recovery improved from 0.067 to 0.633 while complete-null false positives
+remained zero. The full architecture, training guardrails, calibration,
+scenario tables, OOD failures, and reproducibility record are in
+[`docs/foundation_model/experimental_results.md`](docs/foundation_model/experimental_results.md).
+
 Evaluation date: 2026-07-28
 
 ## Executive summary

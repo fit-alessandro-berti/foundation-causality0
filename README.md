@@ -6,7 +6,7 @@ This repository contains:
 - the design of the Causal World Foundation Model (CWFM) under
   `docs/foundation_model`;
 - a runnable PyTorch CWFM reference implementation under `cwfm`;
-- a frozen checkpoint and reproducible held-out comparison under
+- a revised, constraint-selected checkpoint and reproducible held-out comparison under
   `artifacts/cwfm`;
 - the complete CWFM experiment report in
   `docs/foundation_model/experimental_results.md`.
@@ -19,6 +19,7 @@ python -m unittest discover -s tests -v
 python -m cwfm.train \
   --steps 1600 \
   --batch-size 24 \
+  --validation-interval 100 \
   --output artifacts/cwfm/checkpoint.pt
 python -m cwfm.experiment \
   --checkpoint artifacts/cwfm/checkpoint.pt \
@@ -27,10 +28,13 @@ python -m cwfm.experiment \
   --calibration-episodes 360
 ```
 
-The committed final run uses pretraining seed `1729`, calibration seeds
+The committed revised run uses pretraining seed `1729`, separate ID and OOD
+development banks, calibration seeds
 beginning at `19,000,000`, and final evaluation seeds beginning at
 `20,000,000`. The result manifest records package versions, runtime,
-configuration, calibration radii, and the checkpoint SHA-256.
+configuration, finite-sample conformal radii, estimator routing, paired
+comparisons, and the checkpoint SHA-256. Append-only training and grouped
+validation logs are stored beside the checkpoint.
 
 ## Scope
 
