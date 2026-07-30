@@ -63,8 +63,6 @@ Placeholder abstract; see the comment above for the intended content.}
 
 %=================================================================
 \section{Introduction}\label{sec:introduction}
-% Citation keys refer to the planned bibliography (see comment before the
-% references section); they render as "?" until the .bib entries are added.
 
 Many of the most important questions in science, medicine, and industry are \emph{causal}: What happens to the outcome if we change the treatment, the price, the policy, or the process? Standard machine-learning models are built to answer a different question, namely what is likely to happen if nothing is changed. A model can predict outcomes very accurately and still be completely wrong about the consequences of an \emph{intervention}, because prediction exploits every correlation in the data, including correlations that would disappear the moment we intervene~\cite{pearl2009causality,hernan2020whatif}. Answering causal questions therefore requires dedicated methods, and those methods rest on \emph{assumptions} about how the data were generated.
 
@@ -97,38 +95,26 @@ The remainder of the paper is organized as follows. Section~\ref{sec:related} re
 
 %=================================================================
 \section{Related Work}\label{sec:related}
-% Draw on docs/foundation_model/related_work.md; keep each subsection to 1-2
-% paragraphs; end with the explicit gap statement.
 
 \subsection{Causal Inference and Causal Discovery}\label{sec:related-causal}
-% SCMs and potential outcomes (Pearl; Hernan & Robins); the three-way
-% distinction prediction / intervention / counterfactual. Classical discovery:
-% NOTEARS, invariant prediction, discovery from heterogeneous data, PCMCI;
-% interference and spillovers (Hudgens & Halloran). Point: every method embeds
-% assumptions chosen before the data are seen.
+
+Structural causal models and the potential-outcomes framework give causal questions a precise meaning~\cite{pearl2009causality,hernan2020whatif}. They distinguish three tasks that look similar but are fundamentally different: predicting an outcome under the observed regime, estimating the effect of an intervention, and reasoning about what would have happened in a particular case under a different action. Their central tool is the theory of \emph{identification}: a set of rules, such as back-door adjustment, that determine whether a causal question can be answered from the available data under stated assumptions. When point identification fails, the theory does not stop; sensitivity analysis quantifies how conclusions change as hidden confounding grows~\cite{rosenbaum1983sensitivity}, and partial identification replaces a point estimate with an honest interval~\cite{manski1990bounds}. The framework also covers settings where units influence one another, such as treatments that spill over through a network~\cite{hudgens2008interference}.
+
+A complementary line of research, \emph{causal discovery}, aims to learn the causal structure itself from data. Approaches include constraint-based algorithms~\cite{spirtes2000causation}, continuous optimization over graph structures~\cite{zheng2018notears}, invariance of causal mechanisms across environments~\cite{peters2016invariant}, discovery from heterogeneous and nonstationary data~\cite{huang2020heterogeneous}, and causal analysis of nonlinear time series~\cite{runge2019pcmci}. All of these methods are powerful, but they share a practical burden: for every new dataset, an expert must choose the algorithm, the model class, and the tuning parameters, and the true structure is not available to check the choice. This manual selection step is exactly where the failures described in the introduction arise, and it is the entry point for foundation models.
 
 \subsection{Foundation Models for Causal Tasks}\label{sec:related-cfm}
-% Prior-data fitted networks (PFNs) and in-context learning as amortized
-% Bayesian inference. Effect estimation: CausalFM, Do-PFN, CausalPFN.
-% Discovery: Arrow, TabCausal, CDFM, partial-graph conditioning.
-% Temporal/longitudinal/sensitivity: CausalTimePrior, CausalLongPFN, amortized
-% sensitivity bounds. Common limitation: mostly synthetic evidence, and the
-% synthetic prior IS an assumption -- pretraining cannot make an unidentified
-% query identifiable.
+
+Prior-data fitted networks (PFNs) offer a way to remove the manual selection step. A transformer is pretrained on a large collection of synthetic problems whose ground truth is known by construction; afterwards, a new dataset is processed in a single forward pass, and the network approximates Bayesian inference under the distribution of problems it was trained on~\cite{muller2022pfns}. This idea has produced strong general-purpose tabular models~\cite{hollmann2025tabpfn} and has recently been carried over to causal questions. For causal-effect estimation, CausalFM builds PFNs from priors over structural causal models covering back-door, front-door, and instrumental-variable settings~\cite{ma2025causalfm}; Do-PFN predicts interventional outcome distributions directly from observational data~\cite{robertson2025dopfn}; and CausalPFN amortizes average and heterogeneous treatment-effect estimation~\cite{balazadeh2025causalpfn}. For causal discovery, Arrow predicts a graph skeleton together with a variable ordering, which guarantees an acyclic result~\cite{thompson2026arrow}; TabCausal and CDFM predict causal edges across heterogeneous tabular problems~\cite{li2026tabcausal,qiao2026cdfm}; and partial background knowledge can be supplied to such models instead of being ignored~\cite{reuter2026partialgraphs}. Extensions address temporal data with interventions~\cite{thumm2026causaltimeprior}, longitudinal treatment sequences~\cite{zare2026causallongpfn}, and amortized sensitivity analysis~\cite{javurek2026sensitivitypfn}.
+
+These models establish that causal inference can be amortized, but two limitations recur. First, the synthetic pretraining distribution is itself a causal assumption: pretraining cannot make an unidentifiable question identifiable, and a dataset generated by a mechanism outside the prior can be answered with unwarranted confidence. Second, and most importantly for this paper, these models \emph{always return an answer}. None of them combines amortized estimation with a formal check of whether the submitted question is answerable at all, a check of whether the requested contrast is supported by the data, and the option to refuse.
 
 \subsection{Reliability, Calibration, and Abstention}\label{sec:related-reliability}
-% Formal identification theory vs. learned "identifiability scores" as
-% prior-dependent heuristics; self-compatibility as falsification without
-% ground truth; conformal inference (incl. under graph uncertainty); selective
-% prediction / abstention. Motivates our hybrid neural + deterministic design.
+
+The ingredients for such checks exist, but largely outside the foundation-model literature. Identifiability is a property of the causal model and its assumptions, not a pattern that can be certified from the data alone; learned ``identifiability scores'' are therefore heuristics that reflect the training prior, and even amortized sensitivity analysis can only learn the bounds of a partially identified effect, never its exact position inside them~\cite{ma2025causalfm,javurek2026sensitivitypfn}. When no ground truth is available, self-compatibility checks can falsify a causal analysis by testing whether structures learned from different subsets of variables agree~\cite{faller2024selfcompatibility}. On the uncertainty side, conformal prediction turns any point predictor into intervals with finite-sample validity guarantees~\cite{vovk2005conformal,lei2018distribution}, and selective prediction studies the trade-off between answering fewer questions and answering them more reliably~\cite{geifman2017selective}. Each of these tools is well understood in isolation; what is missing is their integration into an amortized causal model, so that identification, support, calibration, and refusal are produced together with the estimate rather than left to the analyst.
 
 \subsection{Positioning and Research Gap}\label{sec:related-gap}
-% Table or paragraph contrasting the families above: existing causal foundation
-% models amortize discovery OR estimation but always answer; classical
-% pipelines are identification-aware but not amortized. CWFM occupies the
-% intersection: amortized, query-conditioned estimation WITH formal
-% identification, query-specific support, and calibrated abstention as
-% first-class outputs.
+
+In summary, two research traditions approach causal questions from opposite directions. Classical causal inference is identification-aware and statistically rigorous, but every analysis must be assembled by hand, and the required choices are error-prone. Causal foundation models remove the manual effort through pretraining, but they answer unconditionally and provide no built-in notion of when an answer is unjustified. CWFM is positioned at the intersection of the two: it uses a pretrained model to amortize the choice and combination of estimators, while a deterministic identification layer, a query-specific support check, conformal calibration, and an explicit abstention decision guarantee that the convenience of a foundation model does not come at the price of false causal confidence. To our knowledge, no existing causal foundation model treats refusal as a first-class output and enforces it as a hard constraint during model selection.
 
 %=================================================================
 \section{Preliminaries}\label{sec:preliminaries}
@@ -354,19 +340,11 @@ OOD & Out-of-Distribution\\
 
 \reftitle{References}
 
-% Replace with the curated bibliography (docs/foundation_model/related_work.md
-% lists the central keys: pearl2009causality, hernan2020whatif,
-% peters2016invariant, zheng2018notears, runge2019pcmci, hudgens2008interference,
-% ma2025causalfm, robertson2025dopfn, balazadeh2025causalpfn, thompson2026arrow,
-% li2026tabcausal, qiao2026cdfm, reuter2026partialgraphs, thumm2026causaltimeprior,
-% zare2026causallongpfn, javurek2026sensitivitypfn, faller24selfcompatibility, ...).
-\begin{thebibliography}{999}
-\bibitem{ref-journal}
-Author~1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
-
-\bibitem{ref-book}
-Author 1, A.; Author 2, B. \textit{Book Title}, 3rd ed.; Publisher: Publisher Location, Country, 2008; pp. 154--196.
-\end{thebibliography}
+% Entries live in references.bib. Entries marked "TODO: verify" there are
+% recent preprints whose author lists must be completed before submission.
+% NOTE: Definitions/mdpi.bst is currently a placeholder copy of unsrt.bst;
+% replace it with the official MDPI style file before submission.
+\bibliography{references}
 
 \PublishersNote{}
 \end{adjustwidth}
