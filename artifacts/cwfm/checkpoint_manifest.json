@@ -1,0 +1,67 @@
+{
+  "status": "completed",
+  "configuration": {
+    "max_variables": 12,
+    "hidden_dim": 96,
+    "heads": 4,
+    "axial_blocks": 3,
+    "mechanism_experts": 4,
+    "top_k_experts": 2,
+    "world_particles": 6,
+    "estimator_experts": 6,
+    "dropout": 0.08,
+    "seed": 1729,
+    "steps": 1600,
+    "batch_size": 24,
+    "device": "cuda",
+    "validation_interval": 100
+  },
+  "loss_weights": {
+    "effect_point": 1.0,
+    "world_mixture_nll": 0.35,
+    "no_harm": 1.0,
+    "correction_scale": 0.03,
+    "router_risk": 0.45,
+    "router_mixture": 0.5,
+    "router_balance": 0.02,
+    "mechanism": 0.12,
+    "world_structure": 0.08,
+    "support": 0.15,
+    "regime_detection": 1.2,
+    "regime_localization": 1.2,
+    "regime_threshold": 0.35,
+    "regime_change_type": 0.2,
+    "regime_delta": 0.25,
+    "graph": 0.08
+  },
+  "expert_definitions": [
+    "linear",
+    "orthogonal",
+    "spline",
+    "interaction",
+    "piecewise",
+    "design_or_null"
+  ],
+  "streams": {
+    "training_start": 1729,
+    "id_development_start": 10001729,
+    "ood_development_start": 11001729,
+    "calibration_start": 19000000,
+    "final_test_start": 20000000
+  },
+  "checkpoint_selection": {
+    "rule": "eligibility constraints then OOD-worst/ID/router lexicographic composite",
+    "best_step": 100,
+    "best_score": 1.482311547206094,
+    "rounds_without_improvement": 15
+  },
+  "source_sha256": {
+    "cwfm/model.py": "fe66d1e2823a885afc50d4fb2181dc92207045969b6716532c762ffaab1908d0",
+    "cwfm/data.py": "23d20adeaf4d155ede06066922dfcc584251b46f809683ee3bda9a8c2a6c304d",
+    "cwfm/estimators.py": "8ef45ca2e0a8247d4926053d0549f5cdda480ea0f5402f6346797407e7adcd6f",
+    "cwfm/train.py": "7678cd5a58df31abce797164d65ebf171b0a0aaa2a784111463d6985e63d606b"
+  },
+  "episodes_seen": 38400,
+  "runtime_seconds": 2000.5451283454895,
+  "torch_version": "2.13.0+cu130"
+}
