@@ -8,6 +8,7 @@ import torch
 from cwfm.baselines import all_baselines
 from cwfm.data import (
     EVALUATION_SCENARIOS,
+    OOD_DEVELOPMENT_SCENARIOS,
     TASK_REGIME,
     collate_episodes,
     generate_episode,
@@ -97,6 +98,88 @@ class CWFMContractTests(unittest.TestCase):
                 self.assertIn("MOB-like", result)
             else:
                 self.assertIn("Linear g-computation", result)
+
+    def test_revised_model_has_do_no_harm_initialization_and_structural_worlds(self) -> None:
+        episodes = [generate_episode(5100 + index) for index in range(6)]
+        batch = collate_episodes(episodes)
+        model = CWFM(
+            CWFMConfig(
+                hidden_dim=32,
+                heads=4,
+                axial_blocks=1,
+                world_particles=4,
+                dropout=0.0,
+            )
+        ).eval()
+        with torch.no_grad():
+            output = model(batch)
+        self.assertTrue(
+            torch.allclose(
+                output["effect_mean"], output["compiled_mean"], atol=1e-6
+            )
+        )
+        self.assertTrue(torch.all(output["residual_gate"] < 0.01))
+        self.assertEqual(output["estimator_weights"].shape, (6, 6))
+        self.assertEqual(output["world_graph_logits"].shape, (6, 4, 12, 12))
+        expected_second_moment = (
+            output["world_weights"]
+            * (
+                output["particle_scales"].square()
+                + output["particle_means"].square()
+            )
+        ).sum(-1)
+        expected_scale = (
+            expected_second_moment - output["effect_mean"].square()
+        ).clamp_min(1e-6).sqrt()
+        self.assertTrue(
+            torch.allclose(output["effect_scale"], expected_scale, atol=1e-6)
+        )
+
+    def test_formal_identification_is_deterministic_and_ood_bank_is_separate(self) -> None:
+        episodes = [
+            generate_episode(6200 + index, task, scenario)
+            for index, (task, scenario) in enumerate(OOD_DEVELOPMENT_SCENARIOS)
+        ]
+        self.assertFalse(
+            set(OOD_DEVELOPMENT_SCENARIOS) & set(EVALUATION_SCENARIOS)
+        )
+        self.assertTrue(all(ep.metadata["generator_version"] == 2 for ep in episodes))
+        batch = collate_episodes(
+            [
+                generate_episode(6300, 0, "hidden_confounding"),
+                generate_episode(6301, 0, "poor_overlap"),
+                generate_episode(6302, 0, "linear"),
+            ]
+        )
+        model = CWFM(
+            CWFMConfig(
+                hidden_dim=32,
+                heads=4,
+                axial_blocks=1,
+                world_particles=3,
+            )
+        ).eval()
+        with torch.no_grad():
+            output = model(batch)
+        self.assertLess(float(output["identification_logit"][0]), -10)
+        self.assertLess(float(output["support_logit"][1]), -10)
+        self.assertGreater(float(output["identification_logit"][2]), 10)
+
+    def test_regime_decoder_masks_ineligible_roles(self) -> None:
+        episode = generate_episode(6400, TASK_REGIME, "linear_split")
+        batch = collate_episodes([episode])
+        model = CWFM(
+            CWFMConfig(
+                hidden_dim=32,
+                heads=4,
+                axial_blocks=1,
+                world_particles=3,
+            )
+        ).eval()
+        with torch.no_grad():
+            logits = model(batch)["structure_logits"][0, :-1]
+        ineligible = torch.from_numpy(episode.roles != 0)
+        self.assertTrue(torch.all(logits[: len(episode.roles)][ineligible] < -100))
 
 
 if __name__ == "__main__":
