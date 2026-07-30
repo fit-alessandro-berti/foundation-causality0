@@ -24,10 +24,8 @@
 % Add extra packages here if needed.
 
 %=================================================================
-\Title{CWFM: A Causal World Foundation Model for Identification-Aware Amortized Causal Inference}
+\Title{CWFM: A Foundation Model for Reliable Causal Inference}
 % Model name: CWFM (Causal World Foundation Model), as in the repository.
-% Alternative subtitle if needed: "Amortizing Causal Effect Estimation with
-% Formal Identification, Support Diagnostics, and Calibrated Abstention".
 
 \newcommand{\orcidauthorA}{0000-0000-0000-000X}
 
@@ -65,55 +63,37 @@ Placeholder abstract; see the comment above for the intended content.}
 
 %=================================================================
 \section{Introduction}\label{sec:introduction}
-% GOAL: a reader with no causality background should grasp the problem, the
-% idea, the model name, the research questions, and the headline results from
-% this section alone.
-%
-% Para 1 (context): scientific and industrial questions are causal ("what
-% happens if we intervene?"), yet standard machine-learning models answer
-% predictive questions; explain in plain terms why good prediction does not
-% imply valid causal conclusions.
-%
-% Para 2 (problem): today's causal analyses require the analyst to pick many
-% things in advance (model class, estimator, adjustment strategy, exposure
-% mapping...); illustrate with two concrete failures from our benchmarks:
-% (i) a misspecified linear model "discovers" a regime change that does not
-% exist while improving test loss, and (ii) under hidden confounding a detector
-% reaches power 1.00 with severely biased estimates and zero interval coverage
-% -- confident and wrong.
-%
-% Para 3 (idea): introduce the Causal World Foundation Model (CWFM) -- a single
-% transformer pretrained on a large stream of synthetic causal episodes that,
-% given a dataset plus a FORMAL causal query, performs in-context (amortized)
-% inference. Emphasize the two defining design choices: (a) amortized estimator
-% selection instead of one universal estimator, and (b) a deterministic
-% identification/support gate so the model abstains or returns bounds instead
-% of unjustified point estimates.
-%
-% Para 4 (research questions): state RQ1-RQ5 explicitly; they structure the
-% assessment (Section 5):
-%   RQ1 (accuracy): can one pretrained model match well-tuned task-specific
-%        estimators on supported, identified queries?
-%   RQ2 (safety): does it avoid false causal claims on non-identified or
-%        poorly supported queries?
-%   RQ3 (structure): can it detect genuine mechanism/regime changes while
-%        rejecting spurious ones induced by misspecification?
-%   RQ4 (generalization): how does it behave on mechanism and graph families
-%        held out from pretraining?
-%   RQ5 (attribution): which architectural components actually produce the
-%        gains (compiled estimator library, router, neural residual, world
-%        posterior)?
-%
-% Para 5 (headline results + contributions bullet list): pooled effect MAE
-% 0.166 statistically indistinguishable from the best specialists and clearly
-% better than a random-forest baseline; zero false answers on 120 stress
-% queries; regime exact accuracy 0.617 with zero complete-null false positives;
-% honest negatives (uniform world particles, diffuse routing, OOD gap on
-% nonmonotone interference). Contributions: (1) architecture, (2) training and
-% constraint-based checkpoint-selection protocol, (3) reproducible benchmark
-% and evaluation with locked seeds, (4) open reference implementation.
-%
-% Para 6: paper outline.
+% Citation keys refer to the planned bibliography (see comment before the
+% references section); they render as "?" until the .bib entries are added.
+
+Many of the most important questions in science, medicine, and industry are \emph{causal}: What happens to the outcome if we change the treatment, the price, the policy, or the process? Standard machine-learning models are built to answer a different question, namely what is likely to happen if nothing is changed. A model can predict outcomes very accurately and still be completely wrong about the consequences of an \emph{intervention}, because prediction exploits every correlation in the data, including correlations that would disappear the moment we intervene~\cite{pearl2009causality,hernan2020whatif}. Answering causal questions therefore requires dedicated methods, and those methods rest on \emph{assumptions} about how the data were generated.
+
+This is where causal analysis becomes fragile in practice. Before seeing the answer, the analyst must choose a model class, an estimator, an adjustment strategy, and often more specialized ingredients such as how influence spreads through a network. Each choice is an assumption, and a wrong choice does not merely reduce accuracy; it can produce conclusions that are \emph{confidently wrong}. Two examples from our own benchmarks illustrate this. First, when a linear model is fitted to data generated by a single smooth nonlinear mechanism, it can ``discover'' a change in the causal mechanism that does not exist, while its test loss improves substantially; the better fit rewards the wrong structural conclusion. Second, when an unobserved common cause affects both treatment and outcome, a standard estimator can detect an effect in every run while its estimate is severely biased and its confidence interval never contains the truth. In both cases the analysis looks successful by the usual metrics and is wrong precisely where it matters.
+
+The state of the art offers two partial answers, each with a gap. On one side, classical causal inference provides a rich theory of \emph{identification} (determining whether a causal question can be answered at all from the available data and assumptions), together with well-understood estimators~\cite{pearl2009causality,hernan2020whatif,hudgens2008interference}. But every new dataset requires the analyst to select and configure these tools by hand, and the examples above show how easily that selection goes wrong. On the other side, a recent line of work pretrains transformer models on large collections of synthetic causal problems, so that a new dataset can be analyzed in a single forward pass without refitting~\cite{ma2025causalfm,robertson2025dopfn,thompson2026arrow,qiao2026cdfm}. These \emph{causal foundation models} remove the manual selection burden, but they inherit a different risk: they \emph{always return an answer}, even when the question is not answerable from the data, thereby automating exactly the false confidence described above.
+
+In this paper we propose the \textbf{Causal World Foundation Model (CWFM)}, a foundation model designed to combine the strengths of both sides. CWFM is a transformer pretrained on a large stream of synthetic causal problems. Given a new dataset together with a formally specified causal question, it answers \emph{in context}, without retraining. Two design choices distinguish it from prior causal foundation models. First, instead of acting as one universal neural estimator, CWFM learns to \emph{select and combine} a library of well-understood classical estimators, adding a learned correction only when it demonstrably \emph{does no harm}. Second, the model is wrapped in an explicit \emph{reliability layer}: a deterministic identification check and a data-support check decide, before any estimate is produced, whether the question can be answered at all. When it cannot, CWFM \emph{refuses} and explains why, instead of returning a misleading number. Its uncertainty intervals are \emph{calibrated} with finite-sample conformal methods rather than taken directly from the network.
+
+The contributions of this paper are:
+\begin{itemize}
+\item the CWFM architecture, which integrates a pretrained causal encoder, a risk-routed library of classical estimators, formal identification and support gates, and \emph{calibrated abstention} in a single query-conditioned model;
+\item a training and model-selection protocol in which safety requirements, such as never harming the classical estimate and never answering unanswerable queries, are enforced as \emph{hard constraints} rather than soft objectives;
+\item a reproducible evaluation protocol with strictly separated training, development, calibration, and locked test streams, covering both answerable queries and stress queries that should be refused;
+\item an open reference implementation of the model, the synthetic problem generators, and the complete experimental pipeline.
+\end{itemize}
+
+Our assessment is organized around five research questions:
+\begin{itemize}
+\item[\textbf{RQ1}] \emph{Accuracy.} Can a single pretrained model match well-tuned task-specific estimators on causal questions that are answerable from the data?
+\item[\textbf{RQ2}] \emph{Safety.} Does the model avoid false causal claims when a question is not identifiable or not supported by the data?
+\item[\textbf{RQ3}] \emph{Structure.} Can the model detect genuine changes in a causal mechanism while rejecting spurious changes induced by model misspecification?
+\item[\textbf{RQ4}] \emph{Generalization.} How does the model behave on problem families that were held out from its pretraining distribution?
+\item[\textbf{RQ5}] \emph{Attribution.} Which components of the architecture are actually responsible for the observed performance?
+\end{itemize}
+
+The experimental results can be summarized as follows. On answerable questions, CWFM matches the accuracy of the best task-specific estimator in each setting, without knowing in advance which setting it is in, and clearly outperforms a generic flexible baseline, with uncertainty intervals close to their nominal coverage (RQ1). It refuses every stress query that should be refused, while baseline estimators return a number in all of them (RQ2). It recovers genuine mechanism changes far more often than the previous version of the system and, unlike a standard model-based splitting baseline, largely resists the temptation to split a smooth nonlinear mechanism into fake regimes (RQ3). Generalization is good under moderate distribution shift but degrades sharply on one problem family that is qualitatively absent from pretraining, which we report as an honest limitation (RQ4). Finally, the gains are attributable to the estimator library, the risk-based routing, and the deterministic safety logic; the free-form neural components contribute little yet, which we also report openly (RQ5).
+
+The remainder of the paper is organized as follows. Section~\ref{sec:related} reviews related work on causal inference and causal foundation models. Section~\ref{sec:preliminaries} introduces the necessary background concepts. Section~\ref{sec:approach} presents and motivates the CWFM architecture. Section~\ref{sec:assessment} describes the experimental design and answers the five research questions. Section~\ref{sec:discussion} discusses implications and limitations, and Section~\ref{sec:conclusion} concludes.
 
 %=================================================================
 \section{Related Work}\label{sec:related}
