@@ -527,14 +527,10 @@ The findings define a concrete agenda. On the current scope, the priorities are 
 
 %=================================================================
 \section{Conclusions}\label{sec:conclusion}
-% 2 paragraphs. Restate: CWFM shows that one pretrained, query-conditioned
-% model can match well-tuned specialists on identified, supported causal
-% queries while never answering the 120 queries it should refuse -- and that
-% constraint-based selection plus formal gating, not model capacity, delivered
-% this. Close with the acceptance-test framing: a causal foundation model that
-% detects an effect under hidden confounding with power 1.00 but zero coverage
-% has automated false confidence; CWFM is designed, trained, and selected to
-% fail safely instead.
+
+This paper introduced CWFM, a foundation model for causal inference that treats reliability as a design requirement rather than a hoped-for property. Given a dataset and a formally specified causal question, CWFM selects and combines classical estimators through a learned router, checks identification and data support with deterministic gates before producing any estimate, reports only conformally calibrated uncertainty, and refuses, with a stated reason, the questions that cannot be answered. On a locked synthetic benchmark, this single pretrained model matched the accuracy of the best task-specific estimator in every setting without knowing which setting it was in, kept its intervals near nominal coverage, and answered none of the 120 queries that should be refused, while every baseline answered all of them. The analysis of where these gains come from is equally clear: they are due to the query-correct estimator library, the risk-based routing, and the formal safety logic, not to the free-form neural components, whose contribution remains an open opportunity rather than a demonstrated fact.
+
+We close with the test that we believe should define success for this line of research. A causal foundation model that detects an effect under hidden confounding in every run, while its estimate is badly biased and its intervals never contain the truth, has not advanced causal inference; it has automated false confidence. The measure of progress is therefore not only how accurately a model answers, but whether it knows what it cannot know: whether it separates identified from unidentified questions, supported from unsupported contrasts, and calibrated confidence from mere fluency. CWFM is designed, trained, and selected so that when it fails, it fails safely, and the experiments show that this behavior can be obtained without giving up accuracy on the questions that can be answered. We hope this standard, answer well and refuse well, becomes the default acceptance test for foundation models that claim to reason about cause and effect.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \authorcontributions{Conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing---original draft preparation, X.X.; writing---review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y. All authors have read and agreed to the published version of the manuscript.}
