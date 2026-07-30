@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import LinearRegression
 
 from .data import (
     Episode,
@@ -15,6 +15,7 @@ from .data import (
     TASK_INTERFERENCE,
     TASK_REGIME,
 )
+from .estimators import estimator_experts
 
 
 def _columns(ep: Episode, role: int) -> np.ndarray:
@@ -27,8 +28,16 @@ def _covariates(ep: Episode) -> np.ndarray:
     )
 
 
+def _complete(values: np.ndarray) -> np.ndarray:
+    result = values.astype(float, copy=True)
+    means = np.nan_to_num(np.nanmean(result, axis=0))
+    rows, columns = np.nonzero(np.isnan(result))
+    result[rows, columns] = means[columns]
+    return result
+
+
 def linear_effect(ep: Episode) -> float:
-    values = ep.values
+    values = _complete(ep.values)
     cov = _covariates(ep)
     outcome = int(_columns(ep, ROLE_OUTCOME)[0])
     if ep.task == TASK_ATE:
@@ -48,7 +57,7 @@ def linear_effect(ep: Episode) -> float:
 
 
 def forest_effect(ep: Episode, trees: int = 120) -> float:
-    values = ep.values
+    values = _complete(ep.values)
     cov = _covariates(ep)
     outcome = int(_columns(ep, ROLE_OUTCOME)[0])
     if ep.task == TASK_ATE:
@@ -76,27 +85,14 @@ def forest_effect(ep: Episode, trees: int = 120) -> float:
 def aipw_effect(ep: Episode, trees: int = 100) -> float:
     if ep.task != TASK_ATE:
         return forest_effect(ep, trees)
-    values = ep.values
-    cov = _covariates(ep)
-    treatment = int(_columns(ep, ROLE_TREATMENT)[0])
-    outcome = int(_columns(ep, ROLE_OUTCOME)[0])
-    x, a, y = values[:, cov], values[:, treatment], values[:, outcome]
-    propensity = LogisticRegression(C=1.0, max_iter=500).fit(x, a).predict_proba(x)[:, 1]
-    propensity = np.clip(propensity, 0.05, 0.95)
-    features = np.column_stack([x, a])
-    model = RandomForestRegressor(
-        n_estimators=trees, min_samples_leaf=7, max_features=0.8, n_jobs=1, random_state=ep.seed
-    ).fit(features, y)
-    low, high = features.copy(), features.copy()
-    low[:, -1], high[:, -1] = 0.0, 1.0
-    mu0, mu1 = model.predict(low), model.predict(high)
-    score = mu1 - mu0 + a * (y - mu1) / propensity - (1 - a) * (y - mu0) / (1 - propensity)
-    return float(np.mean(score))
+    # The online estimator library uses deterministic out-of-fold nuisance
+    # predictions, so the reported orthogonal estimate is never in-sample.
+    return float(estimator_experts(ep).estimates[1])
 
 
 def classic_regime(ep: Episode) -> tuple[int, float]:
     """BIC-penalized one-split linear model, a compact MOB-like specialist."""
-    values = ep.values
+    values = _complete(ep.values)
     cov = _covariates(ep)
     outcome = int(_columns(ep, ROLE_OUTCOME)[0])
     x, y = values[:, cov], values[:, outcome]
@@ -128,6 +124,14 @@ def all_baselines(ep: Episode) -> dict[str, float | int]:
         "Linear g-computation": linear_effect(ep),
         "Random forest g-computation": forest_effect(ep),
     }
+    experts = estimator_experts(ep)
+    estimates["Spline g-computation"] = float(experts.estimates[2])
+    estimates["Interaction g-computation"] = float(experts.estimates[3])
     if ep.task == TASK_ATE:
         estimates["AIPW"] = aipw_effect(ep)
+        if experts.mask[5]:
+            estimates["Randomized difference-in-means"] = float(experts.estimates[5])
+    else:
+        estimates["Piecewise exposure-response"] = float(experts.estimates[4])
+        estimates["Null shrinkage"] = 0.0
     return estimates
