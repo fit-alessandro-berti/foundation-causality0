@@ -24,6 +24,28 @@
 % Add extra packages here if needed.
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+% Shared colors and styles for the result charts
+\definecolor{cwfmblue}{HTML}{2A78D6}
+\definecolor{failorange}{HTML}{EB6834}
+\definecolor{basegray}{HTML}{8B939C}
+\definecolor{inkdark}{HTML}{1F2429}
+\definecolor{inkmuted}{HTML}{5B6570}
+\definecolor{gridgray}{HTML}{E4E6E8}
+\pgfplotsset{
+  cwfmchart/.style={
+    axis line style={draw=none},
+    tick style={draw=none},
+    xmajorgrids,
+    grid style={gridgray},
+    xticklabel style={font=\scriptsize, color=inkmuted},
+    yticklabel style={font=\scriptsize, color=inkdark},
+    title style={font=\footnotesize\bfseries, color=inkdark, anchor=south west, at={(0,1.02)}},
+    axis on top=false,
+    clip=false,
+  },
+}
 
 %=================================================================
 \Title{CWFM: A Foundation Model for Reliable Causal Inference}
@@ -304,60 +326,181 @@ Finally, we state the implemented scope explicitly. The reference implementation
 
 %=================================================================
 \section{Assessment}\label{sec:assessment}
-% Answer RQ1-RQ5 from the Introduction, one subsection each, after the design.
-% All numbers from docs/foundation_model/experimental_results.md and
-% artifacts/cwfm/results.
+
+This section first describes the experimental design and then answers the five research questions of the introduction, one subsection each.
 
 \subsection{Experimental Design}\label{sec:assessment-design}
-% Five strictly separated episode streams (training / ID development / OOD
-% development / calibration / locked 30-seed final test) with disjoint seed
-% ranges; 14 scenario families (static linear, nonlinear, randomized; network
-% linear, threshold, null; regime and stress cells); 120 non-identified or
-% unsupported stress queries. Baselines: linear, interaction, spline,
-% piecewise, random-forest g-computation, MOB-like regime splitter; CWFM
-% variants (revised vs. compiled-only). Metrics: MAE, 90% interval coverage
-% and width, false-answer rate, regime exact accuracy, paired bootstrap CIs.
-% Reproducibility: pinned seeds, checkpoint SHA-256, result manifest.
 
-\subsection{RQ1: Effect-Estimation Accuracy and Calibration}\label{sec:assessment-rq1}
-% Main table (pooled + per-task MAE/coverage/width). Answer: CWFM is
-% statistically indistinguishable from the best specialists (paired MAE
-% difference vs. linear g-computation -0.0028, CI [-0.0132, 0.0080]) and
-% clearly better than random forest (-0.163); coverage ~0.906 near nominal;
-% 38.6% pooled-MAE improvement over the Phase-I prototype. Per-scenario table
-% shows each specialist still wins its home turf -- the value is not beating
-% specialists but matching them WITHOUT knowing the mechanism in advance.
+All results below come from the locked final test bank of Section~\ref{sec:approach-data}, which is evaluated exactly once, after every training, selection, and calibration decision is frozen. The bank contains 14 scenario cells with 30 seeds each, identical for all methods. Six cells contain answerable effect queries (static linear, static nonlinear, and randomized treatment effects; linear, threshold, and null network spillovers), giving 180 queries in which the true effect is known and an estimate is expected. Four cells contain regime-determination problems (a strong split, a weak split, the stationary nonlinear hard negative, and a complete null). The remaining four cells are \emph{stress cells} with 120 queries that must be refused: hidden confounding and poor overlap in the static setting, and hidden confounding and poor support in the network setting.
 
-\subsection{RQ2: Safety on Non-Identified and Unsupported Queries}\label{sec:assessment-rq2}
-% Answer: 180/180 supported+identified queries answered, 0/120 stress queries
-% falsely answered; always-answer baselines return (biased) numbers in every
-% stress cell. Be transparent: the guarantee comes from deterministic gating
-% over declared assumptions; learned heads only add empirical diagnostics --
-% this is not learned detection of hidden confounding.
+CWFM is compared against five baselines that always answer: linear g-computation, g-computation with interactions, spline g-computation, a piecewise exposure-response estimator, and random forest g-computation. Each baseline is a strong specialist for at least one cell, so the comparison is deliberately unfavorable to a general model. For regime determination, the baseline is a model-based recursive splitting procedure of the kind widely used in practice. We also report \emph{CWFM (compiled only)}, which is the full system with the neural residual removed; the difference between the two isolates the contribution of the learned correction in RQ5.
+
+Metrics are the mean absolute error (MAE) of the estimated effect against the known truth, the empirical coverage and width of the 90\% intervals, the rate of false answers on the stress cells, and exact accuracy for regime determination (the detected structure must match the truth, including detecting nothing when there is nothing). Differences between methods are assessed with paired bootstrap confidence intervals over the shared seeds. All seeds, configuration values, and package versions are recorded in a result manifest together with a cryptographic hash of the evaluated checkpoint, so the experiment can be reproduced exactly.
+
+\subsection{RQ1: Accuracy on Answerable Queries}\label{sec:assessment-rq1}
+
+\emph{Answer: yes. Without knowing which setting it is in, CWFM matches the best specialist estimators and clearly outperforms the flexible generic baseline, with intervals close to nominal coverage.}
+
+Figure~\ref{fig:rq1} shows the pooled picture over the 180 answerable queries. CWFM reaches a pooled MAE of 0.166, side by side with the two best specialists (interaction g-computation at 0.167 and linear g-computation at 0.169) and far ahead of random forest g-computation at 0.329. The paired differences confirm statistical equivalence with the specialists: CWFM versus linear g-computation is $-0.0028$ with a 95\% bootstrap interval of $[-0.0132, 0.0080]$, and versus interaction g-computation $-0.0003$ with $[-0.0111, 0.0109]$. Versus random forest the difference is $-0.163$ with $[-0.203, -0.122]$, a clear improvement. Coverage of the 90\% intervals is 0.906, and the mean interval width (0.793) is in the same range as the specialists (0.772 to 0.817) and far below random forest (1.337).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  cwfmchart,
+  name=maeplot,
+  width=72mm, height=46mm,
+  xbar, bar width=6.5pt,
+  xmin=0, xmax=0.42,
+  ymin=-0.6, ymax=6.6,
+  xtick={0,0.1,0.2,0.3,0.4},
+  x tick label style={/pgf/number format/fixed},
+  ytick={0,...,6},
+  yticklabels={Random forest g-comp., Spline g-comp., Piecewise exposure-resp., Linear g-comp., Interaction g-comp., CWFM (compiled only), CWFM (full)},
+  title={Pooled MAE (lower is better)},
+  nodes near coords,
+  nodes near coords style={font=\scriptsize, color=inkdark, /pgf/number format/.cd, fixed, fixed zerofill, precision=3},
+]
+\addplot[xbar, bar shift=0pt, fill=basegray, draw=none] coordinates {
+  (0.329,0) (0.218,1) (0.193,2) (0.169,3) (0.167,4)};
+\addplot[xbar, bar shift=0pt, fill=cwfmblue, draw=none] coordinates {
+  (0.166,5) (0.166,6)};
+\end{axis}
+\begin{axis}[
+  cwfmchart,
+  at={(maeplot.south east)}, anchor=south west, xshift=14mm,
+  width=40mm, height=46mm,
+  xmin=0.85, xmax=0.95,
+  ymin=-0.6, ymax=6.6,
+  xtick={0.86,0.90,0.94},
+  x tick label style={/pgf/number format/.cd, fixed, fixed zerofill, precision=2},
+  ytick=\empty,
+  title={90\% coverage},
+]
+\addplot[draw=inkmuted, dashed, thin] coordinates {(0.90,-0.6) (0.90,6.6)};
+\node[font=\tiny, color=inkmuted, anchor=south] at (axis cs:0.90,6.6) {target};
+\addplot[only marks, mark=*, mark size=2pt, color=basegray] coordinates {
+  (0.911,0) (0.878,1) (0.911,2) (0.928,3) (0.900,4)};
+\addplot[only marks, mark=*, mark size=2pt, color=cwfmblue] coordinates {
+  (0.928,5) (0.906,6)};
+\end{axis}
+\end{tikzpicture}
+\caption{Pooled results on the 180 answerable effect queries of the locked test bank. Left: mean absolute error of the estimated effect. Right: empirical coverage of the 90\% intervals; the dashed line marks the nominal target. CWFM (blue) matches the best always-answer specialists (gray) without knowing in advance which mechanism generated each episode.}
+\label{fig:rq1}
+\end{figure}
+
+The pooled numbers hide the more interesting pattern, shown in Table~\ref{tab:scenario}: every specialist wins the cell its assumptions were designed for, and loses elsewhere. Linear g-computation is best in the linear cells but weak under thresholds; the piecewise estimator is best for threshold spillovers and poor in the linear network cell. CWFM is never the single best method in a cell, but it is close to the winner in every cell. This is exactly the intended behavior: the value of the model is not beating a correctly chosen specialist, which is hardly possible, but matching whichever specialist happens to be correct without being told which one that is.
+
+\begin{table}[H]
+\caption{MAE by scenario cell on the locked test bank (30 seeds per cell). Bold marks the best method per row. Specialists win their home cells; CWFM is close to the winner everywhere without knowing the mechanism.\label{tab:scenario}}
+\small
+\begin{tabularx}{\textwidth}{lCCCCC}
+\toprule
+\textbf{Scenario} & \textbf{CWFM} & \textbf{Linear} & \textbf{Interaction} & \textbf{Spline or piecewise} & \textbf{Rand.\ forest}\\
+\midrule
+Static linear & 0.168 & \textbf{0.160} & 0.189 & 0.181 & 0.412\\
+Static nonlinear & 0.190 & 0.218 & \textbf{0.163} & 0.169 & 0.502\\
+Static randomized & 0.150 & \textbf{0.141} & 0.154 & 0.145 & 0.449\\
+Network linear & 0.107 & \textbf{0.097} & 0.104 & 0.201 & 0.207\\
+Network threshold & 0.283 & 0.311 & 0.312 & \textbf{0.173} & 0.351\\
+Network null & 0.100 & 0.090 & 0.079 & 0.206 & \textbf{0.055}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{RQ2: Safety on Unanswerable Queries}\label{sec:assessment-rq2}
+
+\emph{Answer: yes. CWFM answered all 180 answerable queries and refused all 120 queries that should be refused, a false-answer rate of zero. Every baseline returned a number in every stress cell.}
+
+The stress cells are the queries where a number is a mistake: hidden confounding makes the effect unidentifiable, and poor overlap or support means the requested contrast barely occurs in the data. The always-answer baselines produce estimates in all of them, and those estimates inherit exactly the failure described in the introduction: they can look precise while being systematically wrong. CWFM instead returns a structured refusal naming the failed condition.
+
+Transparency requires stating where this guarantee comes from. The refusals are produced by the deterministic identification and support gates operating on the episode's declared design information, not by a neural network discovering hidden confounding in the data; the learned heads contribute empirical diagnostics only. The correct reading of this result is therefore architectural: routing every query through formal gates makes false causal claims impossible \emph{by construction} for declared conditions, and the experiment confirms that the surrounding learned machinery never circumvents the gates. Detecting undeclared identification failures from data alone remains an open problem for any method.
 
 \subsection{RQ3: Regime Detection without False Splits}\label{sec:assessment-rq3}
-% Regime table vs. MOB-like baseline. Answer: pooled exact accuracy 0.617 vs.
-% 0.458; strong-split recall 0.633 (up from 0.067 in Phase I); complete-null
-% false positives 0.000; the stationary-nonlinear hard negative -- where the
-% baseline splits 100% of the time -- is rejected 83.3% of the time. Remaining
-% weakness: weak splits (magnitude 0.18-0.38 at n=96) are still undetected.
 
-\subsection{RQ4: Out-of-Distribution Generalization}\label{sec:assessment-rq4}
-% Held-out mechanism and graph families (hinge, multiplicative, saturation,
-% Erdos-Renyi, small-world, nonmonotone interference). Answer: parameter-level
-% shifts transfer well (MAE 0.16-0.36) but the nonmonotone-interference family
-% fails badly (MAE 1.357) -- prior mismatch is a real, quantified limitation;
-% report this as a negative result supporting abstention-oriented design.
+\emph{Answer: largely yes. CWFM recovers most strong regime splits while rejecting most spurious ones, where the standard splitting baseline is fooled every time; weak splits remain out of reach for both.}
+
+Table~\ref{tab:regime} compares CWFM with the recursive splitting baseline. On strong splits the baseline is more sensitive (exact accuracy 0.800 versus 0.633). The decisive difference is the stationary nonlinear hard negative: the baseline declares a split in 100\% of these episodes, mistaking one curved mechanism for two regimes in every single run, while CWFM declares a split in only 16.7\% and identifies the correct stationary structure in 83.3\%. Both methods are essentially perfect on the complete null, and both fail on the deliberately weak splits, whose signal is simply too small at this sample size. Pooled over all four cells, CWFM reaches 0.617 exact accuracy versus 0.458 for the baseline. The trade of some sensitivity for a large gain in structural specificity is intentional and follows from the calibrated decision threshold of Section~\ref{sec:approach-calibration}.
+
+\begin{table}[H]
+\caption{Regime determination on the locked test bank (30 seeds per cell). Exact accuracy requires recovering the true structure, including detecting nothing when there is nothing. Split rate is the fraction of episodes in which a regime split was declared.\label{tab:regime}}
+\begin{tabularx}{\textwidth}{Xcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{CWFM}} & \multicolumn{2}{c}{\textbf{Splitting baseline}}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Scenario} & \textbf{Exact} & \textbf{Split rate} & \textbf{Exact} & \textbf{Split rate}\\
+\midrule
+Strong split & 0.633 & 0.633 & \textbf{0.800} & 0.833\\
+Weak split & 0.000 & 0.000 & 0.033 & 0.033\\
+Stationary nonlinear (hard negative) & \textbf{0.833} & 0.167 & 0.000 & 1.000\\
+Complete null & \textbf{1.000} & 0.000 & \textbf{1.000} & 0.000\\
+\midrule
+Pooled exact accuracy & \multicolumn{2}{c}{\textbf{0.617}} & \multicolumn{2}{c}{0.458}\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{RQ4: Generalization to Held-Out Families}\label{sec:assessment-rq4}
+
+\emph{Answer: mixed, and we report it as measured. Accuracy transfers well to most held-out families but fails on the one family that is qualitatively unlike anything in training.}
+
+Figure~\ref{fig:rq4} shows effect MAE on the six mechanism and graph families that were entirely excluded from training. On hinge outcomes, multiplicative outcomes, and the unfamiliar Erd\H{o}s-R\'enyi random graphs, error stays essentially at the in-distribution level. Saturating outcomes and small-world graphs roughly double it, which is a moderate and arguably acceptable degradation. Nonmonotone interference, however, fails badly, with an MAE of 1.357, roughly eight times the in-distribution level: spillovers that first rise and then fall resemble nothing in the training distribution, and the model has no basis for them.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  cwfmchart,
+  width=98mm, height=42mm,
+  xbar, bar width=6.5pt,
+  xmin=0, xmax=1.55,
+  ymin=-0.55, ymax=5.55,
+  xtick={0,0.25,0.5,0.75,1.0,1.25,1.5},
+  x tick label style={/pgf/number format/.cd, fixed, precision=2},
+  ytick={0,...,5},
+  yticklabels={Hinge outcomes, Erd\H{o}s-R\'enyi graphs, Multiplicative outcomes, Saturating outcomes, Small-world graphs, Nonmonotone interference},
+  title={Effect MAE on held-out families (lower is better)},
+]
+\addplot[xbar, bar shift=0pt, fill=cwfmblue, draw=none,
+  nodes near coords,
+  nodes near coords style={font=\scriptsize, color=inkdark, /pgf/number format/.cd, fixed, fixed zerofill, precision=3}] coordinates {
+  (0.157,0) (0.163,1) (0.172,2) (0.307,3) (0.361,4)};
+\addplot[xbar, bar shift=0pt, fill=failorange, draw=none,
+  nodes near coords,
+  nodes near coords style={font=\scriptsize, color=inkdark, /pgf/number format/.cd, fixed, fixed zerofill, precision=3}] coordinates {
+  (1.357,5)};
+\draw[inkmuted, dashed, thin] (axis cs:0.164,-0.55) -- (axis cs:0.164,5.55);
+\end{axis}
+\end{tikzpicture}
+\caption{Generalization to mechanism and graph families held out from training. Most families (blue) stay near or moderately above the in-distribution error level (dashed line); the nonmonotone interference family (orange) fails, quantifying the limit of the synthetic training prior.}
+\label{fig:rq4}
+\end{figure}
+
+We regard this negative result as one of the more informative findings of the study. It quantifies, on a family the model has genuinely never seen, the price of the synthetic prior discussed in Section~\ref{sec:approach-data}: generalization is good under parameter-level novelty and breaks under qualitative mechanism novelty. It also reinforces the case for the abstention-oriented design: a model whose accuracy can collapse eightfold outside its prior must be able to signal low confidence rather than answer uniformly.
 
 \subsection{RQ5: Where Do the Gains Come From?}\label{sec:assessment-rq5}
-% Component attribution via diagnostics and the compiled-only comparison.
-% Answer: the gains are attributable to the query-correct estimator library,
-% risk-routed anchor, and deterministic safety logic; the gated neural residual
-% stays closed (mean gate 0.0067, final estimate equals the compiled anchor to
-% numerical precision) and the world-particle posterior remains uniform
-% (entropy ~ log 6) -- honest no-harm outcomes, not yet evidence of neural
-% value-add. Include robustness probes (row-permutation and affine invariance
-% exact; variable-order equivariance still poor).
+
+\emph{Answer: from the classical estimator library, the risk-based routing, and the deterministic safety logic. The free-form neural components contribute little yet, and we report this openly.}
+
+The cleanest evidence is the comparison with CWFM (compiled only): the two systems produce point estimates that are equal to numerical precision. The gated neural residual remains almost closed (mean gate activation 0.0067) and its mean absolute correction is below $3\times10^{-8}$, so the no-harm training of Section~\ref{sec:approach-estimation} did exactly what it was designed to do, and no more: the residual never damaged the compiled estimate, and it also never improved it. Similarly, the posterior over causal worlds remained effectively uniform across its particles in this run, so the world machinery, while architecturally in place, did not yet contribute measurable value. We consider reporting these honest negatives more useful than hiding them behind aggregate scores.
+
+Routing works but is not sharp. All six estimator experts stay in use, yet in threshold spillover episodes the router assigns the piecewise expert only about 15\% of the weight although that expert is clearly the best there (Table~\ref{tab:scenario}: 0.173 versus 0.283 for CWFM's blend). Sharper episode-level risk prediction is the most direct path to improvement, and Table~\ref{tab:scenario} bounds the available headroom.
+
+Finally, Table~\ref{tab:probes} reports invariance probes: the estimate should not change when the data are presented differently. Row shuffling and affine rescaling of the outcome change the estimate only at numerical noise level. Inserting an irrelevant covariate shifts it moderately, and reordering columns (with roles preserved) shifts it most, so full variable-order equivariance is not yet achieved despite the randomized training presentation. Together with the diffuse routing and the inactive world posterior, these probes give the next revision of the system a concrete and measurable agenda.
+
+\begin{table}[H]
+\caption{Invariance probes at the evaluated checkpoint: absolute change of the effect estimate under presentation changes that should not matter.\label{tab:probes}}
+\begin{tabularx}{\textwidth}{Xc}
+\toprule
+\textbf{Probe} & \textbf{Absolute change in estimate}\\
+\midrule
+Row shuffling & $1.2\times10^{-7}$\\
+Affine rescaling of the outcome & $4.9\times10^{-8}$\\
+Insertion of an irrelevant covariate & $0.039$\\
+Column reordering (roles preserved) & $0.170$\\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 %=================================================================
 \section{Discussion}\label{sec:discussion}
