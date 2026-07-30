@@ -1,0 +1,138 @@
+% LaTeX support: latex@mdpi.com
+%=================================================================
+\documentclass[journal,article,submit,moreauthors]{Definitions/mdpi}
+
+%=================================================================
+% MDPI internal commands
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{}
+\daterevised{}
+\dateaccepted{}
+\datepublished{}
+
+%=================================================================
+% Packages already loaded by mdpi.cls include: amsmath, amssymb,
+% graphicx, booktabs, natbib, hyperref, cleveref, amsthm, etc.
+% Add extra packages here if needed.
+
+%=================================================================
+\Title{Title}
+
+\newcommand{\orcidauthorA}{0000-0000-0000-000X}
+
+\Author{Firstname Lastname $^{1}$\orcidA{}, Firstname Lastname $^{2}$ and Firstname Lastname $^{2,}$*}
+
+\AuthorNames{Firstname Lastname, Firstname Lastname and Firstname Lastname}
+
+\address{%
+$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
+$^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+
+\corres{Correspondence: e-mail@e-mail.com}
+
+\abstract{A single paragraph of about 200 words maximum. For research articles, abstracts should give a pertinent overview of the work: background, methods, results, and conclusions.}
+
+\keyword{keyword 1; keyword 2; keyword 3}
+
+%=================================================================
+\begin{document}
+
+\section{Introduction}
+
+Briefly place the study in a broad context and highlight why it is important. Review the current state of the field and cite key publications~\cite{ref-journal}. State the main aim of the work and the principal conclusions.
+
+\section{Materials and Methods}
+
+Describe methods with sufficient detail to allow replication. Disclose any use of generative AI for non-superficial tasks (text generation, data analysis, study design, etc.). Grammar and spelling edits need not be declared.
+
+\section{Results}
+
+Provide a concise description of the experimental results and their interpretation.
+
+\subsection{Tables}
+
+Tables should be cited in the text as Table~\ref{tab1}.
+
+\begin{table}[H]
+\caption{Example table.\label{tab1}}
+\begin{tabularx}{\textwidth}{CCC}
+\toprule
+\textbf{Title 1} & \textbf{Title 2} & \textbf{Title 3}\\
+\midrule
+Entry 1 & Data & Data\\
+Entry 2 & Data & Data\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Equations}
+
+\begin{equation}
+a = b + c.
+\end{equation}
+
+\begin{Theorem}
+Example theorem text. Theorems, propositions, and lemmas are numbered sequentially.
+\end{Theorem}
+
+\begin{proof}
+Text of the proof.
+\end{proof}
+
+\section{Discussion}
+
+Discuss the results in the context of previous studies and working hypotheses. Highlight implications and future directions.
+
+\section{Conclusions}
+
+Optional section if the discussion is long or complex.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{Conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing---original draft preparation, X.X.; writing---review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y. All authors have read and agreed to the published version of the manuscript.}
+
+\funding{This research received no external funding.}
+
+\institutionalreview{Not applicable.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{No new data were created or analyzed in this study. Data sharing is not applicable to this article.}
+
+\acknowledgments{Optional acknowledgments.}
+
+\conflictsofinterest{The authors declare no conflicts of interest.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\abbreviations{Abbreviations}{%
+The following abbreviations are used in this manuscript:\\
+
+\noindent
+\begin{tabular}{@{}ll}
+MDPI & Multidisciplinary Digital Publishing Institute\\
+\end{tabular}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{adjustwidth}{-\extralength}{0cm}
+
+\reftitle{References}
+
+\begin{thebibliography}{999}
+\bibitem{ref-journal}
+Author~1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
+
+\bibitem{ref-book}
+Author 1, A.; Author 2, B. \textit{Book Title}, 3rd ed.; Publisher: Publisher Location, Country, 2008; pp. 154--196.
+\end{thebibliography}
+
+\PublishersNote{}
+\end{adjustwidth}
+\end{document}
