@@ -3,6 +3,9 @@
 This repository contains:
 
 - six classical synthetic causal-structure benchmarks under `docs/data/benchmark`;
+- a qualitative evaluation package under `qualitative_evaluation` that produces
+  small worked examples from the persisted benchmark artifacts (run with
+  `python -m qualitative_evaluation --project-root . --output-dir qualitative_evaluation_outputs`);
 - the design of the Causal World Foundation Model (CWFM) under
   `docs/foundation_model`;
 - a runnable PyTorch CWFM reference implementation under `cwfm`;
