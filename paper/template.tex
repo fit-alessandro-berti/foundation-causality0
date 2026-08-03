@@ -1510,6 +1510,57 @@ The final case, also outside the implemented scope, dissects error propagation i
 For the implemented scope, the regime and misspecification cases corroborate the RQ3 findings at the level of individual mechanisms: real regimes are recoverable with quantitatively faithful coefficient changes, and false regimes arise from misspecification with no predictive warning sign, which is exactly the failure the calibrated regime decoder is built to resist. For the planned extensions, the cases turn abstract requirements into concrete specifications: a temporal component must classify change types under calibrated error control, because false attributions can arrive at borderline significance with tiny estimated effects; and a latent-variable component must carry grouping uncertainty forward, because the observed graph errors demonstrably originate in measurement and grouping rather than in graph estimation.
 
 %=================================================================
+\section{Tool Support}\label{sec:tools}
+
+The repository accompanying this paper contains, besides the training and evaluation code used in Section~\ref{sec:assessment}, a public application layer that lets readers run the released model on concrete cases without touching any experiment internals. Two entry points are provided: a set of numbered example scripts in the \texttt{examples/} folder, and an interactive web application in the \texttt{app/} folder built on Streamlit. Both are thin clients of the same public programming interface, \texttt{cwfm.application}, which enforces the contract logic of Section~\ref{sec:approach} unchanged: every request passes through the same identification and support gates, returns the same typed statuses, and reports only calibrated intervals. The tools are also \emph{truth-safe} by construction: ordinary analysis reads only observed data and declared metadata, and the simulator ground truth stored in the repository (\texttt{truth.npz}) is never opened.
+
+\subsection{Installation}\label{sec:tools-install}
+
+The tools require a standard Python environment. From the repository root, the dependencies are installed with
+\begin{quote}
+\texttt{python -m pip install -r requirements.txt}
+\end{quote}
+The repository ships the released model weights (\texttt{artifacts/cwfm/release/model\_state.pt}), whose integrity is verified against a manifest with a recorded SHA-256 hash before any inference. The script \texttt{examples/00\_check\_installation.py} confirms that packages, data catalog, model bundle, and calibration data are usable on the local machine. If the weights are absent or fail the integrity check, the tools do not degrade silently: analyses that would need the model return an explicit \texttt{MODEL\_UNAVAILABLE} status, while case browsing and input validation remain available.
+
+\subsection{Runnable Examples}\label{sec:tools-examples}
+
+Each example script covers one query class or one aspect of the system's behavior and is executed directly from the repository root, for instance
+\begin{quote}
+\texttt{python examples/01\_static\_ate.py}
+\end{quote}
+Table~\ref{tab:examples} summarizes the scripts. All analysis scripts accept a common set of options: \texttt{-{}-seed} fixes the random seed, \texttt{-{}-device} selects the compute device, \texttt{-{}-output-dir} redirects exported results, \texttt{-{}-json} switches to machine-readable output, and \texttt{-{}-dry-run} validates the inputs and the declared contract without running model inference. The dry-run mode is useful for a quick inspection of what a query \emph{would} check before any estimate is produced.
+
+\begin{table}[H]
+\caption{Example scripts in the \texttt{examples/} folder and the question each one addresses.\label{tab:examples}}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Script} & \textbf{Purpose}\\
+\midrule
+\texttt{00\_check\_installation.py} & Verify that packages, data catalog, model bundle, and calibration data are usable\\
+\texttt{01\_static\_ate.py} & Estimate a static average treatment effect under a declared identification contract\\
+\texttt{02\_observed\_regimes.py} & Test whether structural coefficients change across an observed candidate regime variable\\
+\texttt{03\_network\_interference.py} & Estimate a peer-exposure contrast on an observed interaction network\\
+\texttt{04\_safety\_and\_abstention.py} & Demonstrate refusals when identification or empirical support conditions fail\\
+\texttt{05\_compare\_repository\_cases.py} & Batch-compare answer rates, estimates, and interval widths across repository cases\\
+\texttt{06\_model\_diagnostics.py} & Inspect estimator weights, routing, and internal diagnostics for one analysis\\
+\texttt{07\_reference\_benchmark\_atlas.py} & Browse stored results of the classical reference evaluators, independent of the model\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The fourth script deserves a note, because it exercises the property this paper emphasizes: it submits a sequence of contrasts of which some are answerable and some are not (an observational effect without declared identification, a network contrast with inadequate exposure support), and shows that the system answers the former and refuses the latter with a machine-readable reason, exactly as in the experiments of Section~\ref{sec:assessment}.
+
+\subsection{Interactive Application}\label{sec:tools-app}
+
+For exploration without writing code, the same functionality is available through a browser interface, started with
+\begin{quote}
+\texttt{streamlit run app/streamlit\_app.py}
+\end{quote}
+The application opens locally in a web browser and is organized into four working views beside a home page. \emph{Analyze} runs a single query of any of the three implemented classes---static effect, observed regime, or network interference---on a selected repository case: the user chooses the case, reviews the declared assumptions, and receives either an estimate with its calibrated interval or a typed refusal with its reason. \emph{Compare} repeats one analysis across several comparable cases and juxtaposes estimates, interval widths, and abstention decisions. \emph{Benchmark Atlas} browses the stored results of the classical reference evaluators and involves no model inference. \emph{Model Diagnostics} exposes, for one analysis, the internal quantities discussed in Section~\ref{sec:assessment}: the weights the router assigns to each classical estimator, the compiled versus final estimate, and the state of the neural components.
+
+Because the application calls the same public interface as the scripts, its results are identical to those obtained on the command line, and its abstention behavior cannot be weaker: no view can bypass a gate, and a refused query is displayed as a refusal, with the declared condition that failed. In this sense the tools are not a demonstration layered on top of the system but the system itself, exercised through its only public entry point.
+
+%=================================================================
 \section{Discussion}\label{sec:discussion}
 
 \subsection{What the Results Mean}\label{sec:discussion-meaning}
