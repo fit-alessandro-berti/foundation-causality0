@@ -228,3 +228,5 @@ paper/*.out
 
 paper/*.pdf
 
+!artifacts/cwfm
+
