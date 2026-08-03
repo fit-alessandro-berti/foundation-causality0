@@ -1,8 +1,7 @@
-% Bibliography for "CWFM: A Foundation Model for Reliable Causal Inference".
+% Bibliography for "CWFM: Reliability-Gated Amortized Causal Estimation".
 %
-% NOTE: entries marked "TODO: verify" are recent preprints for which the
-% project notes record only the title and arXiv identifier. Complete and
-% verify the author lists (and any missing identifiers) before submission.
+% Metadata for post-2025 entries was verified against the arXiv, PMLR, and
+% conference records in August 2026.
 
 %=====================================================================
 % Causal inference: frameworks, identification, sensitivity, interference
@@ -34,6 +33,14 @@
   year      = {2000}
 }
 
+@inproceedings{shpitser2006identification,
+  author    = {Shpitser, Ilya and Pearl, Judea},
+  title     = {Identification of Joint Interventional Distributions in Recursive Semi-{Markovian} Causal Models},
+  booktitle = {Proceedings of the 21st National Conference on Artificial Intelligence (AAAI)},
+  pages     = {1219--1226},
+  year      = {2006}
+}
+
 @article{manski1990bounds,
   author  = {Manski, Charles F.},
   title   = {Nonparametric Bounds on Treatment Effects},
@@ -54,6 +61,44 @@
   year    = {1983}
 }
 
+%=====================================================================
+% Positivity, overlap, and limited-support policies
+%=====================================================================
+
+@article{damour2021overlap,
+  author  = {D'Amour, Alexander and Ding, Peng and Feller, Avi and Lei, Lihua and Sekhon, Jasjeet},
+  title   = {Overlap in Observational Studies with High-Dimensional Covariates},
+  journal = {Journal of Econometrics},
+  volume  = {221},
+  number  = {2},
+  pages   = {644--654},
+  year    = {2021}
+}
+
+@article{crump2009overlap,
+  author  = {Crump, Richard K. and Hotz, V. Joseph and Imbens, Guido W. and Mitnik, Oscar A.},
+  title   = {Dealing with Limited Overlap in Estimation of Average Treatment Effects},
+  journal = {Biometrika},
+  volume  = {96},
+  number  = {1},
+  pages   = {187--199},
+  year    = {2009}
+}
+
+@article{li2018overlap,
+  author  = {Li, Fan and Morgan, Kari Lock and Zaslavsky, Alan M.},
+  title   = {Balancing Covariates via Propensity Score Weighting},
+  journal = {Journal of the American Statistical Association},
+  volume  = {113},
+  number  = {521},
+  pages   = {390--400},
+  year    = {2018}
+}
+
+%=====================================================================
+% Network interference and exposure mappings
+%=====================================================================
+
 @article{hudgens2008interference,
   author  = {Hudgens, Michael G. and Halloran, M. Elizabeth},
   title   = {Toward Causal Inference with Interference},
@@ -62,6 +107,63 @@
   number  = {482},
   pages   = {832--842},
   year    = {2008}
+}
+
+@article{aronow2017interference,
+  author  = {Aronow, Peter M. and Samii, Cyrus},
+  title   = {Estimating Average Causal Effects under General Interference, with Application to a Social Network Experiment},
+  journal = {Annals of Applied Statistics},
+  volume  = {11},
+  number  = {4},
+  pages   = {1912--1947},
+  year    = {2017}
+}
+
+@article{savje2024misspecified,
+  author  = {S{\"a}vje, Fredrik},
+  title   = {Causal Inference with Misspecified Exposure Mappings: Separating Definitions and Assumptions},
+  journal = {Biometrika},
+  volume  = {111},
+  number  = {1},
+  pages   = {1--15},
+  year    = {2024}
+}
+
+@inproceedings{ma2021networked,
+  author    = {Ma, Yunpu and Tresp, Volker},
+  title     = {Causal Inference under Networked Interference and Intervention Policy Enhancement},
+  booktitle = {International Conference on Artificial Intelligence and Statistics},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {130},
+  year      = {2021}
+}
+
+%=====================================================================
+% Automated causal-analysis systems
+%=====================================================================
+
+@article{sharma2020dowhy,
+  author  = {Sharma, Amit and Kiciman, Emre},
+  title   = {{DoWhy}: An End-to-End Library for Causal Inference},
+  journal = {arXiv preprint arXiv:2011.04216},
+  year    = {2020}
+}
+
+@article{blobaum2024dowhygcm,
+  author  = {Bl{\"o}baum, Patrick and G{\"o}tz, Peter and Budhathoki, Kailash and Mastakouri, Atalanti A. and Janzing, Dominik},
+  title   = {{DoWhy-GCM}: An Extension of {DoWhy} for Causal Inference in Graphical Causal Models},
+  journal = {Journal of Machine Learning Research},
+  volume  = {25},
+  number  = {147},
+  pages   = {1--7},
+  year    = {2024}
+}
+
+@article{geffner2022deci,
+  author  = {Geffner, Tomas and Antor{\'a}n, Javier and Foster, Adam and Gong, Wenbo and Ma, Chao and Kiciman, Emre and Sharma, Amit and Lamb, Angus and Kukla, Martin and Pawlowski, Nick and Allamanis, Miltiadis and Zhang, Cheng},
+  title   = {Deep End-to-End Causal Inference},
+  journal = {arXiv preprint arXiv:2202.02195},
+  year    = {2022}
 }
 
 %=====================================================================
@@ -130,63 +232,67 @@
 % Causal foundation models: effect estimation
 %=====================================================================
 
-% TODO: verify author list.
-@article{ma2025causalfm,
-  author  = {Ma, Yuchen and Frauen, Dennis and Javurek, Emil and Feuerriegel, Stefan},
-  title   = {Foundation Models for Causal Inference via Prior-Data Fitted Networks},
-  journal = {arXiv preprint arXiv:2506.10914},
-  year    = {2025}
+@inproceedings{ma2025causalfm,
+  author    = {Ma, Yuchen and Frauen, Dennis and Javurek, Emil and Feuerriegel, Stefan},
+  title     = {Foundation Models for Causal Inference via Prior-Data Fitted Networks},
+  booktitle = {International Conference on Learning Representations},
+  note      = {arXiv:2506.10914},
+  year      = {2026}
 }
 
-% TODO: verify/complete author list.
-@article{robertson2025dopfn,
-  author  = {Robertson, Jake and others},
-  title   = {{Do-PFN}: In-Context Learning for Causal Effect Estimation},
-  journal = {arXiv preprint arXiv:2506.06039},
-  year    = {2025}
+@inproceedings{robertson2025dopfn,
+  author    = {Robertson, Jake and Reuter, Arik and Guo, Siyuan and Hollmann, Noah and Hutter, Frank and Sch{\"o}lkopf, Bernhard},
+  title     = {{Do-PFN}: In-Context Learning for Causal Effect Estimation},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {38},
+  note      = {arXiv:2506.06039},
+  year      = {2025}
 }
 
-% TODO: verify/complete author list and arXiv identifier.
 @article{balazadeh2025causalpfn,
-  author  = {Balazadeh, Vahid and others},
-  title   = {{CausalPFN}: Amortizing Causal Effect Estimation via In-Context Learning},
-  journal = {arXiv preprint},
+  author  = {Balazadeh, Vahid and Kamkari, Hamidreza and Thomas, Valentin and Li, Benson and Ma, Junwei and Cresswell, Jesse C. and Krishnan, Rahul G.},
+  title   = {{CausalPFN}: Amortized Causal Effect Estimation via In-Context Learning},
+  journal = {arXiv preprint arXiv:2506.07918},
   year    = {2025}
+}
+
+@article{sauter2025activa,
+  author  = {Sauter, Andreas and Salehkaleybar, Saber and van Harmelen, Frank and Plaat, Aske and Acar, Erman},
+  title   = {{ACTIVA}: Amortized Causal Effect Estimation via Transformer-based Variational Autoencoder},
+  journal = {arXiv preprint arXiv:2503.01290},
+  year    = {2025}
+}
+
+@inproceedings{reuter2026partialgraphs,
+  author    = {Reuter, Arik and Dhir, Anish and Diaconu, Cristiana and Robertson, Jake and Ossen, Ole and Hutter, Frank and Weller, Adrian and van der Wilk, Mark and Sch{\"o}lkopf, Bernhard},
+  title     = {Use What You Know: Causal Foundation Models with Partial Graphs},
+  booktitle = {International Conference on Machine Learning},
+  note      = {arXiv:2602.14972},
+  year      = {2026}
 }
 
 %=====================================================================
 % Causal foundation models: discovery
 %=====================================================================
 
-% TODO: complete author list.
 @article{thompson2026arrow,
-  author  = {Thompson and others},
+  author  = {Thompson, Ryan and Zhao, He and Steinberg, Daniel M. and Bonilla, Edwin V.},
   title   = {Arrow: A Foundation Model for Causal Discovery},
   journal = {arXiv preprint arXiv:2605.07204},
   year    = {2026}
 }
 
-% TODO: verify title, complete author list, and add arXiv identifier.
 @article{li2026tabcausal,
-  author  = {Li and others},
-  title   = {{TabCausal}: A Tabular Foundation Model for Causal Discovery},
-  journal = {arXiv preprint},
+  author  = {Li, Zi-Rong and Liu, Si-Yang and Wang, Tian-Zuo and Ye, Han-Jia},
+  title   = {{TabCausal}: Pretraining Across Causal Environments for Tabular Causal Discovery},
+  journal = {arXiv preprint arXiv:2605.31156},
   year    = {2026}
 }
 
-% TODO: complete author list.
 @article{qiao2026cdfm,
-  author  = {Qiao and others},
+  author  = {Qiao, Jie and Cai, Ruichu and Li, Zijian and Chen, Weilin and Hua, Pengfei and Xu, Boyan and Chen, Zhengming and Hao, Zhifeng and Cui, Peng},
   title   = {{CDFM}: Towards a General-Purpose Causal Discovery Foundation Model},
   journal = {arXiv preprint arXiv:2607.11508},
-  year    = {2026}
-}
-
-% TODO: complete author list.
-@article{reuter2026partialgraphs,
-  author  = {Reuter and others},
-  title   = {Use What You Know: Causal Foundation Models with Partial Graphs},
-  journal = {arXiv preprint arXiv:2602.14972},
   year    = {2026}
 }
 
@@ -194,39 +300,81 @@
 % Causal foundation models: temporal, longitudinal, sensitivity
 %=====================================================================
 
-% TODO: complete author list.
 @article{thumm2026causaltimeprior,
-  author  = {Thumm and others},
+  author  = {Thumm, Dennis and Chen, Ying},
   title   = {Interventional Time Series Priors for Causal Foundation Models},
   journal = {arXiv preprint arXiv:2603.11090},
+  note    = {ICLR 2026 Workshop on Time Series in the Age of Large Models},
   year    = {2026}
 }
 
-% TODO: verify title, complete author list, and add arXiv identifier.
 @article{zare2026causallongpfn,
-  author  = {Zare and others},
-  title   = {{CausalLongPFN}: Amortized Causal Inference for Longitudinal Data},
-  journal = {arXiv preprint},
+  author  = {Zare, Amirhossein and Zare, Amirhessam and Rahimi, Herlock and Salarikia, Reza and Kashkooli, Mohammad},
+  title   = {Causal Longitudinal Prior-Fitted Networks for Counterfactual Outcome Prediction},
+  journal = {arXiv preprint arXiv:2606.05797},
   year    = {2026}
 }
 
-% TODO: complete author list.
 @article{javurek2026sensitivitypfn,
-  author  = {Javurek and others},
+  author  = {Javurek, Emil and Frauen, Dennis and Brockschmidt, Marie and Schweisthal, Jonas and Feuerriegel, Stefan},
   title   = {Amortizing Causal Sensitivity Analysis via Prior Data-Fitted Networks},
   journal = {arXiv preprint arXiv:2605.10590},
   year    = {2026}
 }
 
 %=====================================================================
-% Causal estimator selection and ensembling
+% Causal estimator validation, selection, and aggregation
 %=====================================================================
+
+@inproceedings{alaa2019validating,
+  author    = {Alaa, Ahmed and van der Schaar, Mihaela},
+  title     = {Validating Causal Inference Models via Influence Functions},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {97},
+  year      = {2019}
+}
 
 @inproceedings{saito2020counterfactualcv,
   author    = {Saito, Yuta and Yasui, Shota},
   title     = {Counterfactual Cross-Validation: Stable Model Selection Procedure for Causal Inference Models},
   booktitle = {International Conference on Machine Learning},
   year      = {2020}
+}
+
+@article{nie2021rlearner,
+  author  = {Nie, Xinkun and Wager, Stefan},
+  title   = {Quasi-Oracle Estimation of Heterogeneous Treatment Effects},
+  journal = {Biometrika},
+  volume  = {108},
+  number  = {2},
+  pages   = {299--319},
+  year    = {2021}
+}
+
+@article{han2022ensemble,
+  author  = {Han, Kevin Wu and Wu, Han},
+  title   = {Ensemble Method for Estimating Individualized Treatment Effects},
+  journal = {arXiv preprint arXiv:2202.12445},
+  year    = {2022}
+}
+
+@inproceedings{lan2024qaggregation,
+  author    = {Lan, Hui and Syrgkanis, Vasilis},
+  title     = {Causal {Q}-Aggregation for {CATE} Model Selection},
+  booktitle = {International Conference on Artificial Intelligence and Statistics},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {238},
+  year      = {2024}
+}
+
+@inproceedings{curth2023search,
+  author    = {Curth, Alicia and van der Schaar, Mihaela},
+  title     = {In Search of Insights, Not Magic Bullets: Towards Demystification of the Model Selection Dilemma in Heterogeneous Treatment Effect Estimation},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {202},
+  year      = {2023}
 }
 
 @inproceedings{mahajan2024empirical,
@@ -243,8 +391,18 @@
   year    = {2024}
 }
 
+@inproceedings{vanderschueren2025autocate,
+  author    = {Vanderschueren, Toon and Verdonck, Tim and van der Schaar, Mihaela and Verbeke, Wouter},
+  title     = {{AutoCATE}: End-to-End, Automated Treatment Effect Estimation},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {267},
+  pages     = {60880--60904},
+  year      = {2025}
+}
+
 %=====================================================================
-% Regime baseline
+% Regime baseline and heterogeneity
 %=====================================================================
 
 @article{zeileis2008mob,
@@ -257,32 +415,73 @@
   year    = {2008}
 }
 
+@article{athey2016recursive,
+  author  = {Athey, Susan and Imbens, Guido},
+  title   = {Recursive Partitioning for Heterogeneous Causal Effects},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {113},
+  number  = {27},
+  pages   = {7353--7360},
+  year    = {2016}
+}
+
 %=====================================================================
 % Reliability layers for causal foundation models
 %=====================================================================
 
-% TODO: verify authors (only title and arXiv id recorded in project notes).
 @article{tcpfn2026reliability,
-  author  = {{Author list to be verified}},
+  author  = {Talupula, Shravan and Sharma, Saurabh},
   title   = {Temporal Causal Prior-Data Fitted Networks for Panel Data with Learned Reliability Signals},
   journal = {arXiv preprint arXiv:2606.20889},
   year    = {2026}
 }
 
-% TODO: verify authors (only title and arXiv id recorded in project notes).
 @article{causalguard2026,
-  author  = {{Author list to be verified}},
+  author  = {Singh, Vikash and Chen, Weicong and Ganguly, Debargha and Zhang, Yanyan and Wang, Nengbo and Sankar, Sreehari and Hariri, Mohsen and Nemecek, Alexander and Song, Chaoda and Wang, Shouren and Zhang, Biyao and Yang, Van and Ayday, Erman and Ma, Jing and Chaudhary, Vipin},
   title   = {{CausalGuard}: Conformal Inference under Graph Uncertainty},
   journal = {arXiv preprint arXiv:2605.21928},
   year    = {2026}
 }
 
-% TODO: verify title and authors (only the arXiv id and the topic, frequentist
-% one-step posterior correction for PFN estimators, are recorded).
-@article{ospc2026correction,
-  author  = {{Author list to be verified}},
-  title   = {One-Step Posterior Correction for Prior-Data Fitted Networks},
-  journal = {arXiv preprint arXiv:2603.12037},
+@inproceedings{ospc2026correction,
+  author    = {Melnychuk, Valentyn and Balazadeh, Vahid and Feuerriegel, Stefan and Krishnan, Rahul G.},
+  title     = {Frequentist Consistency of Prior-Data Fitted Networks for Causal Inference},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {306},
+  note      = {arXiv:2603.12037},
+  year      = {2026}
+}
+
+@article{mourao2026pfnsim,
+  author  = {Mourao, Francisco and Hajage, David and Bystrova, Daria and Bouvarel, Bertrand and Lapidus, Nathana{\"e}l and Carrat, Fabrice and Glemain, Benjamin},
+  title   = {Prior-Data Fitted Networks for Causal Inference: A Simulation Study with Real-World Scenarios},
+  journal = {arXiv preprint arXiv:2603.15928},
+  year    = {2026}
+}
+
+%=====================================================================
+% Causal-reasoning benchmarks with explicit non-answer evaluation
+%=====================================================================
+
+@article{sawarni2026crb,
+  author  = {Sawarni, Ayush and Tan, Jiyuan and Syrgkanis, Vasilis},
+  title   = {{CausalReasoningBenchmark}: A Real-World Benchmark for Disentangled Evaluation of Causal Identification and Estimation},
+  journal = {arXiv preprint arXiv:2602.20571},
+  year    = {2026}
+}
+
+@article{leban2026causalds,
+  author  = {Leban, Andrej and Sun, Yuekai},
+  title   = {{CausalDS}: Benchmarking Causal Reasoning in Data-Science Agents},
+  journal = {arXiv preprint arXiv:2607.08093},
+  year    = {2026}
+}
+
+@article{geng2026causalt5k,
+  author  = {Geng, Longling and Ouyang, Andy and Wu, Theodore and Barretto, Daphne and Hayes, Matthew John and Cooper, Rachael and Zeng, Yuqiao and Vijay, Sameer and Ancone, Gia and Rai, Ankit and Wolfman, Matthew and Flanagan, Patrick and Chang, Edward Y.},
+  title   = {{CausalT5k}: Diagnosing Refusal and Failure Modes in Trustworthy Causal Reasoning Across Causal Rungs},
+  journal = {arXiv preprint arXiv:2602.08939},
   year    = {2026}
 }
 
@@ -313,6 +512,25 @@
   number  = {523},
   pages   = {1094--1111},
   year    = {2018}
+}
+
+@article{lei2021conformal,
+  author  = {Lei, Lihua and Cand{\`e}s, Emmanuel J.},
+  title   = {Conformal Inference of Counterfactuals and Individual Treatment Effects},
+  journal = {Journal of the Royal Statistical Society: Series B},
+  volume  = {83},
+  number  = {5},
+  pages   = {911--938},
+  year    = {2021}
+}
+
+@inproceedings{vanderlaan2023isotonic,
+  author    = {van der Laan, Lars and Ulloa-P{\'e}rez, Ernesto and Carone, Marco and Luedtke, Alex},
+  title     = {Causal Isotonic Calibration for Heterogeneous Treatment Effects},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {202},
+  year      = {2023}
 }
 
 @inproceedings{geifman2017selective,
