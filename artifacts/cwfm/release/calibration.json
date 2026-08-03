@@ -1,0 +1,56 @@
+{
+  "interval_level": 0.9,
+  "normalized_radius": {
+    "static_ate": 0.3172979638662901,
+    "static_ate|spline|high_disagreement": 0.484590871779335,
+    "network_interference": 0.5321429915612295,
+    "network_interference|interaction|low_disagreement": 0.37099438898256526,
+    "static_ate|interaction|low_disagreement": 0.4511769675440678,
+    "static_ate|linear|low_disagreement": 0.3622386343375534,
+    "network_interference|linear|low_disagreement": 0.5122672986095904,
+    "network_interference|interaction|high_disagreement": 0.6765545748424955
+  },
+  "absolute_radius": {
+    "static_ate": {
+      "CWFM-Compiled": 0.3632506830037656,
+      "Linear g-computation": 0.33299211381138794,
+      "Random forest g-computation": 0.7885613724807811,
+      "Spline g-computation": 0.3481178548259003,
+      "Interaction g-computation": 0.3290407369460828,
+      "AIPW": 1.0653909094691714,
+      "Randomized difference-in-means": 0.49261386060081924
+    },
+    "network_interference": {
+      "CWFM-Compiled": 0.4163271361986469,
+      "Linear g-computation": 0.4708776353243912,
+      "Random forest g-computation": 0.5487146990840074,
+      "Spline g-computation": 0.46917451882598815,
+      "Interaction g-computation": 0.46022055115442073,
+      "Piecewise exposure-response": 0.38575512170791626,
+      "Null shrinkage": 1.0754477834268465
+    }
+  },
+  "counts": {
+    "static_ate": 69,
+    "static_ate|spline|high_disagreement": 12,
+    "network_interference": 70,
+    "network_interference|interaction|low_disagreement": 37,
+    "static_ate|interaction|low_disagreement": 17,
+    "static_ate|spline|low_disagreement": 8,
+    "static_ate|linear|low_disagreement": 19,
+    "network_interference|linear|low_disagreement": 12,
+    "static_ate|linear|high_disagreement": 4,
+    "network_interference|interaction|high_disagreement": 19,
+    "static_ate|piecewise|low_disagreement": 1,
+    "static_ate|interaction|high_disagreement": 5,
+    "static_ate|piecewise|high_disagreement": 1,
+    "static_ate|design_or_null|low_disagreement": 2,
+    "network_interference|linear|high_disagreement": 2
+  },
+  "regime": {
+    "evidence_threshold": 0.02904069982469082,
+    "calibration_recall": 0.4098360655737705,
+    "calibration_false_positive_rate": 0.0847457627118644,
+    "episodes": 120
+  }
+}

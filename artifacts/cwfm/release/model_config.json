@@ -1,0 +1,11 @@
+{
+  "max_variables": 12,
+  "hidden_dim": 96,
+  "heads": 4,
+  "axial_blocks": 3,
+  "mechanism_experts": 4,
+  "top_k_experts": 2,
+  "world_particles": 6,
+  "estimator_experts": 6,
+  "dropout": 0.08
+}

@@ -1,0 +1,14 @@
+{
+  "model_format_version": 1,
+  "checkpoint_sha256": "8c3fa941e7bb515f1276281bd339e3032e40fc4247edccfea076067f932bb856",
+  "calibration_sha256": "4e62899fa9096cdfff1c488b0f3b1e8575ba4f914d164eb6acbeeb5f371d113d",
+  "supported_tasks": [
+    "static_ate",
+    "observed_regime",
+    "network_interference"
+  ],
+  "maximum_variables": 12,
+  "checkpoint_file": "model_state.pt",
+  "calibration_file": "calibration.json",
+  "configuration_file": "model_config.json"
+}
