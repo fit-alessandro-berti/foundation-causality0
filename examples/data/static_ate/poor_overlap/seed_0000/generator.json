@@ -1,0 +1,6 @@
+{
+  "scenario": "poor_overlap",
+  "seed": 11003,
+  "sample_size": 96,
+  "covariates": 6
+}

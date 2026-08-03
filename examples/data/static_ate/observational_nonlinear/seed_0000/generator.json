@@ -1,0 +1,6 @@
+{
+  "scenario": "nonlinear",
+  "seed": 11002,
+  "sample_size": 96,
+  "covariates": 6
+}

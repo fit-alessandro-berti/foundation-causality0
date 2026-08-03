@@ -1,0 +1,6 @@
+{
+  "scenario": "randomized",
+  "seed": 11001,
+  "sample_size": 96,
+  "covariates": 6
+}

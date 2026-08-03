@@ -1,0 +1,6 @@
+{
+  "scenario": "hidden_confounding",
+  "seed": 11004,
+  "sample_size": 96,
+  "covariates": 6
+}
