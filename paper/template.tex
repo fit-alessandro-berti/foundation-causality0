@@ -101,7 +101,7 @@ Our assessment is organized around five research questions:
 
 The experimental results can be summarized as follows. On answerable questions, CWFM matches the best single fixed baseline in pooled error without knowing in advance which mechanism generated each dataset, although a correctly chosen per-setting specialist remains somewhat better in individual settings (RQ1). It refuses every query whose declared identification or support conditions fail, while the baselines return a number in all of them; this is enforcement of a declared contract, not detection of hidden confounding from the data (RQ2). It recovers most genuine mechanism changes and, unlike a standard splitting baseline, largely resists splitting a smooth nonlinear mechanism into fake regimes (RQ3). Accuracy transfers to most problem families excluded from pretraining but degrades sharply on the one family qualitatively unlike the training distribution, showing that reliable recognition of such mismatch is still missing (RQ4). Finally, the reported estimates are produced entirely by the classical estimator blend selected by the pretrained router; the free-form neural components are inactive at the evaluated checkpoint, which we report openly (RQ5).
 
-The remainder of the paper is organized as follows. Section~\ref{sec:related} reviews related work on causal inference and causal foundation models. Section~\ref{sec:preliminaries} introduces the necessary background concepts. Section~\ref{sec:approach} presents and motivates the CWFM architecture. Section~\ref{sec:assessment} describes the experimental design and answers the five research questions. Section~\ref{sec:discussion} discusses implications and limitations, and Section~\ref{sec:conclusion} concludes.
+The remainder of the paper is organized as follows. Section~\ref{sec:related} reviews related work on causal inference and causal foundation models. Section~\ref{sec:preliminaries} introduces the necessary background concepts. Section~\ref{sec:approach} presents and motivates the CWFM architecture. Section~\ref{sec:assessment} describes the experimental design, answers the five research questions, and situates the pooled results among published causal foundation models. Section~\ref{sec:discussion} discusses implications and limitations, and Section~\ref{sec:conclusion} concludes.
 
 %=================================================================
 \section{Related Work}\label{sec:related}
@@ -114,7 +114,7 @@ A complementary line of research, \emph{causal discovery}, aims to learn the cau
 
 \subsection{Amortized Causal-Effect Estimation}\label{sec:related-cfm}
 
-Prior-data fitted networks (PFNs) offer a way to remove the manual selection step. A transformer is pretrained on a large collection of synthetic problems whose ground truth is known by construction; afterwards, a new dataset is processed by the fixed network, which approximates Bayesian inference under the distribution of problems it was trained on~\cite{muller2022pfns}. This idea has produced strong general-purpose tabular models~\cite{hollmann2025tabpfn} and has been carried over to causal-effect estimation, the closest comparison group for this paper. CausalFM builds PFNs from priors over structural causal models and formalizes valid priors for back-door, front-door, and instrumental-variable settings~\cite{ma2025causalfm}. Do-PFN predicts interventional outcome distributions directly from observational data, without requiring the causal graph at inference time~\cite{robertson2025dopfn}. CausalPFN amortizes average and heterogeneous treatment-effect estimation for settings satisfying ignorability and reports Bayesian uncertainty~\cite{balazadeh2025causalpfn}. Extensions address temporal data with interventions~\cite{thumm2026causaltimeprior} and longitudinal treatment sequences~\cite{zare2026causallongpfn}. These systems engage seriously with identification: the causal setting is encoded in the training prior or supplied by the practitioner. What they do not expose is a runtime interface that checks whether a specific submitted query satisfies explicit identification and support conditions and refuses when it does not; their answers are produced within the assumed setting.
+Prior-data fitted networks (PFNs) offer a way to remove the manual selection step. A transformer is pretrained on a large collection of synthetic problems whose ground truth is known by construction; afterwards, a new dataset is processed by the fixed network, which approximates Bayesian inference under the distribution of problems it was trained on~\cite{muller2022pfns}. This idea has produced strong general-purpose tabular models~\cite{hollmann2025tabpfn} and has been carried over to causal-effect estimation, the closest comparison group for this paper. CausalFM builds PFNs from priors over structural causal models and formalizes valid priors for back-door, front-door, and instrumental-variable settings~\cite{ma2025causalfm}. Do-PFN predicts interventional outcome distributions directly from observational data, without requiring the causal graph at inference time~\cite{robertson2025dopfn}. CausalPFN amortizes average and heterogeneous treatment-effect estimation for settings satisfying ignorability and reports Bayesian uncertainty~\cite{balazadeh2025causalpfn}. Extensions address temporal data with interventions~\cite{thumm2026causaltimeprior} and longitudinal treatment sequences~\cite{zare2026causallongpfn}. These systems engage seriously with identification: the causal setting is encoded in the training prior or supplied by the practitioner. What they do not expose is a runtime interface that checks whether a specific submitted query satisfies explicit identification and support conditions and refuses when it does not; their answers are produced within the assumed setting. Section~\ref{sec:assessment-comparison} contextualizes our pooled benchmark result against the published results of these systems.
 
 \subsection{Amortized Causal Discovery}\label{sec:related-discovery}
 
@@ -392,7 +392,7 @@ Out-of-prior reliability & Not established & & Detection of or refusal on qualit
 %=================================================================
 \section{Assessment}\label{sec:assessment}
 
-This section first describes the experimental design, then answers the five research questions of the introduction, one subsection each, and closes with qualitative case studies that complement the aggregate metrics with worked examples.
+This section first describes the experimental design, then answers the five research questions of the introduction, one subsection each, adding after RQ1 a contextual comparison with published causal foundation models, and closes with qualitative case studies that complement the aggregate metrics with worked examples.
 
 \subsection{Experimental Design}\label{sec:assessment-design}
 
@@ -474,6 +474,50 @@ Network null & 0.100 & 0.090 & 0.079 & 0.206 & \textbf{0.055}\\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\subsection{Contextual Comparison with Published Causal Foundation Models}\label{sec:assessment-comparison}
+
+RQ1 compares CWFM against classical always-answer baselines on a shared locked benchmark. A natural further question is how the pooled result relates to the published causal foundation models reviewed in Section~\ref{sec:related-cfm}. For this second comparison no common test set exists: CausalPFN, Do-PFN, and CausalFM each evaluate on their own benchmark distributions, with their own outcome scalings, estimands, and aggregation protocols. We therefore contextualize our result against their published numbers, without rerunning their implementations, and mark every entry of Table~\ref{tab:fm-comparison} with its evidence status: exact values (E) read directly from a repository or the comparator paper, derived values (D) obtained from a published score by a deterministic conversion, and indicative ranges (I) that summarize the order of magnitude of several benchmark-specific published results.
+
+Two conversions are used. Where a comparator reports an RMSE-type error $r$, we report the point approximation $\sqrt{2/\pi}\,r \approx 0.798\,r$, which is exact for zero-mean Gaussian errors, together with a sensitivity band $[0.70\,r,\, 0.90\,r]$ covering the MAE-to-RMSE ratios of light- to moderately heavy-tailed error distributions. For CausalFM, whose principal published score is a PEHE of $0.515$, we additionally use the fact that PEHE is the root mean squared error over individual treatment effects: for effect errors $e_i$, $|\overline{e}\,| \le \sqrt{\overline{e^{2}}} = \mathrm{PEHE}$, so the published value yields only the loose same-sample bound of $0.515$ on the absolute ATE error and, under the Gaussian approximation, an ITE-level MAE proxy of $0.361$--$0.464$. In particular, the numerical inequality $0.166 < 0.515$ is \emph{not} a superiority claim: it compares a population-level effect MAE with an individual-effect RMSE on different test distributions and outcome scalings, and taking it at face value would reward the easier estimand.
+
+Read with these caveats, Table~\ref{tab:fm-comparison} supports one deliberately modest conclusion. The closest published systems, CausalPFN and Do-PFN, occupy an indicative low-to-mid $10^{-1}$ ATE-MAE range on their own benchmarks, which overlaps our pooled MAE of 0.166 on ours. CWFM is therefore competitive in order of magnitude with published foundation models for causal-effect estimation, on its native evaluation and under the substantially stricter interface of Section~\ref{sec:related-gap}; the comparison does not establish a ranking in either direction. The amortized discovery models are excluded from the error comparison entirely, because structure-recovery metrics such as SHD, edge F1, or AUROC admit no valid conversion to effect error. Table~\ref{tab:fm-capabilities} instead records which causal targets each system principally evaluates, complementing the interface-level comparison of Table~\ref{tab:positioning}.
+
+\begin{table}[H]
+\caption{Contextual comparison with published foundation models for causal-effect estimation; lower is better for all error metrics. Status: E marks exact repository or published values, D deterministic metric conversions, and I indicative cross-benchmark ranges. Because the underlying benchmark distributions, outcome scalings, and estimands differ, the table contextualizes the published order of magnitude and is not a common-test-set leaderboard.\label{tab:fm-comparison}}
+\footnotesize
+\begin{tabularx}{\textwidth}{lXXXc}
+\toprule
+\textbf{Model} & \textbf{Causal target} & \textbf{Native metric and value} & \textbf{Harmonized view} & \textbf{Status}\\
+\midrule
+CWFM (this paper) & Population effects (ATE, spillovers) & Pooled MAE $=0.166$ & Effect MAE $=0.166$ & E\\
+CausalPFN~\cite{balazadeh2025causalpfn} & ATE and CATE & Benchmark-specific effect errors & ATE MAE ${\approx}\,0.08$--$0.22$ & I\\
+Do-PFN~\cite{robertson2025dopfn} & Interventional mean, ATE & Benchmark-specific RMSE-type errors & ATE MAE ${\approx}\,0.10$--$0.25$ & I\\
+CausalFM~\cite{ma2025causalfm} & CATE and ITE & PEHE $=0.515$ & ITE MAE proxy $0.361$--$0.464$; ATE error bound $[0,0.515]$ & D\\
+Discovery models~\cite{thompson2026arrow,li2026tabcausal,qiao2026cdfm} & Causal graph & SHD, F1, AUROC & No valid conversion & ---\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\caption{Principal causal targets of the compared foundation models, complementing the interface comparison of Table~\ref{tab:positioning}. \checkmark{} marks a principal published evaluation target; $\sim$ marks a capability reported in some but not all published experiments; a blank cell means the capability is not the principal published evaluation target, not that it is impossible in principle.\label{tab:fm-capabilities}}
+\footnotesize
+\begin{tabularx}{\textwidth}{lCCCCX}
+\toprule
+\textbf{Model} & \textbf{ATE} & \textbf{CATE/ITE} & \textbf{Do-query} & \textbf{Graph} & \textbf{Principal published evaluation}\\
+\midrule
+CWFM (this paper) & \checkmark & & & & Population causal-effect error\\
+CausalPFN~\cite{balazadeh2025causalpfn} & \checkmark & \checkmark & & & Treatment-effect error\\
+Do-PFN~\cite{robertson2025dopfn} & \checkmark & $\sim$ & \checkmark & & Interventional-query error\\
+CausalFM~\cite{ma2025causalfm} & $\sim$ & \checkmark & $\sim$ & & Heterogeneous-effect error (PEHE)\\
+Arrow~\cite{thompson2026arrow} & & & & \checkmark & Structure and edge recovery\\
+TabCausal~\cite{li2026tabcausal} & & & & \checkmark & Structure and edge recovery\\
+CDFM~\cite{qiao2026cdfm} & & & & \checkmark & Structure and edge recovery\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Cross-paper comparisons of this kind are affected by differences in the causal estimand, the data-generating process, sample size, confounding strength, overlap, outcome normalization, and aggregation protocol. Derived and indicative values are therefore used only for scale contextualization, never for ranking, and they are labeled in Table~\ref{tab:fm-comparison} to keep them visually distinct from exact numbers. A head-to-head comparison would require porting the comparators to the locked episode format of Section~\ref{sec:approach-data}, or CWFM to their benchmarks; we consider this valuable future work for which published numbers are no substitute.
 
 \subsection{RQ2: Enforcement of the Declared Contract}\label{sec:assessment-rq2}
 
@@ -709,7 +753,7 @@ The safety-first selection protocol also deserves comment. The evaluated checkpo
 
 \subsection{Limitations}\label{sec:discussion-limitations}
 
-The study has clear limitations, and the assessment was designed to expose rather than obscure them. First, the free-form neural components are not yet pulling their weight: the gated residual never improved the compiled estimate, and the posterior over causal worlds remained uniform, so two of the architecturally central components currently contribute safety but no accuracy. Second, routing is diffuse; the router keeps all experts active instead of committing to the best one, leaving measurable headroom unused in the threshold cell. Third, variable-order equivariance is imperfect: reordering columns, which should not matter, shifts the estimate noticeably. Fourth, generalization collapses on the one excluded family that is qualitatively unlike the training distribution, the system did not recognize the failure, and those families also informed checkpoint selection, so even these numbers are not from wholly unseen data. Fifth, the implemented scope is the first slice of the design: static tabular effects, observed regimes, and network interference, without temporal changes, latent variables, or identification with partially specified graphs. Sixth, and most importantly, all evidence in this paper is synthetic. The locked test bank is generated by the same kind of simulator as the training data, so the reported accuracy is an upper bound on what should be expected on real data, where the prior is never exactly right.
+The study has clear limitations, and the assessment was designed to expose rather than obscure them. First, the free-form neural components are not yet pulling their weight: the gated residual never improved the compiled estimate, and the posterior over causal worlds remained uniform, so two of the architecturally central components currently contribute safety but no accuracy. Second, routing is diffuse; the router keeps all experts active instead of committing to the best one, leaving measurable headroom unused in the threshold cell. Third, variable-order equivariance is imperfect: reordering columns, which should not matter, shifts the estimate noticeably. Fourth, generalization collapses on the one excluded family that is qualitatively unlike the training distribution, the system did not recognize the failure, and those families also informed checkpoint selection, so even these numbers are not from wholly unseen data. Fifth, the implemented scope is the first slice of the design: static tabular effects, observed regimes, and network interference, without temporal changes, latent variables, or identification with partially specified graphs. Sixth, and most importantly, all evidence in this paper is synthetic. The locked test bank is generated by the same kind of simulator as the training data, so the reported accuracy is an upper bound on what should be expected on real data, where the prior is never exactly right. For the same reason, the contextual comparison of Section~\ref{sec:assessment-comparison} rests on published numbers obtained on different benchmarks, estimands, and scalings, and therefore supports only an order-of-magnitude competitiveness claim, not a ranking among causal foundation models.
 
 \subsection{What a Causal Foundation Model Cannot Solve}\label{sec:discussion-cannot}
 
@@ -751,8 +795,12 @@ The following abbreviations are used in this manuscript:\\
 CWFM & Causal World Foundation Model\\
 SCM & Structural Causal Model\\
 ATE & Average Treatment Effect\\
+CATE & Conditional Average Treatment Effect\\
+ITE & Individual Treatment Effect\\
+PEHE & Precision in Estimation of Heterogeneous Effects\\
 PFN & Prior-Data Fitted Network\\
 MAE & Mean Absolute Error\\
+RMSE & Root Mean Squared Error\\
 OOD & Out-of-Distribution\\
 \end{tabular}
 }
