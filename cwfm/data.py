@@ -46,7 +46,7 @@ class Episode:
     cluster_ids: np.ndarray = field(
         default_factory=lambda: np.asarray([], dtype=np.int64)
     )
-    metadata: dict[str, str | int | float] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 def _sigmoid(x: np.ndarray) -> np.ndarray:
@@ -530,6 +530,11 @@ def collate_episodes(
             ]
         )
         if ep.task == TASK_REGIME:
+            quantiles = ep.metadata.get(
+                "threshold_quantiles", [0.2, 0.35, 0.5, 0.65, 0.8]
+            )
+            if len(quantiles) != 5:
+                raise ValueError("Regime inputs require exactly five threshold quantiles")
             outcome = int(outcome_indices[0])
             predictors = np.flatnonzero(
                 (ep.roles == ROLE_PREDICTOR) | (ep.roles == ROLE_COVARIATE)
@@ -541,7 +546,7 @@ def collate_episodes(
             base_sse = max(float(base_residual @ base_residual), 1e-8)
             for variable in np.flatnonzero(ep.roles == ROLE_COVARIATE):
                 for q_index, threshold_value in enumerate(
-                    np.quantile(z[:, variable], [0.2, 0.35, 0.5, 0.65, 0.8])
+                    np.quantile(z[:, variable], quantiles)
                 ):
                     side = z[:, variable] > threshold_value
                     left, right = ~side, side
@@ -607,6 +612,76 @@ def collate_episodes(
         "metadata": [ep.metadata for ep in episodes],
         "scenarios": [ep.scenario for ep in episodes],
         "episodes": episodes,
+    }
+
+
+# Only these tensors and diagnostics are required at inference time.  Keeping
+# the list explicit is a small but important truth firewall: public callers do
+# not receive targets, simulator labels, or graph truth even though the legacy
+# training collator still creates them internally.
+INFERENCE_BATCH_KEYS = frozenset(
+    {
+        "values",
+        "missing",
+        "roles",
+        "variable_mask",
+        "adjacency",
+        "row_mask",
+        "cluster_ids",
+        "task",
+        "design",
+        "raw_scale",
+        "expert_estimates",
+        "expert_standard_errors",
+        "expert_mask",
+        "query",
+        "regime_evidence",
+        "threshold_values",
+        "nuisance",
+    }
+)
+
+
+def collate_observed_inputs(
+    episodes: Iterable[Episode],
+    max_variables: int = 12,
+) -> dict[str, torch.Tensor | list[dict[str, float]]]:
+    """Collate model inputs without exposing any training or oracle planes.
+
+    ``Episode`` remains the implementation-level carrier for estimator parity,
+    but application users construct inference-only contracts in
+    :mod:`cwfm.application`.  Adapters fill every oracle field with neutral
+    sentinels, and this function drops those fields before the model is called.
+    """
+
+    batch = collate_episodes(episodes, max_variables=max_variables)
+    return {key: value for key, value in batch.items() if key in INFERENCE_BATCH_KEYS}
+
+
+def collate_training_targets(
+    episodes: Iterable[Episode],
+    max_variables: int = 12,
+) -> dict[str, torch.Tensor]:
+    """Collate only supervised targets used by training and evaluation."""
+
+    batch = collate_episodes(episodes, max_variables=max_variables)
+    keys = {
+        "target",
+        "raw_target",
+        "identified",
+        "supported",
+        "structure_target",
+        "mechanism",
+        "route_flexible",
+        "graph",
+        "regime_threshold",
+        "change_type",
+        "split_target",
+    }
+    return {
+        key: value
+        for key, value in batch.items()
+        if key in keys and isinstance(value, torch.Tensor)
     }
 
 
