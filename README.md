@@ -67,10 +67,11 @@ python examples/07_reference_benchmark_atlas.py
 streamlit run app/streamlit_app.py
 ```
 
-The committed archive intentionally has no
-`artifacts/cwfm/release/model_state.pt`. In that state the tools continue to
-browse and validate repository cases, expose the classical Benchmark Atlas,
-and report a typed `MODEL_UNAVAILABLE` result for answerable CWFM requests.
-Install weights matching `artifacts/cwfm/release/manifest.json` to enable model
-inference. Normal analysis never reads `truth.npz`; simulator truth is reserved
-for a future, explicit post-fit audit mode.
+The committed release bundle includes
+`artifacts/cwfm/release/model_state.pt`, integrity-checked against
+`artifacts/cwfm/release/manifest.json`, so model inference is available after
+installing the dependencies. If the weights are removed or fail validation,
+the tools continue to browse and validate repository cases, expose the
+classical Benchmark Atlas, and report a typed `MODEL_UNAVAILABLE` result for
+answerable CWFM requests. Normal analysis never reads `truth.npz`; simulator
+truth is reserved for a future, explicit post-fit audit mode.

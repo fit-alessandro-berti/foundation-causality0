@@ -109,11 +109,13 @@ class PublicApplicationTests(unittest.TestCase):
         self.assertEqual(set(arrays), {"X", "A", "Y"})
         self.assertEqual(arrays["X"].shape[0], len(arrays["A"]))
 
-    def test_missing_checkpoint_is_an_actionable_supported_state(self) -> None:
+    def test_release_checkpoint_is_available_and_integrity_checked(self) -> None:
         bundle = ModelBundle.from_project_root(ROOT)
-        self.assertEqual(bundle.status, ModelBundleStatus.UNAVAILABLE)
-        self.assertIn("model_state.pt was not found", bundle.reason)
+        self.assertEqual(bundle.status, ModelBundleStatus.AVAILABLE)
+        self.assertEqual(bundle.checkpoint_hash, bundle.manifest["checkpoint_sha256"])
+        self.assertEqual(bundle.calibration_hash, bundle.manifest["calibration_sha256"])
         self.assertIsNotNone(bundle.calibration)
+        self.assertIsInstance(bundle.load_model(torch.device("cpu")), CWFM)
 
     def test_public_runner_matches_legacy_prediction_on_observed_planes(self) -> None:
         runner = available_runner()
@@ -276,14 +278,14 @@ class PublicApplicationTests(unittest.TestCase):
 
 
 class StreamlitSmokeTests(unittest.TestCase):
-    def test_home_page_renders_missing_model_state(self) -> None:
+    def test_home_page_renders_available_model_state(self) -> None:
         from streamlit.testing.v1 import AppTest
 
         app = AppTest.from_file(str(ROOT / "app" / "streamlit_app.py"), default_timeout=20)
         app.run()
         self.assertFalse(app.exception)
         self.assertEqual(app.title[0].value, "CWFM Application")
-        self.assertTrue(any("Model unavailable" in warning.value for warning in app.warning))
+        self.assertTrue(any("Model available" in success.value for success in app.success))
 
 
 if __name__ == "__main__":

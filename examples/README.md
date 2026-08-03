@@ -15,10 +15,12 @@ python examples/07_reference_benchmark_atlas.py
 ```
 
 All analysis scripts support `--project-root`, `--device`, `--output-dir`,
-`--seed`, `--dry-run`, `--json`, and `--quiet`. The committed archive does not
-contain `artifacts/cwfm/release/model_state.pt`, so answerable analyses report a
-typed `MODEL_UNAVAILABLE` status until matching weights are installed. Catalog
-preview and dry-run validation remain available.
+`--seed`, `--dry-run`, `--json`, and `--quiet`. The committed release bundle
+contains `artifacts/cwfm/release/model_state.pt`, so answerable analyses can run
+model inference after the dependencies are installed. If the weights are
+missing or fail their manifest integrity check, analyses report a typed
+`MODEL_UNAVAILABLE` status. Catalog preview and dry-run validation remain
+available.
 
 Static ATE examples are deterministic model-native fixture specifications. The
 catalog materializes observed `X`, `A`, and `Y` arrays while discarding simulator

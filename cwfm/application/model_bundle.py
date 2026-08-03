@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
+from torch.torch_version import TorchVersion
 
 from ..model import CWFM, CWFMConfig
 from .calibration import Calibration
@@ -139,7 +140,8 @@ class ModelBundle:
     def load_model(self, device: torch.device) -> CWFM:
         if self.status != ModelBundleStatus.AVAILABLE:
             raise RuntimeError(self.reason)
-        saved = torch.load(self.model_path, map_location=device, weights_only=True)
+        with torch.serialization.safe_globals([TorchVersion]):
+            saved = torch.load(self.model_path, map_location=device, weights_only=True)
         state_dict = saved.get("state_dict", saved) if isinstance(saved, dict) else saved
         model = CWFM(self.config).to(device)
         model.load_state_dict(state_dict)
