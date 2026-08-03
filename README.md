@@ -47,3 +47,30 @@ and network interference. It is not presented as the full proposed
 384-dimensional, temporal, latent-variable, partial-identification system.
 The distinction between implemented features and future architecture is
 explicit in the architecture and experimental report.
+
+## Public application layer and examples
+
+Scripts and the Streamlit interface share the truth-safe public API in
+`cwfm.application`. It provides typed inference queries, task adapters, input
+validation, an explicit assumption ledger, checkpoint-bound calibration,
+answer/abstention decisions, structured results, provenance, and exports.
+
+```bash
+python examples/00_check_installation.py
+python examples/01_static_ate.py --dry-run
+python examples/02_observed_regimes.py --dry-run
+python examples/03_network_interference.py --dry-run
+python examples/04_safety_and_abstention.py
+python examples/05_compare_repository_cases.py --dry-run
+python examples/06_model_diagnostics.py --dry-run
+python examples/07_reference_benchmark_atlas.py
+streamlit run app/streamlit_app.py
+```
+
+The committed archive intentionally has no
+`artifacts/cwfm/release/model_state.pt`. In that state the tools continue to
+browse and validate repository cases, expose the classical Benchmark Atlas,
+and report a typed `MODEL_UNAVAILABLE` result for answerable CWFM requests.
+Install weights matching `artifacts/cwfm/release/manifest.json` to enable model
+inference. Normal analysis never reads `truth.npz`; simulator truth is reserved
+for a future, explicit post-fit audit mode.
