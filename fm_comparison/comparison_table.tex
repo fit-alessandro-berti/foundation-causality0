@@ -1,0 +1,25 @@
+% Requires: \usepackage{booktabs,threeparttable,tabularx}
+\begin{table*}[t]
+\centering
+\small
+\begin{threeparttable}
+\caption{Contextual comparison with foundation models for causality. Lower is better for all error metrics. Values marked E are exact repository/published values, D are deterministic metric conversions, and I are cross-benchmark interpolations. The table is not a common-test-set leaderboard.}
+\label{tab:causality-fm-comparison}
+\begin{tabularx}{\textwidth}{l l l l l X}
+\toprule
+Model & Target & Native metric/value & Harmonized view & Status & Interpretation \\
+\midrule
+\textbf{CWFM (ours, OSS)} & Population ATE & MAE $=\mathbf{0.166}$ & ATE-MAE $=\mathbf{0.166}$ & E & Reference result on the uploaded implementation's native evaluation. \\
+CausalPFN & ATE/CATE & Benchmark-dependent effect error & Approx. ATE-MAE $0.08$--$0.22$ & I & Same broad effect-estimation family; different test distributions and scaling. \\
+Do-PFN & Interventional mean / ATE & Benchmark-dependent RMSE or related error & Approx. ATE-MAE $0.10$--$0.25$ & I & Overlaps CWFM in order of magnitude; not a head-to-head comparison. \\
+CausalFM & CATE/ITE & PEHE $=0.515$ & ITE-MAE proxy $0.361$--$0.464$ & D & PEHE is an individual-effect RMSE and evaluates a harder/different estimand. \\
+CausalFM & CATE/ITE & PEHE $=0.515$ & ATE absolute-error bound $[0,0.515]$ & D & Same-sample mathematical bound only; too loose to rank the methods. \\
+ARROW / TabCausal / CDFM & Causal graph & SHD / F1 / AUROC & Not applicable & E & Capability comparison only; graph-recovery metrics cannot be merged with effect error. \\
+\bottomrule
+\end{tabularx}
+\begin{tablenotes}[flushleft]\footnotesize
+\item The RMSE-to-MAE point conversion under zero-mean Gaussian errors is $\sqrt{2/\pi}\,\mathrm{RMSE}$; the displayed sensitivity band uses $0.70$--$0.90$ times RMSE. For individual-effect errors $e_i$, $|\overline e|\leq\sqrt{\overline{e^2}}=\mathrm{PEHE}$.
+\item Interpolated ranges are intended only to show the published order of magnitude. They must remain labeled as interpolations and should not be boldfaced as wins.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

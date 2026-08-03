@@ -1,0 +1,21 @@
+% Requires: \usepackage{booktabs,tabularx,pifont}
+% Define: \newcommand{\cmark}{\ding{51}} \newcommand{\xmark}{\ding{55}}
+\begin{table*}[t]
+\centering
+\small
+\caption{Capability-level comparison. A dash indicates that the capability is not the principal published evaluation target, not necessarily that it is impossible in principle.}
+\label{tab:causality-fm-capabilities}
+\begin{tabularx}{\textwidth}{l c c c c c X}
+\toprule
+Model & ATE & CATE/ITE & Do-query & Graph recovery & Open implementation & Principal published evaluation \\
+\midrule
+CWFM (ours) & \cmark & -- & -- & -- & \cmark & Population causal-effect error \\
+CausalPFN & \cmark & \cmark & -- & -- & paper-dependent & Treatment-effect estimation \\
+Do-PFN & \cmark & paper-dependent & \cmark & -- & paper-dependent & Interventional-query/effect error \\
+CausalFM & paper-dependent & \cmark & paper-dependent & -- & paper-dependent & Heterogeneous treatment-effect error \\
+ARROW & -- & -- & -- & \cmark & paper-dependent & Structure/edge recovery \\
+TabCausal & -- & -- & -- & \cmark & paper-dependent & Structure/edge recovery \\
+CDFM & -- & -- & -- & \cmark & paper-dependent & Structure/edge recovery \\
+\bottomrule
+\end{tabularx}
+\end{table*}
