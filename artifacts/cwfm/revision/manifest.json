@@ -1,0 +1,343 @@
+{
+  "status": "completed",
+  "quick_smoke_run": false,
+  "protocol": "experiments/revision_protocol.json",
+  "protocol_sha256": "360446d8eb0702c65ff1952e2571832a8e893861e1b709f996d28a05486a052a",
+  "checkpoint": "artifacts/cwfm/checkpoint.pt",
+  "checkpoint_sha256": "8c3fa941e7bb515f1276281bd339e3032e40fc4247edccfea076067f932bb856",
+  "foundation_model_retrained": false,
+  "estimator_layer_corrected_before_new_streams": true,
+  "aggregation_policy": {
+    "fixed_expert": {
+      "network_interference": "interaction",
+      "static_ate": "interaction"
+    },
+    "temperature": {
+      "network_interference": 0.5,
+      "static_ate": 0.25
+    },
+    "convex_stack_weights": {
+      "network_interference": {
+        "linear": 0.24594078238153044,
+        "orthogonal": 0.0,
+        "spline": 0.2368998044526004,
+        "interaction": 0.26856313044540914,
+        "piecewise": 0.24859628272046003,
+        "design_or_null": 0.0
+      },
+      "static_ate": {
+        "linear": 0.44165581846356694,
+        "orthogonal": 0.0,
+        "spline": 0.2631919756388537,
+        "interaction": 0.2708442030119157,
+        "piecewise": 0.0243080028856638,
+        "design_or_null": 0.0
+      }
+    },
+    "metadata_risk_model": "ridge(alpha=1.0), one model per task/expert",
+    "shallow_risk_model": "random forest regression, 200 trees, max_depth=4, min_samples_leaf=20, one model per task/expert"
+  },
+  "conformal_radii": {
+    "ate_linear": {
+      "Pretrained soft router": 0.3163118871185121,
+      "Pretrained hard top-1": 0.3188930880167402,
+      "Temperature-scaled router": 0.3026707807435808,
+      "Uniform expert mean": 0.3500271500503733,
+      "Median expert": 0.30709851484583717,
+      "Best fixed expert": 0.3206399149984217,
+      "Metadata-only selector": 0.3206399149984217,
+      "Shallow risk selector": 0.3073184831218141,
+      "Convex stack": 0.30389733981690914,
+      "Expert: linear": 0.3018371303002183,
+      "Expert: orthogonal": 0.9938462481727826,
+      "Expert: spline": 0.32698013410151583,
+      "Expert: interaction": 0.3206399149984217,
+      "Expert: piecewise": 0.34221042815442626,
+      "Linear g-computation": 0.3018053411147579,
+      "Random forest g-computation": 0.8155267249446176,
+      "Spline g-computation": 0.32698013410151583,
+      "Interaction g-computation": 0.3206399149984217,
+      "AIPW": 0.9938462481727826,
+      "DR learner (spline nuisances)": 0.4417937758768671
+    },
+    "ate_nonlinear": {
+      "Pretrained soft router": 0.34142113170543753,
+      "Pretrained hard top-1": 0.29174870208310855,
+      "Temperature-scaled router": 0.29222480726785655,
+      "Uniform expert mean": 0.41909731391631916,
+      "Median expert": 0.28360563394990534,
+      "Best fixed expert": 0.29174870208310855,
+      "Metadata-only selector": 0.29174870208310855,
+      "Shallow risk selector": 0.2990842327555947,
+      "Convex stack": 0.30043517812807863,
+      "Expert: linear": 0.36088676326973734,
+      "Expert: orthogonal": 1.45790060723238,
+      "Expert: spline": 0.298784178642004,
+      "Expert: interaction": 0.29174870208310855,
+      "Expert: piecewise": 0.34370778512839606,
+      "Linear g-computation": 0.36086977640170526,
+      "Random forest g-computation": 0.8771677621286695,
+      "Spline g-computation": 0.298784178642004,
+      "Interaction g-computation": 0.29174870208310855,
+      "AIPW": 1.45790060723238,
+      "DR learner (spline nuisances)": 0.4532338294018746
+    },
+    "ate_randomized": {
+      "Pretrained soft router": 0.32229930811103036,
+      "Pretrained hard top-1": 0.33618606001212115,
+      "Temperature-scaled router": 0.32096987981753566,
+      "Uniform expert mean": 0.3228570522629396,
+      "Median expert": 0.3169727176972159,
+      "Best fixed expert": 0.32444670247498986,
+      "Metadata-only selector": 0.3170129129010437,
+      "Shallow risk selector": 0.3215984982199882,
+      "Convex stack": 0.3124812802896681,
+      "Expert: linear": 0.3170129129010437,
+      "Expert: orthogonal": 0.37972484934172646,
+      "Expert: spline": 0.3435404600464479,
+      "Expert: interaction": 0.32444670247498986,
+      "Expert: piecewise": 0.3786770747080294,
+      "Expert: design_or_null": 0.49824420895420896,
+      "Linear g-computation": 0.31708675796507935,
+      "Random forest g-computation": 0.8312511216225502,
+      "Spline g-computation": 0.3435404600464479,
+      "Interaction g-computation": 0.32444670247498986,
+      "AIPW": 0.379724968551016,
+      "DR learner (spline nuisances)": 0.40739890279510027,
+      "Randomized difference-in-means": 0.49824420895420896
+    },
+    "interference_linear": {
+      "Pretrained soft router": 0.1940365523191719,
+      "Pretrained hard top-1": 0.19424955355705076,
+      "Temperature-scaled router": 0.1888423846266789,
+      "Uniform expert mean": 0.20807755620529256,
+      "Median expert": 0.19625735752202966,
+      "Best fixed expert": 0.18799365903789989,
+      "Metadata-only selector": 0.18799365903789989,
+      "Shallow risk selector": 0.226870263901372,
+      "Convex stack": 0.24431429325417797,
+      "Expert: linear": 0.1763959338532361,
+      "Expert: orthogonal": 0.20642336734833244,
+      "Expert: spline": 0.4644883513450623,
+      "Expert: interaction": 0.18799365903789989,
+      "Expert: piecewise": 0.3597249775164411,
+      "Expert: design_or_null": 0.6189717387078114,
+      "Linear g-computation": 0.17982771521025231,
+      "Random forest g-computation": 0.3366801066352079,
+      "Spline g-computation": 0.4644883513450623,
+      "Interaction g-computation": 0.18799365903789989,
+      "Piecewise exposure-response": 0.3597249775164411,
+      "Null shrinkage": 0.6189717387078114
+    },
+    "interference_threshold": {
+      "Pretrained soft router": 0.4797106188711595,
+      "Pretrained hard top-1": 0.533059046048129,
+      "Temperature-scaled router": 0.4975929256487124,
+      "Uniform expert mean": 0.4749064873337323,
+      "Median expert": 0.5128426948511793,
+      "Best fixed expert": 0.5319760662993673,
+      "Metadata-only selector": 0.5319760662993673,
+      "Shallow risk selector": 0.3894569890258248,
+      "Convex stack": 0.3609964497114174,
+      "Expert: linear": 0.5433367991540363,
+      "Expert: orthogonal": 0.544611097117608,
+      "Expert: spline": 0.47788267926021444,
+      "Expert: interaction": 0.5319760662993673,
+      "Expert: piecewise": 0.4182253360748291,
+      "Expert: design_or_null": 1.269119962871697,
+      "Linear g-computation": 0.5284750155661793,
+      "Random forest g-computation": 0.5799612385597349,
+      "Spline g-computation": 0.47788261965556966,
+      "Interaction g-computation": 0.5319760066947226,
+      "Piecewise exposure-response": 0.4182253360748291,
+      "Null shrinkage": 1.269119962871697
+    },
+    "interference_null": {
+      "Pretrained soft router": 0.18732845560486555,
+      "Pretrained hard top-1": 0.1914709061384201,
+      "Temperature-scaled router": 0.17913402942040918,
+      "Uniform expert mean": 0.19331541657447815,
+      "Median expert": 0.1808139830827713,
+      "Best fixed expert": 0.19211217761039734,
+      "Metadata-only selector": 0.19211217761039734,
+      "Shallow risk selector": 0.1791040599346161,
+      "Convex stack": 0.24368649196712283,
+      "Expert: linear": 0.1780175417661667,
+      "Expert: orthogonal": 0.21052229404449463,
+      "Expert: spline": 0.43726274371147156,
+      "Expert: interaction": 0.19211217761039734,
+      "Expert: piecewise": 0.33970552682876587,
+      "Expert: design_or_null": 0.0,
+      "Linear g-computation": 0.18655649538507896,
+      "Random forest g-computation": 0.11985682657153879,
+      "Spline g-computation": 0.43726274371147156,
+      "Interaction g-computation": 0.19211217761039734,
+      "Piecewise exposure-response": 0.33970552682876587,
+      "Null shrinkage": 0.0
+    }
+  },
+  "external_conformal_radii": {
+    "external_appliances_energy": {
+      "Pretrained soft router": 0.3632962623217839,
+      "Pretrained hard top-1": 0.345135534957847,
+      "Temperature-scaled router": 0.3429084075219603,
+      "Uniform expert mean": 0.40101898701936334,
+      "Median expert": 0.34507049311069926,
+      "Best fixed expert": 0.3405449972375249,
+      "Metadata-only selector": 0.3405449972375249,
+      "Shallow risk selector": 0.3417581345287003,
+      "Convex stack": 0.3327070735525066,
+      "Expert: linear": 0.325656394638823,
+      "Expert: orthogonal": 0.8925716650984636,
+      "Expert: spline": 0.365963911733286,
+      "Expert: interaction": 0.3405449972375249,
+      "Expert: piecewise": 0.38671127754809587,
+      "Linear g-computation": 0.3256566119360343,
+      "Random forest g-computation": 0.36341078417391875,
+      "Spline g-computation": 0.365963911733286,
+      "Interaction g-computation": 0.3405449972375249,
+      "AIPW": 0.8925716650984636,
+      "DR learner (spline nuisances)": 0.380666596630613
+    }
+  },
+  "external_data": {
+    "path": "data/external/appliances-energy.zip",
+    "sha256": "2fccf354445d886e7917620b0195db1f3e3e34d5a067a93b844694a4c561255a",
+    "calibration_episodes": 200,
+    "test_episodes": 300
+  },
+  "contract_property_test": {
+    "episodes": 1200,
+    "methods": 13,
+    "gate_matches_declared_contract": 1.0,
+    "always_answer_rate": 1.0,
+    "gate_wrapped_answer_rate": 0.0,
+    "interpretation": "Deterministic enforcement of supplied contract fields; not detection of hidden confounding or empirical overlap from observations."
+  },
+  "robustness": {
+    "covariate_permutation": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 2.910305435458819e-08,
+      "maximum_absolute_equivariance_error": 2.384185791015625e-07
+    },
+    "irrelevant_feature_insertion": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 0.019101826074377944,
+      "maximum_absolute_equivariance_error": 0.27819401025772095
+    },
+    "near_constant_feature": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 0.00018206544181642432,
+      "maximum_absolute_equivariance_error": 0.0012238025665283203
+    },
+    "near_duplicate_feature": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 0.0005305777210742235,
+      "maximum_absolute_equivariance_error": 0.019846230745315552
+    },
+    "negative_outcome_scaling": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 0.022502484904058897,
+      "maximum_absolute_equivariance_error": 0.16930808126926422
+    },
+    "outcome_translation": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 3.2060779631137845e-08,
+      "maximum_absolute_equivariance_error": 2.384185791015625e-07
+    },
+    "positive_outcome_scaling": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 3.1813408713787792e-06,
+      "maximum_absolute_equivariance_error": 8.434057235717773e-05
+    },
+    "row_permutation": {
+      "episodes": 300,
+      "mean_absolute_equivariance_error": 4.057384406526883e-08,
+      "maximum_absolute_equivariance_error": 2.9206275939941406e-06
+    },
+    "treatment_recoding": {
+      "episodes": 150,
+      "mean_absolute_equivariance_error": 0.00993218906961071,
+      "maximum_absolute_equivariance_error": 0.11331859230995178
+    },
+    "exact_invariance_pass_rate_at_1e-5": 0.9725
+  },
+  "paired_comparisons": {
+    "Pretrained hard top-1": {
+      "soft_minus_comparator_macro_mae": -0.0015466277421697114,
+      "ci95": [
+        -0.004757111207200364,
+        0.001640485379832592
+      ]
+    },
+    "Temperature-scaled router": {
+      "soft_minus_comparator_macro_mae": 0.0029989175841546073,
+      "ci95": [
+        0.0014374355861231515,
+        0.004636441919736208
+      ]
+    },
+    "Uniform expert mean": {
+      "soft_minus_comparator_macro_mae": -0.007109658700087553,
+      "ci95": [
+        -0.008719946875495958,
+        -0.005555768505002274
+      ]
+    },
+    "Median expert": {
+      "soft_minus_comparator_macro_mae": 0.002562759556080384,
+      "ci95": [
+        0.0004045610987705543,
+        0.0046752212669955405
+      ]
+    },
+    "Best fixed expert": {
+      "soft_minus_comparator_macro_mae": -0.0020691820174678593,
+      "ci95": [
+        -0.005276204904678796,
+        0.0009502781789253873
+      ]
+    },
+    "Metadata-only selector": {
+      "soft_minus_comparator_macro_mae": -0.00041398226231294477,
+      "ci95": [
+        -0.003413529864181009,
+        0.002612136468368415
+      ]
+    },
+    "Shallow risk selector": {
+      "soft_minus_comparator_macro_mae": 0.020039275048786838,
+      "ci95": [
+        0.015240490059129391,
+        0.02487371034109336
+      ]
+    },
+    "Convex stack": {
+      "soft_minus_comparator_macro_mae": 0.01417623983027771,
+      "ci95": [
+        0.011117138261266875,
+        0.017115687851836363
+      ]
+    }
+  },
+  "counts": {
+    "aggregation_tuning": 1200,
+    "effect_calibration": 1800,
+    "confirmatory_test": 1800,
+    "external_energy_calibration": 200,
+    "external_energy_test": 300
+  },
+  "source_sha256": {
+    "cwfm/estimators.py": "e206268fc0290d13bbf3c886cd066f1186188c3ed49dddbb07eaa5af1bb0348c",
+    "cwfm/baselines.py": "6e3639a9eae7155fa2a1ee5a63af69628dcbff94aeeb06c2d487a0dbb35d61bd",
+    "cwfm/experiment.py": "4caa090be0dfc315f5a5da0eb977edf5de1cdfc3d2eaee1c54db080298d43b80",
+    "cwfm/revision_experiment.py": "fb65b126dcf5497dfc4a5b3e3b98c68f655778ed69215934503492e96fe8e949",
+    "cwfm/external_energy.py": "fe9e41800e5dbbfac89af57c7c6d3beb040274973c676172a6225bf36000fe58"
+  },
+  "runtime_seconds": 2535.7936005592346,
+  "device": "cpu",
+  "python": "3.13.5",
+  "torch": "2.12.1+cpu",
+  "numpy": "2.5.0",
+  "pandas": "3.0.4"
+}

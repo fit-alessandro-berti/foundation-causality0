@@ -103,6 +103,7 @@ def _predict_model(
             {
                 "final": float(final[index].cpu()),
                 "compiled": float(compiled[index].cpu()),
+                "outcome_scale": float(raw_scale[index].cpu()),
                 "raw_scale": float(scales[index].cpu()),
                 "compiled_scale": float(compiled_scales[index].cpu()),
                 "correction": float(
@@ -118,10 +119,17 @@ def _predict_model(
                     output["flexible_route_logit"][index].sigmoid().cpu()
                 ),
                 "estimator_weights": weights.tolist(),
+                "estimator_router_logits": output["estimator_router_logits"][
+                    index
+                ].cpu().numpy().tolist(),
                 "selected_expert": EXPERT_NAMES[int(weights.argmax())],
                 "expert_estimates": (
                     batch["expert_estimates"][index] * raw_scale[index]
                 ).cpu().numpy().tolist(),
+                "expert_standard_errors": (
+                    batch["expert_standard_errors"][index] * raw_scale[index]
+                ).cpu().numpy().tolist(),
+                "expert_mask": batch["expert_mask"][index].cpu().numpy().tolist(),
                 "structure": selected_structure,
                 "split_probability": float(
                     output["split_logit"][index].sigmoid().cpu()

@@ -76,19 +76,34 @@ def _impute(values: np.ndarray) -> np.ndarray:
     return values
 
 
-def _folds(x: np.ndarray, groups: np.ndarray | None = None) -> np.ndarray:
-    """Deterministic, row-permutation invariant two-fold assignment."""
+def _folds(
+    x: np.ndarray,
+    groups: np.ndarray | None = None,
+    row_ids: np.ndarray | None = None,
+) -> np.ndarray:
+    """Deterministic two-fold assignment independent of presentation order.
+
+    ``row_ids`` are preferred for independent observations.  Network episodes
+    instead provide analysis-cluster identifiers through ``groups`` so that a
+    connected cluster is never split across nuisance-training folds.  The
+    canonicalized-covariate fallback is deliberately invariant to both row and
+    covariate permutations; it is used only by legacy inputs without stable
+    identifiers.
+    """
     if groups is not None:
         unique = np.unique(groups)
         if len(unique) < 2:
-            return _folds(x)
-        ordered = sorted(
-            unique,
-            key=lambda value: tuple(np.mean(x[groups == value], axis=0).tolist()),
-        )
-        mapping = {value: index % 2 for index, value in enumerate(ordered)}
+            return _folds(x, row_ids=row_ids)
+        mapping = {value: index % 2 for index, value in enumerate(unique)}
         return np.asarray([mapping[value] for value in groups], dtype=int)
-    order = np.lexsort(np.flipud(x.T)) if x.shape[1] else np.arange(len(x))
+
+    if row_ids is not None and len(row_ids) == len(x) and len(np.unique(row_ids)) == len(x):
+        order = np.argsort(row_ids, kind="stable")
+    elif x.shape[1]:
+        canonical_rows = np.sort(np.nan_to_num(x), axis=1)
+        order = np.lexsort(np.flipud(canonical_rows.T))
+    else:
+        order = np.arange(len(x))
     folds = np.empty(len(x), dtype=int)
     folds[order] = np.arange(len(x)) % 2
     return folds
@@ -125,7 +140,8 @@ def _ate_experts(ep: Episode) -> ExpertResult:
     linear = float(linear_coef[-1])
     linear_score = np.full(n, linear)
 
-    folds = _folds(x)
+    row_ids = ep.cluster_ids if len(ep.cluster_ids) == n else None
+    folds = _folds(x, row_ids=row_ids)
     mu0 = np.zeros(n)
     mu1 = np.zeros(n)
     propensity = np.zeros(n)
@@ -165,9 +181,10 @@ def _ate_experts(ep: Episode) -> ExpertResult:
     )
     interaction = float(interaction_scores.mean())
 
-    # A compact hinge-basis expert gives a held-out nonlinear family without
-    # the expense and in-sample routing bias of fitting a forest online.
-    hinges = np.maximum(x[:, : min(3, x.shape[1]), None] - np.array([-0.5, 0.0, 0.5]), 0)
+    # Use the same hinge candidates for every eligible covariate.  Restricting
+    # the expansion to the first columns made the estimate depend on arbitrary
+    # presentation order.
+    hinges = np.maximum(x[:, :, None] - np.array([-0.5, 0.0, 0.5]), 0)
     hinges = hinges.reshape(n, -1)
     piece_design = np.column_stack([x, hinges, a, a[:, None] * hinges])
     piece_coef = _ridge_fit(piece_design, y, 0.05)
@@ -239,7 +256,11 @@ def _network_experts(ep: Episode) -> ExpertResult:
     linear_scores = _predict(high, linear_coef) - _predict(low, linear_coef)
     linear = float(linear_scores.mean())
 
-    clusters = _connected_components(ep.adjacency)
+    clusters = (
+        ep.cluster_ids
+        if len(ep.cluster_ids) == n
+        else _connected_components(ep.adjacency)
+    )
     folds = _folds(x, clusters)
     oof = np.zeros(n)
     fold_effects = []

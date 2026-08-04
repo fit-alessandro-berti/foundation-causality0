@@ -1,0 +1,58 @@
+{
+  "Pretrained hard top-1": {
+    "soft_minus_comparator_macro_mae": -0.0015466277421697114,
+    "ci95": [
+      -0.004757111207200364,
+      0.001640485379832592
+    ]
+  },
+  "Temperature-scaled router": {
+    "soft_minus_comparator_macro_mae": 0.0029989175841546073,
+    "ci95": [
+      0.0014374355861231515,
+      0.004636441919736208
+    ]
+  },
+  "Uniform expert mean": {
+    "soft_minus_comparator_macro_mae": -0.007109658700087553,
+    "ci95": [
+      -0.008719946875495958,
+      -0.005555768505002274
+    ]
+  },
+  "Median expert": {
+    "soft_minus_comparator_macro_mae": 0.002562759556080384,
+    "ci95": [
+      0.0004045610987705543,
+      0.0046752212669955405
+    ]
+  },
+  "Best fixed expert": {
+    "soft_minus_comparator_macro_mae": -0.0020691820174678593,
+    "ci95": [
+      -0.005276204904678796,
+      0.0009502781789253873
+    ]
+  },
+  "Metadata-only selector": {
+    "soft_minus_comparator_macro_mae": -0.00041398226231294477,
+    "ci95": [
+      -0.003413529864181009,
+      0.002612136468368415
+    ]
+  },
+  "Shallow risk selector": {
+    "soft_minus_comparator_macro_mae": 0.020039275048786838,
+    "ci95": [
+      0.015240490059129391,
+      0.02487371034109336
+    ]
+  },
+  "Convex stack": {
+    "soft_minus_comparator_macro_mae": 0.01417623983027771,
+    "ci95": [
+      0.011117138261266875,
+      0.017115687851836363
+    ]
+  }
+}

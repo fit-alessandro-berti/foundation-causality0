@@ -1,0 +1,125 @@
+{
+  "protocol_version": "1.0.0",
+  "frozen_on": "2026-08-04",
+  "scientific_object": "One released frozen pretrained router over per-dataset classical causal estimators, protected by declared contract gates",
+  "checkpoint": {
+    "path": "artifacts/cwfm/checkpoint.pt",
+    "sha256": "8c3fa941e7bb515f1276281bd339e3032e40fc4247edccfea076067f932bb856",
+    "neural_parameter_updates_allowed": false
+  },
+  "effect_scenarios": [
+    "static_ate:linear",
+    "static_ate:nonlinear",
+    "static_ate:randomized",
+    "network_interference:linear",
+    "network_interference:threshold",
+    "network_interference:null"
+  ],
+  "streams": {
+    "aggregation_tuning": {
+      "seed_start": 60000000,
+      "episodes_per_scenario": 200
+    },
+    "effect_calibration": {
+      "seed_start": 70000000,
+      "episodes_per_scenario": 300
+    },
+    "confirmatory_test": {
+      "seed_start": 80000000,
+      "episodes_per_scenario": 300,
+      "inspect_only_after_methods_and_hyperparameters_are_frozen": true
+    },
+    "contract_property_test": {
+      "seed_start": 85000000,
+      "episodes_per_scenario": 300,
+      "scenarios": [
+        "static_ate:poor_overlap",
+        "static_ate:hidden_confounding",
+        "network_interference:poor_support",
+        "network_interference:hidden_confounding"
+      ]
+    },
+    "invariance_property_test": {
+      "seed_start": 86000000,
+      "episodes_per_effect_scenario": 50
+    },
+    "external_energy_calibration": {
+      "seed_start": 87000000,
+      "episodes": 200
+    },
+    "external_energy_test": {
+      "seed_start": 88000000,
+      "episodes": 300
+    }
+  },
+  "aggregation_methods": [
+    "each compatible library expert",
+    "best fixed expert selected on aggregation_tuning",
+    "uniform mean of compatible experts",
+    "median of compatible experts",
+    "hard top-1 expert from frozen router logits",
+    "temperature-scaled frozen-router blend",
+    "metadata-only risk selector",
+    "shallow non-neural risk selector using expert estimates and standard errors",
+    "task-wise nonnegative convex stack",
+    "released frozen-router soft blend",
+    "per-cell and within-library oracles as non-deployable upper bounds"
+  ],
+  "temperature_candidates": [0.25, 0.5, 1.0, 2.0, 4.0],
+  "additional_estimators": [
+    "linear g-computation",
+    "random-forest g-computation",
+    "cross-fitted AIPW with linear nuisances",
+    "cross-fitted AIPW with spline outcome and propensity nuisances"
+  ],
+  "external_benchmark": {
+    "name": "UCI Appliances Energy Prediction semi-synthetic ATE",
+    "source_path": "data/external/appliances-energy.zip",
+    "source_sha256": "2fccf354445d886e7917620b0195db1f3e3e34d5a067a93b844694a4c561255a",
+    "source_doi": "10.24432/C5VC8G",
+    "license": "CC BY 4.0",
+    "features_selected_without_outcome": [
+      "T1",
+      "RH_1",
+      "T2",
+      "RH_2",
+      "T3",
+      "RH_3",
+      "T_out",
+      "RH_out"
+    ],
+    "prognostic_response": "standardized log(1 + Appliances Wh)",
+    "episode_sample_size": 128,
+    "source_partition": "even rows for calibration; odd rows for test",
+    "treatment_and_effect_mechanism": "fixed in cwfm/external_energy.py before evaluation",
+    "neural_parameter_updates": false
+  },
+  "gating": {
+    "primary_result": "declared-contract compliance property test",
+    "comparison": "Every deployable estimator is reported in always-answer and identical gate-wrapped form",
+    "automatic_hidden-confounding_detection_claimed": false,
+    "empirical_support_detection_claimed": false
+  },
+  "uncertainty": {
+    "coverage": 0.9,
+    "score": "ordinary absolute residual",
+    "finite_sample_quantile": "ceil((n+1)*coverage)-th order statistic",
+    "stratification": "scenario",
+    "same_protocol_for_every_deployable_method": true,
+    "guarantee_scope": "episode-marginal coverage for future episodes exchangeable with the simulator calibration distribution"
+  },
+  "metrics": [
+    "micro-averaged MAE",
+    "macro-average scenario MAE",
+    "outcome-standardized MAE",
+    "mean within-episode method rank",
+    "regret relative to the best compatible library expert",
+    "worst-scenario MAE",
+    "scenario-stratified paired bootstrap difference with 95% interval",
+    "pooled and per-scenario coverage with Wilson 95% interval",
+    "raw and outcome-standardized interval width",
+    "answer rate"
+  ],
+  "bootstrap_replicates": 4000,
+  "foundation_model_retraining": false
+}

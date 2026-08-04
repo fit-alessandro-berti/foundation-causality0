@@ -1,18 +1,25 @@
 from __future__ import annotations
 
 import unittest
+from copy import deepcopy
 
 import numpy as np
 import torch
 
-from cwfm.baselines import all_baselines
+from cwfm.baselines import all_baselines, spline_dr_effect
 from cwfm.data import (
     EVALUATION_SCENARIOS,
     OOD_DEVELOPMENT_SCENARIOS,
+    ROLE_COVARIATE,
+    ROLE_PREDICTOR,
+    TASK_ATE,
+    TASK_INTERFERENCE,
     TASK_REGIME,
     collate_episodes,
     generate_episode,
 )
+from cwfm.estimators import estimator_experts
+from cwfm.external_energy import generate_appliances_energy_episode
 from cwfm.model import CWFM, CWFMConfig
 from cwfm.train import compute_loss
 
@@ -79,6 +86,7 @@ class CWFMContractTests(unittest.TestCase):
         order = np.random.default_rng(9).permutation(len(permuted.values))
         permuted.values = permuted.values[order]
         permuted.adjacency = permuted.adjacency[np.ix_(order, order)]
+        permuted.cluster_ids = permuted.cluster_ids[order]
         batch_a = collate_episodes([episode])
         batch_b = collate_episodes([permuted])
         model = CWFM(
@@ -89,6 +97,49 @@ class CWFMContractTests(unittest.TestCase):
             second = model(batch_b)["effect_mean"]
         self.assertTrue(torch.allclose(first, second, atol=1e-5))
 
+    def test_effect_path_is_covariate_permutation_invariant(self) -> None:
+        saved = torch.load(
+            "artifacts/cwfm/checkpoint.pt", map_location="cpu", weights_only=False
+        )
+        model = CWFM(CWFMConfig(**saved["config"])).eval()
+        model.load_state_dict(saved["state_dict"])
+        cases = [
+            (TASK_ATE, "nonlinear", 123456),
+            (TASK_INTERFERENCE, "threshold", 123457),
+        ]
+        for task, scenario, seed in cases:
+            episode = generate_episode(seed, task, scenario)
+            permuted = deepcopy(episode)
+            eligible = np.flatnonzero(
+                np.isin(permuted.roles, [ROLE_COVARIATE, ROLE_PREDICTOR])
+            )
+            order = np.arange(len(permuted.roles))
+            order[eligible] = eligible[::-1]
+            inverse = np.argsort(order)
+            permuted.values = permuted.values[:, order]
+            permuted.roles = permuted.roles[order]
+            permuted.graph = permuted.graph[np.ix_(order, order)]
+            if permuted.structure_target < len(order):
+                permuted.structure_target = int(inverse[permuted.structure_target])
+
+            original_experts = estimator_experts(episode)
+            permuted_experts = estimator_experts(permuted)
+            self.assertTrue(
+                np.allclose(
+                    original_experts.estimates,
+                    permuted_experts.estimates,
+                    atol=1e-6,
+                )
+            )
+            with torch.no_grad():
+                original = model(collate_episodes([episode]))
+                revised = model(collate_episodes([permuted]))
+            self.assertTrue(
+                torch.allclose(
+                    original["effect_mean"], revised["effect_mean"], atol=1e-6
+                )
+            )
+
     def test_baselines_return_declared_outputs(self) -> None:
         for task in range(3):
             episode = generate_episode(4000 + task, task)
@@ -98,6 +149,20 @@ class CWFMContractTests(unittest.TestCase):
                 self.assertIn("MOB-like", result)
             else:
                 self.assertIn("Linear g-computation", result)
+
+    def test_external_energy_streams_are_disjoint_and_reproducible(self) -> None:
+        calibration = generate_appliances_energy_episode(
+            87000000, stream="calibration"
+        )
+        repeated = generate_appliances_energy_episode(
+            87000000, stream="calibration"
+        )
+        test = generate_appliances_energy_episode(88000000, stream="test")
+        self.assertTrue(np.array_equal(calibration.values, repeated.values))
+        self.assertEqual(calibration.target, repeated.target)
+        self.assertTrue(np.all(calibration.cluster_ids % 2 == 0))
+        self.assertTrue(np.all(test.cluster_ids % 2 == 1))
+        self.assertTrue(np.isfinite(spline_dr_effect(test)))
 
     def test_revised_model_has_do_no_harm_initialization_and_structural_worlds(self) -> None:
         episodes = [generate_episode(5100 + index) for index in range(6)]
