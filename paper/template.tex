@@ -23,6 +23,9 @@
 % graphicx, booktabs, natbib, hyperref, cleveref, amsthm, etc.
 % Add extra packages here if needed.
 \setlength{\headheight}{20pt}
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc,backgrounds,decorations.pathreplacing,patterns}
 \usepackage{pgfplots}
@@ -273,9 +276,9 @@ CWFM builds on this literature, and its distinguishing element is where the aggr
 
 Each ingredient of CWFM exists in the literature above; the contribution is their integration: for a finite set of implemented query classes, CWFM combines a typed causal query, deterministic validation of a declared assumption contract, an empirical-support policy, a pretrained cross-episode risk router over per-dataset classical estimators, episode-level conformal calibration, and typed non-answer outcomes, with refusal behavior evaluated as a first-class outcome. The contribution is reliability-gated estimator orchestration and its evaluation, not general graphical identification, automatic detection of hidden confounding, or out-of-distribution-safe abstention. Table~\ref{tab:positioning} locates CWFM among representative systems.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Interface positioning of representative systems. Cells describe the published interface; n/r (not reported) means the publication does not expose the capability as a first-class evaluated interface, not that it could not be added; n/a marks capabilities outside the system's scope.\label{tab:positioning}}
-\footnotesize
+\scriptsize
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.5cm}XXXXX}
 \toprule
 \textbf{System} & \textbf{Primary target} & \textbf{Identification handling} & \textbf{Support/ overlap handling} & \textbf{Estimator adaptation} & \textbf{Non-answer behavior}\\
@@ -540,9 +543,9 @@ where $E$ is the episode, $Q$ the formal query, and $S$ a status taking one of f
 \label{fig:episode}
 \end{figure*}
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Implemented query classes; the gates check the declared and support conditions before any listed estimator is fitted.\label{tab:queryclasses}}
-\small
+\footnotesize
 \begin{tabularx}{\textwidth}{lXXX}
 \toprule
 \textbf{Query class} & \textbf{Declared conditions} & \textbf{Support condition} & \textbf{Estimators}\\
@@ -865,9 +868,9 @@ Finally, the implemented scope: static tabular effects, observed-regime determin
 
 Guarantee, constraint, and calibration name different kinds of properties, and it is easy to overclaim by mixing them up. Table~\ref{tab:guarantees} states, for each reliability property of CWFM, what holds, under which conditions, and what is not promised. The most important row is the last: nothing in the current system detects that an episode comes from outside the training prior.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{The guarantee taxonomy of CWFM. Each row is a different kind of property; none implies the others.\label{tab:guarantees}}
-\small
+\footnotesize
 \begin{tabularx}{\textwidth}{lXXX}
 \toprule
 \textbf{Property} & \textbf{What holds} & \textbf{Conditions} & \textbf{Not promised}\\
@@ -951,9 +954,9 @@ Figure~\ref{fig:rq1} shows the pooled picture over the 180 answerable queries. C
 
 The pooled numbers hide the more interesting pattern, shown in Table~\ref{tab:scenario}: every specialist wins the cell its assumptions were designed for and loses elsewhere, while CWFM is never the single best method in a cell but is close to the winner in most cells. A \emph{per-cell oracle} that always picks the best method of Table~\ref{tab:scenario} quantifies the remaining gap: its mean over the six cells is about 0.132 against 0.166 for CWFM, with the largest single gap, 0.110, in the network-threshold cell where the router underuses the piecewise expert (Section~\ref{sec:assessment-rq5}). An oracle over CWFM's own library is stronger still (mean approximately 0.122), because the null-shrinkage expert attains exactly zero error in the network-null cell yet receives only about 15\% of the weight there. CWFM is thus a strong pooled generalist with known, localized routing headroom. Two boundaries remain: the paired intervals against the best fixed baselines contain zero, so the benchmark establishes comparability, not superiority; and this locked bank contains no within-dataset stacking or cross-validated aggregation baselines, a gap the confirmatory round of Section~\ref{sec:assessment-confirmatory} closes directly.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{MAE by scenario cell on the locked test bank (30 seeds per cell). Bold marks the best method per row. The combined column reports spline g-computation in the static rows and the piecewise exposure-response estimator in the network rows.\label{tab:scenario}}
-\small
+\footnotesize
 \begin{tabularx}{\textwidth}{lCCCCC}
 \toprule
 \textbf{Scenario} & \textbf{CWFM} & \textbf{Linear} & \textbf{Interaction} & \textbf{Spline or piecewise} & \textbf{Rand.\ forest}\\
@@ -972,7 +975,7 @@ Network null & 0.100 & 0.090 & 0.079 & 0.206 & \textbf{0.055}\\
 
 A natural further question is how RQ1 relates to the published causal foundation models reviewed in Section~\ref{sec:related-cfm}. No common test set exists: CausalPFN, Do-PFN, and CausalFM each evaluate on their own benchmark distributions, and metric conversions between, say, an individual-effect PEHE and a population-effect MAE do not make such numbers commensurable. We therefore report no cross-paper error table; Table~\ref{tab:fm-capabilities} instead records which causal targets each system principally evaluates, complementing the interface-level comparison of Table~\ref{tab:positioning}.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Principal causal targets of the compared foundation models, complementing the interface comparison of Table~\ref{tab:positioning}. \checkmark{} marks a principal published evaluation target, $\sim$ a capability reported in some but not all published experiments; a blank cell means not a principal published target, not that it is impossible.\label{tab:fm-capabilities}}
 \footnotesize
 \begin{tabularx}{\textwidth}{lCCCCX}
@@ -1006,7 +1009,7 @@ The stress cells are the queries where a number is a mistake under the declared 
 
 As stated in Section~\ref{sec:approach-worlds}, the decision evaluated here is produced by CWFM's compiled, BIC-based evidence statistic thresholded on the calibration bank; the learned split head is recorded as a diagnostic only, so RQ3 validates an evidence-calibrated classical rule executed inside CWFM's pipeline, not learned structure discovery. Table~\ref{tab:regime} compares this diagnostic (reported as CWFM) with the one-split linear baseline. Structure accuracy requires selecting the correct split variable, or correctly selecting no split; threshold localization is not scored, because the generator draws the true threshold continuously while the decision selects among quantile candidates. On strong splits the baseline is more sensitive (structure accuracy 0.800 versus 0.633). The decisive difference is the stationary nonlinear hard negative: the baseline declares a split in 100\% of these episodes, while CWFM declares one in only 16.7\% and identifies the correct stationary structure in 83.3\%. Both methods are essentially perfect on the complete null, and both miss the deliberately weak splits, whose signal is too small at this sample size. Pooled over all four cells, CWFM reaches 0.617 structure accuracy versus 0.458 for the baseline; trading some sensitivity for a large gain in specificity is intentional and follows from the calibrated threshold of Section~\ref{sec:approach-calibration}.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Regime determination on the locked test bank (30 seeds per cell). Structure accuracy requires selecting the correct split variable, or correctly selecting no split; threshold localization is not scored. Split rate is the fraction of episodes in which a regime split was declared.\label{tab:regime}}
 \begin{tabularx}{\textwidth}{Xcccc}
 \toprule
@@ -1072,7 +1075,7 @@ Routing works but is not sharp. All six experts stay in use, yet in threshold sp
 
 Finally, Table~\ref{tab:probes} reports presentation-change probes: the estimate should not change when the data are presented differently. Each value is measured on a single static linear ATE probe episode, so these are illustrative diagnostics rather than averages over a probe bank. Row shuffling and positive outcome rescaling change the estimate only at numerical noise level. Inserting an irrelevant covariate shifts it moderately (a stability probe, since the data genuinely change), and reordering columns with roles preserved shifts it most: the observed change of 0.170 is of the same order as the pooled estimation MAE of 0.166. The sensitivity is traceable to the classical estimator layer, not the encoder: the cross-fitting fold assignment ordered rows lexicographically by the covariate columns, and the hinge-basis expert constructed its basis from the first three covariates only. Both root causes were repaired in the estimator layer after this locked evaluation, without updating any neural parameter, and all conformal radii were recalibrated on fresh streams; the frozen invariance bank of Section~\ref{sec:assessment-confirmatory} verifies the repair at scale.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Presentation-change probes at the evaluated checkpoint, each on a single static linear ATE episode: absolute change of the estimate under changes that should not matter.\label{tab:probes}}
 \begin{tabularx}{\textwidth}{Xc}
 \toprule
@@ -1094,7 +1097,7 @@ Column reordering (roles preserved) & $0.170$\\
 
 \paragraph{Baseline matrix.} Every method is evaluated under identical conditions. The deployable methods are each library expert as a stand-alone estimator; four conventional comparators (linear and random-forest g-computation, cross-fitted AIPW with ridge-linear nuisances, and a cross-fitted doubly robust learner with spline nuisances); and nine aggregation policies over the same fitted expert library: the released frozen-router soft blend, hard top-1 routing from the frozen logits, a temperature-scaled variant of those logits (tuned per task on the tuning stream), the uniform mean and the median of compatible experts, the best fixed expert on the tuning stream, a metadata-only ridge risk selector, a shallow random-forest risk selector reading the experts' estimates and standard errors alongside the metadata, and a task-wise nonnegative convex stack. Per-cell and per-episode oracles are non-deployable upper bounds. Uncertainty uses ordinary absolute-residual split conformal around each method's point estimate, scenario-stratified, with the exact finite-sample quantile, the same 90\% target, and the same calibration stream for every method: the protocol-identical comparison that RQ1 could not offer.
 
-\begin{table}[H]
+\begin{table}[!t]
 \caption{Confirmatory test stream (1,800 fresh episodes, 300 per scenario; frozen checkpoint, no neural updates). MAE is pooled mean absolute error; the worst-cell column is the highest per-scenario MAE. Coverage is pooled empirical coverage under the shared 90\% conformal protocol. The last column is the scenario-stratified paired bootstrap difference (router minus the row's method) with its 95\% interval; positive values favor the row's method, and intervals excluding zero are bold. Oracles are non-deployable bounds.\label{tab:confirmatory}}
 \footnotesize
 \begin{tabularx}{\textwidth}{lCCC>{\scriptsize\arraybackslash}C}
