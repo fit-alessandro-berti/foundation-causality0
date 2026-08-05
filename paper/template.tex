@@ -19,6 +19,33 @@
 \datepublished{}
 
 %=================================================================
+% Preprint marking. This compiled version is a preprint, not the
+% journal submission: the block below replaces the class's
+% "Version ... submitted to Electronics" header/footer and the
+% "Submitted to Electronics ..." copyright note, and removes the
+% placeholder journal DOI from the footers. Delete this whole block
+% when producing the actual submission version.
+\newcommand{\PreprintNote}{Preprint version \today. This preprint has not been peer reviewed.}
+\makeatletter
+% Running header on pages 2 and later
+\lhead{\fontsize{8}{8}\selectfont\vspace{2pt}\PreprintNote\\\rule{\fulllength}{0.4pt}}
+% No placeholder journal DOI in the running footer
+\rfoot{}
+% First page: preprint note in the left footer, no placeholder DOI
+\fancypagestyle{plain}{%
+  \renewcommand{\footrulewidth}{0.4pt}%
+  \fancyhead{\null\vspace{8pt}}%
+  \fancyfoot[L]{\fontsize{8}{8}\selectfont\PreprintNote}%
+  \fancyfoot[R]{}%
+}
+% Copyright note: preprint wording, license text unchanged
+\patchcmd{\cright}
+  {Submitted to {\em\journalname} for possible open access publication under the terms and conditions of the }
+  {This is a preprint, which has not been peer reviewed. It is made available under the terms and conditions of the }
+  {}{\ClassError{template}{Preprint patch of \string\cright\space failed}{Check the preprint block in template.tex against mdpi.cls}}
+\makeatother
+
+%=================================================================
 % Packages already loaded by mdpi.cls include: amsmath, amssymb,
 % graphicx, booktabs, natbib, hyperref, cleveref, amsthm, etc.
 % Add extra packages here if needed.
