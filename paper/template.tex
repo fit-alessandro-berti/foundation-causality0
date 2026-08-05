@@ -69,7 +69,7 @@
 }
 
 %=================================================================
-\Title{CWFM: Reliability-Gated Amortized Causal Estimation}
+\Title{Answer Well, Refuse Well: Trustworthy Causal Estimation with a Reliability-Gated Foundation Model}
 
 \newcommand{\orcidauthorA}{0000-0002-3279-4795}
 
@@ -1529,27 +1529,9 @@ For the implemented scope, the regime and misspecification cases corroborate the
 
 The repository accompanying this paper contains, besides the training and evaluation code used in Section~\ref{sec:assessment}, a public application layer that lets readers run the released model on concrete cases: numbered example scripts in the \texttt{examples/} folder and an interactive Streamlit web application in the \texttt{app/} folder. Both are thin clients of the same public programming interface, \texttt{cwfm.application}, which enforces the contract logic of Section~\ref{sec:approach}: every request passes through the identification gate and through the \emph{empirical} support diagnostics computed from the submitted data, returns the same typed statuses, and reports only calibrated intervals. Because the application evaluates the empirical support statistic rather than a declared support class (Section~\ref{sec:approach-gates}), its refusal rates on new data may differ from those reported in Section~\ref{sec:assessment}. The tools are also \emph{truth-safe} by construction: ordinary analysis reads only observed data and declared metadata, and the simulator ground truth stored in the repository (\texttt{truth.npz}) is never opened.
 
-Dependencies are installed from the repository root with \texttt{python -m pip install -r requirements.txt}. The shipped model weights (\path{artifacts/cwfm/release/model_state.pt}) are verified against a recorded SHA-256 hash before any inference; if they are absent or fail the check, analyses that would need the model return an explicit \texttt{MODEL\_UNAVAILABLE} status instead of degrading silently. Each example script covers one query class or one aspect of the system's behavior (Table~\ref{tab:examples}) and accepts common options for seeding, device selection, output redirection, machine-readable output, and a dry-run mode that validates the inputs and the declared contract without running inference.
+Dependencies are installed from the repository root with \texttt{python -m pip install -r requirements.txt}. The shipped model weights (\path{artifacts/cwfm/release/model_state.pt}) are verified against a recorded SHA-256 hash before any inference; if they are absent or fail the check, analyses that would need the model return an explicit \texttt{MODEL\_UNAVAILABLE} status instead of degrading silently. Each numbered example script covers one query class or one aspect of the system's behavior, from installation checking through static, regime, and network analyses to batch comparison, model diagnostics, and a benchmark atlas, and accepts common options for seeding, device selection, output redirection, machine-readable output, and a dry-run mode that validates the inputs and the declared contract without running inference.
 
-\begin{table}[H]
-\caption{Example scripts in the \texttt{examples/} folder and the question each one addresses.\label{tab:examples}}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Script} & \textbf{Purpose}\\
-\midrule
-\texttt{00\_check\_installation.py} & Verify that packages, data catalog, model bundle, and calibration data are usable\\
-\texttt{01\_static\_ate.py} & Estimate a static average treatment effect under a declared identification contract\\
-\texttt{02\_observed\_regimes.py} & Test whether structural coefficients change across an observed candidate regime variable\\
-\texttt{03\_network\_interference.py} & Estimate a peer-exposure contrast on an observed interaction network\\
-\texttt{04\_safety\_and\_abstention.py} & Demonstrate refusals when identification or empirical support conditions fail\\
-\texttt{05\_compare\_repository\_cases.py} & Batch-compare answer rates, estimates, and interval widths across repository cases\\
-\texttt{06\_model\_diagnostics.py} & Inspect estimator weights, routing, and internal diagnostics for one analysis\\
-\texttt{07\_reference\_benchmark\_atlas.py} & Browse stored results of the classical reference evaluators, independent of the model\\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The fourth script exercises the property this paper emphasizes: it submits a sequence of contrasts of which some are answerable and some are not (an observational effect without declared identification, a network contrast with inadequate exposure support), and shows that the system answers the former and refuses the latter with a machine-readable reason, exactly as in Section~\ref{sec:assessment}.
+The script \texttt{04\_safety\_and\_abstention.py} exercises the property this paper emphasizes: it submits a sequence of contrasts of which some are answerable and some are not (an observational effect without declared identification, a network contrast with inadequate exposure support), and shows that the system answers the former and refuses the latter with a machine-readable reason, exactly as in Section~\ref{sec:assessment}.
 
 The browser interface, started with \texttt{streamlit run app/streamlit\_app.py}, offers four working views. \emph{Analyze} runs a single query of any of the three implemented classes on a selected repository case and returns either an estimate with its calibrated interval or a typed refusal with its reason. \emph{Compare} repeats one analysis across comparable cases and juxtaposes estimates, interval widths, and abstention decisions. \emph{Benchmark Atlas} browses the stored results of the classical reference evaluators without model inference. \emph{Model Diagnostics} exposes, for one analysis, the weights the router assigns to each classical estimator, the compiled versus final estimate, and the state of the neural components. Because the application calls the same public interface as the scripts, no view can bypass a gate: the tools are not a demonstration layered on top of the system but the system itself, exercised through its only public entry point.
 
