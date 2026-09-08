@@ -3,7 +3,9 @@ RESPONSE TO THE REVIEWERS
 Manuscript: Estimating Causal Effects from Tabular Data with Assumption Gates and Automated Estimator Selection for Trustworthy Artificial Intelligence
 Revision date: 8 September 2026
 
-We thank the reviewers for their detailed comments. We revised the manuscript, clarified the implemented scope, corrected two support-checking defects and one assumption-entry issue in the public application, and added a focused empirical support audit. The central interpretation now reflects the confirmatory finding that simple aggregation outperforms the evaluated deep router. We also revised the English, reorganized the manuscript, redrew the figures, reformatted the tables, and checked the bibliography.
+We thank the reviewers for their detailed comments. The revised manuscript presents the framework as an inspectable integration of causal assumptions, classical estimation, automated aggregation, and documented decisions. Its main empirical finding is constructive: simple aggregation improves accuracy within this shared framework. The shallow risk selector and convex stack reduce pooled mean absolute error by 12.4% and 8.8%, respectively, relative to the evaluated deep router on 1,800 confirmatory queries.
+
+We clarified the conditions supporting these findings, corrected two support-checking defects and one assumption-entry issue in the public application, and added a focused empirical support audit. A further editorial pass simplified the abstract and main text, aligned the figures and tables with the central findings, checked every caption and table note, and inspected both rendered manuscript versions. The bibliography was checked against primary records.
 
 Revision markings
 
@@ -12,7 +14,7 @@ The revised source defines and uses the requested environments:
 2. minorRevisionContent: medium grey, grayscale 0.43, for modest content clarifications and presentation changes.
 3. majorRevisionContent: blue, RGB 0, 65, 170, for substantive reframing, implementation changes, and the empirical support audit.
 
-The marked manuscript is paper/template.pdf. The matching clean copy is paper/template-clean.pdf. Both use paper/template.tex, with the clean wrapper disabling revision text colors. Figures retain their data-series colors. Section, figure, and table numbers below refer to the revised manuscript. Locations are identified by section titles as well as numbers because pagination differs from the original submission.
+The marked manuscript is paper/template.pdf. The matching clean copy is paper/template-clean.pdf. Both use paper/template.tex, with the clean wrapper disabling revision text colors. Captions inherit the enclosing revision category; figures retain their data-series colors. Section, figure, and table numbers below refer to the revised manuscript. Locations are identified by section titles as well as numbers because pagination differs from the original submission.
 
 Scope of additional work
 
@@ -22,21 +24,21 @@ REVIEWER 1
 
 Comment 1. Zero false answers depend on truthful and complete metadata; this is a fundamental limitation.
 
-Response. We agree and have made this limitation explicit in the abstract, Introduction, gate description, property table, Discussion, and Conclusion. The identification gate checks a finite library of sufficient declared conditions; it does not establish whether those declarations are true. Incorrect randomization claims, omitted confounders, and an incorrect exposure mapping can pass the implemented rules. Observationally equivalent causal models can imply different intervention effects, so this limitation cannot be removed by checking the observed table alone.
+Response. We agree and have made this limitation explicit in the Introduction, gate description, property table, Discussion, and Conclusion. The abstract makes no claim of a zero causal-error rate or an unconditional guarantee. The identification gate checks a finite library of sufficient declared conditions; it does not establish whether those declarations are true. Incorrect randomization claims, omitted confounders, and an incorrect exposure mapping can pass the implemented rules. Observationally equivalent causal models can imply different intervention effects, so this limitation cannot be removed by checking the observed table alone.
 
 The stress result is now described as contract compliance, not a zero rate of incorrect causal estimates. We also clarified the confirmatory property test: 1,200 distinct gate evaluations are recorded under 13 method labels. The 15,600 recorded statuses are not 15,600 independent tests or numerical evaluations of all estimators on invalid queries. Its ungated answer indicator is true by definition.
 
 The public result view now states the conditional meaning of an accepted causal answer. Network analysis requires an explicit no-unmeasured-confounding declaration instead of automatically asserting it. A regression test demonstrates that changing an ignorability declaration changes the decision without establishing the truth of the declaration.
 
-Locations: Abstract; Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, and 8; Table 3. Implementation: cwfm/application/contracts.py, decision_policy.py, app/pages/analyze.py, app/components/result_status.py, and tests/test_support_revision.py.
+Locations: Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, 7.2, and 8; Table 3. Implementation: cwfm/application/contracts.py, decision_policy.py, app/pages/analyze.py, app/components/result_status.py, and tests/test_support_revision.py.
 
 Comment 2. The shallow selector and convex stack outperform the deep router; this finding should lead the paper.
 
-Response. We reframed the paper around the integrated assumption, support, estimation, and calibration interface. The deep router is explicitly an evaluated baseline. The abstract, Introduction, first Results subsection, Discussion, and Conclusion now report the confirmatory pooled MAEs: 0.141 for the shallow random-forest risk selector, 0.147 for the convex stack, and 0.161 for the frozen router, on 1,800 queries. Table 5 reports paired confidence intervals and coverage. We distinguish the shallow risk selector from random-forest g-computation, which is a different outcome estimator.
+Response. We reframed the paper around the integrated assumption, support, estimation, and calibration interface. The abstract states the main finding directly: simple aggregation improves accuracy over deep routing on 1,800 synthetic queries. The Introduction, first Results subsection, Discussion, and Conclusion develop this finding. Pooled MAEs are 0.141 for the shallow random-forest risk selector, 0.147 for the convex stack, and 0.161 for the frozen router. Figure 10 now compares all nine aggregation policies using the recorded confirmatory results. Table 5 follows the same ordering and supplies paired confidence intervals and coverage. We distinguish the shallow risk selector from random-forest g-computation, which is a different outcome estimator.
 
-The confirmatory comparison now opens the Results section instead of appearing as an ancillary follow-up. We retain the existing public checkpoint for reproducibility. Replacing it with a shallow selector would require packaging that fitted policy and matching calibration, which is outside this focused revision. No claim of a deep-routing accuracy advantage remains.
+The confirmatory comparison now opens Results. The deep router provides a reproducible neural baseline, and the stronger simple policies demonstrate the value of the shared estimator library and aggregation interface. The released checkpoint and its calibration remain fixed. Packaging a stronger fitted policy with matching calibration is identified as the next implementation step in Sections 7.3 and 7.4. The comparison concerns this evaluated checkpoint and does not establish a general ranking of deep and shallow methods.
 
-Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Table 5; release MODEL_CARD.md.
+Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Figure 10; Table 5; release MODEL_CARD.md.
 
 Comment 3. Benchmark the finite-sample empirical support statistic used by the application.
 
@@ -44,7 +46,7 @@ Response. We added a direct audit of the actual public screening functions, incl
 
 The reference is the existing practical-overlap policy applied to a known population distribution. It is not strict mathematical positivity or causal correctness. We define false refusal as rejection in a population-adequate cell and false acceptance as acceptance in a population-inadequate cell. If a positive decision means detecting inadequate support, the false-positive rate is the false-refusal rate. Both error directions are reported, with pointwise 95% Wilson intervals.
 
-For linear assignment at slope one, false refusals decrease from 0.528 at n=32 to 0.106 at n=128 and zero at n=512. For quadratic assignment at slope two, all 500 datasets are accepted at both n=128 and n=512 despite failing the population reference. Increasing sample size does not repair a misspecified linear-probability screen. In the network setting at assignment probability 0.3, false refusal remains 0.246 at n=512. These results explicitly limit practical deployment claims.
+For linear assignment at slope one, false refusals decrease from 0.528 at n=32 to 0.106 at n=128 and zero at n=512. For quadratic assignment at slope two, all 500 datasets are accepted at both n=128 and n=512 despite failing the population reference. Increasing sample size does not repair a misspecified linear-probability screen. In the network setting at assignment probability 0.3, false refusal remains 0.246 at n=512. The audit also records consistent refusal at linear-assignment slopes four and eight and network probabilities 0.1 and 0.02. It identifies both useful screening behavior and specific settings requiring a more flexible diagnostic.
 
 The audit also motivated two small correctness repairs: a passing exposure check can no longer overwrite an earlier treatment-group support failure, and a missing own-treatment group cannot pass the exposure function. The numerical thresholds are unchanged. The audit evaluates this corrected composition, and regression tests cover both defects.
 
@@ -72,7 +74,7 @@ Locations: Section 3.5; references.bib; Definitions/mdpi.bst; paper/REFERENCE_AU
 
 Round 1 presentation comment. Figures and tables can be improved.
 
-Response. We redrew every diagram with larger text and clearer flow, moved the introductory diagrams to the method, and added a Python component diagram. Quantitative plots now have vector PDF and editable SVG exports, readable labels, and neutral metric titles. Captions are brief; explanatory paragraphs follow the figures. Tables use readable text, less crowded columns, and notes below the table for symbols, abbreviations, and comparison conventions. The rendered manuscript was checked for clipping, unresolved references, and oversized boxes.
+Response. We reviewed all 13 figures and all 10 tables. The nine diagrams use 10-point text, complete labels, and explicit inputs, outputs, and connections. The four quantitative figures use vector PDFs with editable SVG exports and labels measuring approximately 9.6 points at the manuscript width. Figure 10 now presents the main confirmatory comparison, with the same method names and ordering as Table 5. Every caption is brief; explanations follow the figures. All tables use 10-point body text, increased row spacing, and 9-point notes defining symbols and abbreviations below the table. Tables follow their first mentions and remain beside their discussion. Both rendered versions were inspected for clipping, crowded labels, broken words in diagrams, and unresolved references.
 
 REVIEWER 2
 
@@ -80,11 +82,11 @@ The five substantive comments match those of Reviewer 1. We address each explici
 
 Comment 1. The zero false-answer result is conditional on the metadata.
 
-Response. The revised abstract and main text distinguish contract enforcement from causal correctness. False or incomplete declarations can pass the same rules, and the support statistic does not establish population positivity. Section 6.1 explains the 1,200 distinct gate tests and the repeated method labels. The application exposes the confounding declaration and displays the conditional interpretation of accepted answers. A regression test verifies the declaration-dependent decision behavior. Locations: Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, and 8; Table 3.
+Response. The Introduction, method, property table, Discussion, and Conclusion distinguish contract enforcement from causal correctness. The abstract makes no unconditional correctness claim. False or incomplete declarations can pass the same rules, and the support statistic does not establish population positivity. Section 6.1 explains the 1,200 distinct gate tests and the repeated method labels. The application exposes the confounding declaration and displays the conditional interpretation of accepted answers. A regression test verifies the declaration-dependent decision behavior. Locations: Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, and 8; Table 3.
 
 Comment 2. Give the stronger shallow selector and convex stack a central position.
 
-Response. The confirmatory comparison now opens Results and appears quantitatively in the abstract and Conclusion: MAEs 0.141 and 0.147 versus 0.161 for the deep router on 1,800 queries. The router is a baseline, and the contribution is the implemented interface and its evaluation. We retain the checkpoint and calibration for reproducibility and do not claim a general disadvantage of deep methods from one selected run. Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Table 5.
+Response. The abstract now states the aggregation advantage on 1,800 synthetic queries. The confirmatory comparison opens Results, and the Introduction and Conclusion report MAEs of 0.141 and 0.147 versus 0.161 for the evaluated deep router. Figure 10 displays all nine aggregation policies; Table 5 supplies uncertainty and coverage. Discussion explains how the framework benefits from these simpler policies while retaining the same candidates and contract. The router remains a reproducible baseline; one selected run does not establish a general disadvantage of deep methods. Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Figure 10; Table 5.
 
 Comment 3. Analyze the empirical support screen across sample sizes and overlap severity.
 
@@ -100,7 +102,7 @@ Response. All 59 entries were checked against primary records, and published rep
 
 Round 1 presentation comment. Figures and tables can be improved.
 
-Response. All figures and tables received a presentation pass. Diagrams and plots have larger labels, captions are short, explanatory material appears in the body, and table notation appears in footnotes. The first table follows its first textual mention. Vector exports and the plot-generation script are included.
+Response. All 13 figures and 10 tables received a complete presentation pass. Diagram and table body text use 10 points, and quantitative figure labels measure approximately 9.6 points after scaling. Captions identify the subject briefly; the explanatory text follows each figure. All table notation is defined below the table, and tables follow their first mentions. Figure 10 and Table 5 now foreground the confirmatory aggregation comparison with consistent method labels. Vector exports, editable sources, and the plot-generation script are included.
 
 REVIEWER 3: TECHNICAL CORRECTIONS
 
@@ -114,7 +116,7 @@ Response. We expanded the technical abbreviations at their first substantive use
 
 Technical comment 3. Place Table 1 after its first mention.
 
-Response. Section 3.6 introduces Table 1 before its source block. Float placement now prevents the table from appearing before that mention. The rendered PDF confirms this order. Location: Section 3.6, Table 1.
+Response. Section 3.6 introduces Table 1 before the table itself. All ten tables are now anchored after their first mentions, alongside the relevant discussion. This also prevents a table from interrupting a paragraph continued on the next page. Both rendered PDFs confirm the order. Location: Section 3.6, Table 1; the same placement rule applies throughout.
 
 Technical comment 4. Explain every equation element below its equation.
 
@@ -126,11 +128,11 @@ Response. Every figure now has a brief descriptive caption. The longer explanati
 
 Technical comment 6. Increase figure font sizes.
 
-Response. We rebuilt the diagrams with larger text and wider boxes rather than shrinking dense layouts. Quantitative charts use larger axis, legend, and category labels and are embedded as vector PDFs. Diagram labels use the manuscript's small text size, approximately 9 points, and plot labels remain approximately that size at their final printed width. We checked the rendered figures for legibility and clipping. Sources and editable SVG plot exports are supplied.
+Response. All nine diagrams now use the manuscript's 10-point body size. Boxes were widened or labels rephrased to accommodate the text, with automatic word hyphenation disabled inside boxes. The four quantitative figures are vector PDFs; their axis, legend, category, and value labels measure approximately 9.6 points at final manuscript width, with larger panel titles. Mathematical subscripts retain their normal smaller size. We checked the actual rendered pages for legibility, overlap, and clipping. Diagram sources, the plotting script, and editable SVG exports are supplied.
 
 Technical comment 7. Remove evaluative phrases such as "lower is better" from figures.
 
-Response. Figure titles and axes now identify the measured quantity directly, for example "Pooled mean absolute error" and "Interval coverage." We removed evaluative parenthetical phrases. Interpretation appears in the text. Locations: Figures 10 and 11, corresponding to the original result plots.
+Response. Titles and axes identify the measured quantity directly. Figure 10 uses "Pooled mean absolute error," Figure 11 uses "Mean absolute error," and Figure 12 uses "Refusal rate." Evaluative parenthetical phrases were removed. Performance interpretation and the meaning of reference lines appear in the accompanying text. Figure 10 now presents the main confirmatory comparison.
 
 Technical comment 8. Avoid abbreviated labels such as "resp." and "comp." in diagrams.
 
@@ -144,19 +146,19 @@ REVIEWER 3: CONTENT CORRECTIONS
 
 Content comment 1. Make the title explicitly relevant to artificial intelligence and the special issue.
 
-Response. The title now identifies automated causal-effect estimation and explicitly names trustworthy artificial intelligence. It does not imply that an accepted estimate is unconditionally trustworthy. The abstract and main text state the conditions and limitations.
+Response. The title now identifies automated causal-effect estimation and explicitly names trustworthy artificial intelligence. The abstract connects explicit assumptions and classical estimators to transparent causal analysis. The main text explains that acceptance and interpretation remain conditional on supplied assumptions.
 
 Content comment 2. State the problem and solution, including what is estimated and by what system.
 
-Response. The new title is "Estimating Causal Effects from Tabular Data with Assumption Gates and Automated Estimator Selection for Trustworthy Artificial Intelligence." It identifies the target, input data, and proposed computational approach. The abstract immediately explains the hybrid system and evaluated policies.
+Response. The new title is "Estimating Causal Effects from Tabular Data with Assumption Gates and Automated Estimator Selection for Trustworthy Artificial Intelligence." It identifies the target, input data, and proposed computational approach. The abstract states the framework's purpose and its main aggregation finding.
 
 Content comment 3. Replace "Answer Well, Refuse Well" with precise scientific wording.
 
-Response. We removed that phrase. The title uses the concrete problem and implemented solution. We did not center the title on neural networks because the confirmatory evidence does not establish an advantage for deep routing.
+Response. We removed that phrase. The title names the estimation problem, tabular input, assumption gates, and automated estimator selection. This wording covers the shared framework and its evaluated neural and simple aggregation policies.
 
 Content comment 4. Use one abstract paragraph of about 200 words with clear methods, results, and conclusions.
 
-Response. The abstract is a single paragraph below 200 words. It progresses from the analysis problem to the hybrid method, gives the 1,800-query comparison and its numerical MAEs, states the conditional stress result and new support-audit finding, and concludes with the contribution and limits. All reported results are supported in the main Results section. Location: Abstract; supporting results in Sections 6.1 and 6.8.
+Response. The abstract is now a brief, single paragraph in two direct sentences. It states the approach and purpose, linking explicit assumptions with classical estimators for transparent causal analysis, then gives the main comparative finding on 1,800 synthetic queries. It avoids technical detail that obscured the message and makes no unsupported guarantee. The specific MAEs, paired intervals, coverage, and conditional stress findings are reported in the Introduction, Results, Discussion, and Conclusion as appropriate. The abstract remains below the requested 200-word maximum. Location: Abstract; supporting comparison in Section 6.1, Figure 10, and Table 5.
 
 Content comment 5. Resolve the [???] citations and explain the manuscript preparation.
 
@@ -176,7 +178,7 @@ Response. The subsection is now titled "Formal Identification and Causal-Analysi
 
 Content comment 8. Separate contributions from exclusions in the positioning statement.
 
-Response. Section 3.6 first states the implemented combination and its evaluation as the contribution. A separate sentence identifies general graphical identification, detection of undeclared confounding, and guaranteed rejection under distribution shift as outside scope. The contribution is no longer mixed with exclusions in one sentence.
+Response. Section 3.6 states the implemented combination and its evaluation first. A separate sentence identifies general graphical identification and detection of undeclared confounding as outside the implemented scope. The treatment of distribution shift appears in Table 3 and the Discussion. Contributions and scope limits no longer share a single sentence.
 
 Content comment 9. Make Preliminaries an accessible, cited Background section.
 
@@ -208,7 +210,7 @@ Response. We removed the "Answer: yes" openings and conversational one-sentence 
 
 Content comment 16. Separate results from discussion and remove unsupported evaluative phrasing.
 
-Response. Results now report numerical findings, uncertainty, and factual scope. Phrases such as "clearly the best" and "far ahead" were removed. Discussion separately interprets the shallow-policy advantage, inactive neural components, contract dependence, support failures, and deployment limits. Locations: Sections 6 and 7, especially Sections 6.7 and 7.1.
+Response. Results now report numerical findings, uncertainty, and factual scope. Phrases such as "clearly the best" and "far ahead" were removed. Discussion separately interprets the aggregation gains, regime-detection tradeoff, inspectable decisions, and the settings in which the empirical screen succeeds or needs improvement. It then states the limits and practical next steps. Locations: Sections 6 and 7, especially Sections 6.7 and 7.1.
 
 Content comment 17. Move tool support before results and connect it to the setup.
 
@@ -216,7 +218,7 @@ Response. Implementation and Tool Support is now Section 5.3 within Experimental
 
 Content comment 18. Provide a component diagram mapping the method to Python tools and routers.
 
-Response. Figure 9 maps example and Streamlit clients, the public runner and adapters, validation and contract policy, classical candidate fitting, the frozen PyTorch encoder/router, calibration and typed results, and the experiment drivers. The accompanying text identifies NumPy, SciPy, PyTorch, and scikit-learn roles. This describes the implemented integration rather than suggesting that unrelated cited causal packages are runtime dependencies. Location: Section 5.3, Figure 9.
+Response. Figure 9 maps example and Streamlit clients, the public runner and adapters, validation and contract policy, classical candidate fitting, the frozen PyTorch encoder/router, calibration and typed results, and the experiment drivers. Figures 3 and 7 explicitly connect fitted candidate effects and standard errors to the risk router, alongside the encoded episode and query. The accompanying text identifies NumPy, SciPy, PyTorch, and scikit-learn roles. This describes the implemented integration rather than suggesting that unrelated cited causal packages are runtime dependencies. Location: Section 5.3, Figure 9.
 
 Content comment 19. Explain "locked final test bank."
 
@@ -232,11 +234,11 @@ Response. The input is an observed table, named formal query, and assumption led
 
 Content comment 22. Provide a clear workflow with inputs and outputs.
 
-Response. Figure 3 shows the public analysis flow from observed data, named query, and ledger through validation, empirical support, declared identification, candidate fitting, risk routing, aggregation, calibration, and output. The refusal branch explicitly excludes an effect estimate and interval. Figures 4 and 6 provide the input/output objects and the implemented gate precedence. The text distinguishes effect queries from regime decisions. Locations: Sections 4.1, 4.2, and 4.5.
+Response. Figure 3 shows the public analysis flow from observed data, named query, and ledger through validation, empirical support, declared identification, candidate fitting, risk routing, aggregation, calibration, and output. The refusal branch explicitly excludes an effect estimate and interval. Figure 4 presents the observed episode, formal query, and assumption ledger as separate inputs to the runner, so observations are not shown as generating assumptions. Figure 6 specifies gate precedence. The text distinguishes effect queries from regime decisions. Locations: Sections 4.1, 4.2, and 4.5.
 
 Content comment 23. Relate "Reliability-Gated Foundation Model" to CWFM.
 
-Response. We removed the competing model designation from the title. CWFM consistently names the implementation. The Introduction explains that foundation model refers narrowly to reuse of one pretrained neural checkpoint across the implemented tasks; the main contribution does not require deep routing superiority. The new title names the problem and approach rather than introducing a second system name. Locations: title, Abstract, and Section 1.
+Response. We removed the competing model designation from the title. CWFM consistently names the implementation. The Introduction explains that foundation model refers narrowly to reuse of one pretrained neural checkpoint across the implemented tasks; the main contribution does not require deep routing superiority. The new title names the problem and approach rather than introducing a second system name. Locations: title and Section 1.
 
 Content comment 24. Explain how integration is implemented and used in the experiments.
 
@@ -244,18 +246,18 @@ Response. Sections 4.6 and 5.3 explain the computation and software mapping. Cla
 
 Round 1 language comment. Improve the English to clarify the research.
 
-Response. We revised the abstract, Introduction, definitions, transitions, results, and Discussion for formal scientific language. We removed dialogue-style answers, rhetorical formulations, ambiguous claims of guarantees, and inconsistent uses of expert and specialist. We separated formal definitions from examples and results from interpretation. We avoided em and en dashes, including automatically compressed citation ranges; page ranges use "to." Language-only changes use the dark-grey revision environment.
+Response. We revised the full manuscript for clear scientific English, including the abstract, Introduction, Related Work, definitions, method, setup, results, and Discussion. Long sentences were divided, repeated caveats consolidated, and software roles named consistently. The narrative leads with the supported contributions and numerical gains, then explains their conditions and limits. Dialogue-style answers, rhetorical formulations, and ambiguous guarantee claims were removed. Formal definitions precede separate examples; Results and Discussion have distinct roles. Em and en dashes were removed from text and automatically compressed citation ranges; page ranges use "to." Language-only changes use the dark-grey revision environment.
 
 Round 1 presentation comment. Figures and tables must be improved.
 
-Response. All figure and table changes described under Technical Comments 3 and 5 through 9 have been implemented. Figure sources are supplied in vector form, detailed explanations follow figures, captions are concise, and table symbols and abbreviations appear below tables. The full rendered document was inspected, and marked and clean submission copies are included.
+Response. The changes under Technical Comments 3 and 5 through 9 cover every figure and table. We additionally checked the clarity of arrows and independent inputs in the workflow diagrams, standardized method names between Figure 10 and Table 5, and expanded the table row spacing. The rendered marked and clean copies were inspected at page and figure scale. The editorial audit records caption counts, printed font sizes, table placement, and compilation checks in paper/EDITORIAL_AUDIT.txt.
 
 REPRODUCTION AND VERIFICATION
 
-- Full Python test suite: 34 tests passed, including four new behavioral checks for support composition, missing treatment groups, declared-assumption dependence, and audit reference/rate handling.
+- Implementation revision: the full Python test suite passed all 34 tests, including four new behavioral checks for support composition, missing treatment groups, declared-assumption dependence, and audit reference/rate handling.
 - A pre-existing interval-endpoint assertion failed at a float32 rounding difference of approximately 5.4e-7. The same failure was reproduced with the original runner and validation code. That assertion now uses explicit relative tolerance 1e-6 and absolute tolerance 1e-7; point-estimate checks were retained.
 - New experiment: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m cwfm.support_experiment.
-- Figure regeneration: python scripts/build_paper_figures.py. This uses recorded results and does not run training.
+- Figure regeneration: python scripts/build_paper_figures.py. This uses recorded results and does not run training. The final editorial pass adds no experiments and changes no reported estimates; the new confirmatory chart reads the existing CSV directly.
 - Manuscript builds, from paper/: latexmk -pdf -interaction=nonstopmode -halt-on-error template.tex; and the same command for template-clean.tex.
 - All 59 bibliography entries resolve. The final builds have no undefined references, citation placeholders, or overfull boxes. The manuscript contains no em or en dashes.
 - Existing neural weights, release calibration, and original/confirmatory numerical result artifacts were not changed. The newly reported empirical support limitations are documented rather than concealed by tuning on the audit.
@@ -267,6 +269,7 @@ paper/template.pdf: marked review copy.
 paper/template-clean.tex and paper/template-clean.pdf: matching clean copy.
 RESPONSE.txt and paper/RESPONSE.txt: identical plain text point-by-point responses.
 paper/references.bib and paper/REFERENCE_AUDIT.txt: revised references and primary-source audit.
+paper/EDITORIAL_AUDIT.txt: final language, revision-marking, figure, table, and PDF checks.
 paper/figures/: diagram sources and vector plots.
 scripts/build_paper_figures.py: reproducible result-plot generation.
 cwfm/support_experiment.py and experiments/support_protocol.json: new empirical support audit.
