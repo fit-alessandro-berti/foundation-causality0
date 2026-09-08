@@ -1,0 +1,7 @@
+scenario,sum,count
+ate_linear,300,300
+ate_nonlinear,300,300
+ate_randomized,300,300
+interference_linear,300,300
+interference_null,300,300
+interference_threshold,300,300

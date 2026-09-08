@@ -1,0 +1,169 @@
+{
+  "protocol": {
+    "purpose": "Reviewer 1: matched pretraining ablation and router diagnostics",
+    "specified_on": "2026-09-08",
+    "checkpoint": "artifacts/cwfm/checkpoint.pt",
+    "checkpoint_sha256": "8c3fa941e7bb515f1276281bd339e3032e40fc4247edccfea076067f932bb856",
+    "source_protocol": "experiments/revision_protocol.json",
+    "interpretation": "Post-review analysis of the existing confirmatory effect bank, not a newly independent confirmatory study. No training, checkpoint selection, threshold selection, or interval recalibration.",
+    "initialization_seeds": [
+      1729,
+      1730,
+      1731,
+      1732,
+      1733
+    ],
+    "tuning_seed_start": 60000000,
+    "tuning_episodes_per_scenario": 200,
+    "test_seed_start": 80000000,
+    "test_episodes_per_scenario": 300,
+    "scenario_seed_stride": 100000,
+    "scenarios": [
+      [
+        0,
+        "linear"
+      ],
+      [
+        0,
+        "nonlinear"
+      ],
+      [
+        0,
+        "randomized"
+      ],
+      [
+        2,
+        "linear"
+      ],
+      [
+        2,
+        "threshold"
+      ],
+      [
+        2,
+        "null"
+      ]
+    ],
+    "controls": "Same architecture, observed inputs, fitted classical candidates, compatibility masks and deterministic declared gate. Evaluate full effect_mean and verify equality to compiled_mean for every model. Random initializations receive no optimization or task adaptation. Dropout is disabled. Simulator targets are withheld from forward inputs.",
+    "comparators": [
+      "pretrained",
+      "five untrained initializations",
+      "uniform compatible weights",
+      "pretrained weights averaged on tuning episodes with the same task and compatibility mask"
+    ],
+    "primary_metric": "Pooled absolute effect error, equally weighted over the six scenarios. The untrained summary averages errors across initializations, not predictions. Also report all per-initialization and per-scenario errors.",
+    "bootstrap": {
+      "replicates": 4000,
+      "seed": 902026,
+      "confidence": 0.95,
+      "unit": "paired episode, stratified by scenario; conditional on the single trained checkpoint and the five fixed random initializations"
+    },
+    "router_diagnostics": "Mean candidate weights, normalized routing entropy, within-group weight variation, oracle top-choice agreement, and comparison with fixed tuning-mean weights. Oracle comparisons use truth only after inference and are descriptive.",
+    "development_results": "Export the saved step-100 development diagnostics without recomputing their estimates. Report all four individual effect errors for each of six RQ4 families, with seeds reconstructed from the saved training stream and validate() generation order.",
+    "cost_reporting": "Exact full-model parameter count, checkpoint bytes, saved original training runtime and workload, current device and separate preparation/forward timings. Initialization variation is not training-run stability.",
+    "pilot": {
+      "seed_start": 99000000,
+      "episodes": 32,
+      "task": 0,
+      "scenario": "linear",
+      "purpose": "Timing only; no outcome comparisons or protocol tuning",
+      "estimated_main_seconds": 212
+    }
+  },
+  "source_sha256": {
+    "experiments/pretraining_protocol.json": "ab7d5948e7cc19f86424012cd3d1ac78876a750856778594379a90c11a7e4c60",
+    "artifacts/cwfm/checkpoint.pt": "8c3fa941e7bb515f1276281bd339e3032e40fc4247edccfea076067f932bb856",
+    "experiments/revision_protocol.json": "360446d8eb0702c65ff1952e2571832a8e893861e1b709f996d28a05486a052a",
+    "/home/berti/foundation-causality/cwfm/pretraining_experiment.py": "0843f6a08eacc911e14ef98f6a7bba661847f95b062d7edd7dd9781a620b4ada",
+    "cwfm/model.py": "fe66d1e2823a885afc50d4fb2181dc92207045969b6716532c762ffaab1908d0",
+    "cwfm/data.py": "90ea60714a30990cc2f0a3d4503da0aad06f30a62059c50d0e041fc06924dca0",
+    "cwfm/estimators.py": "e206268fc0290d13bbf3c886cd066f1186188c3ed49dddbb07eaa5af1bb0348c",
+    "cwfm/train.py": "7678cd5a58df31abce797164d65ebf171b0a0aaa2a784111463d6985e63d606b",
+    "artifacts/cwfm/validation_episode_diagnostics.jsonl": "5cea2cd8dd59e2e3e63fd2d4dc8f8ccf3975616c16e43a782ff52261b20c1b59",
+    "artifacts/cwfm/revision/confirmatory_per_seed.csv": "a3a0d31d162f0f4df6d90da08c0ec611215ccaea7c14582fe2361ed07825804f"
+  },
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "device": "cuda",
+    "torch_threads": 4,
+    "gpu": "NVIDIA L40S"
+  },
+  "model": {
+    "parameters": 917040,
+    "float32_parameter_bytes": 3668160,
+    "checkpoint_bytes": 3735574,
+    "original_training_seconds": 2000.5451283454895,
+    "original_training_steps": 1600,
+    "original_batch_size": 24,
+    "selected_step": 100,
+    "original_gpu_model": "not recorded in the original manifest"
+  },
+  "checks": {
+    "original_prediction_max_difference": 4.3723335352297e-07,
+    "max_absolute_residual_by_model": {
+      "Pretrained": 2.0186142535294493e-07,
+      "Untrained seed 1729": 1.8022015524365997e-07,
+      "Untrained seed 1730": 2.043276907670588e-07,
+      "Untrained seed 1731": 2.0186142535294493e-07,
+      "Untrained seed 1732": 1.972257024362989e-07,
+      "Untrained seed 1733": 1.972257024362989e-07
+    },
+    "model_states_unchanged": true,
+    "development_records": 36,
+    "effect_development_records": 24,
+    "all_test_methods_accept_all_episodes": true
+  },
+  "tuning_mean_weights": {
+    "0:111110": [
+      0.23139454424381256,
+      0.11122853308916092,
+      0.21751493215560913,
+      0.23656600713729858,
+      0.20329593122005463,
+      0.0
+    ],
+    "0:111111": [
+      0.20317187905311584,
+      0.10114263743162155,
+      0.18080174922943115,
+      0.189409077167511,
+      0.16717329621315002,
+      0.15830141305923462
+    ],
+    "2:111111": [
+      0.21872863173484802,
+      0.14472560584545135,
+      0.11950504034757614,
+      0.23144304752349854,
+      0.1449126899242401,
+      0.14068494737148285
+    ]
+  },
+  "timings": {
+    "generation_and_fitting_seconds": 3.1902959356084466,
+    "transfer_seconds": 0.04110969929024577,
+    "forward_seconds": {
+      "Pretrained": 31.164386552758515,
+      "Untrained seed 1729": 18.108886365313083,
+      "Untrained seed 1730": 18.170694668078795,
+      "Untrained seed 1731": 18.424985504709184,
+      "Untrained seed 1732": 18.28096784837544,
+      "Untrained seed 1733": 18.095346871763468
+    }
+  },
+  "total_runtime_seconds": 126.67300895601511,
+  "artifact_sha256": {
+    "acceptance.csv": "24d9a6dcc20268f083b11f7760b43f87f612fdad67c624288c8a8264ad564065",
+    "development_effect_errors.csv": "9c6bee111863047abb5d721f77f04f390689971b94c5af60f01c3a8c45f8059e",
+    "development_episodes.csv": "b69acfdc8af2504591ffeb54b7a3b8c091d8152ccecabbe30dfe18198c9c3439",
+    "paired_errors.csv": "5d5c8e178bbc70de432001cb8841aed724c56021b2437b79485c68e363fcc8dc",
+    "per_seed.csv": "6e7fe0c9fae9652a16f9f8426dc295690e0238c96ff95e70c08b8c2f6cb0f50e",
+    "router_summary.csv": "d160150cb320b3915735ccc1d3c4a577ed1410ad43bb0a5c8ec9984bf319d5c1",
+    "router_weight_variation.csv": "442bcfb785b344c7213e519c75c2e9dd1cadbf6129d23e01b9a1516fb9af5932",
+    "router_weights.csv": "c5c10c8f315ef935205a4fc11be86ee1aab8eca3599d67eaef7141a126dc8f53",
+    "summary.csv": "3dadd4900b57f1977204d960606f3fd5df31d7011bec9bd2ad8f36394b5d5dc1"
+  }
+}

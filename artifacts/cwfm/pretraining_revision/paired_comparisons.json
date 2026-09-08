@@ -1,0 +1,23 @@
+{
+  "Untrained mean": {
+    "comparator_minus_pretrained_mae": 0.006135217973608326,
+    "ci95": [
+      0.004698738231738349,
+      0.007596854940857013
+    ]
+  },
+  "Uniform": {
+    "comparator_minus_pretrained_mae": 0.007109657576077652,
+    "ci95": [
+      0.005571804345185975,
+      0.008720393374704231
+    ]
+  },
+  "Mean pretrained weights": {
+    "comparator_minus_pretrained_mae": 0.0009177469486905354,
+    "ci95": [
+      0.0002851736497493413,
+      0.0015448063133711163
+    ]
+  }
+}

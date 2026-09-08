@@ -5,22 +5,98 @@ Revision date: 8 September 2026
 
 We thank the reviewers for their detailed comments. The revised manuscript presents the framework as an inspectable integration of causal assumptions, classical estimation, automated aggregation, and documented decisions. Its main empirical finding is constructive: simple aggregation improves accuracy within this shared framework. The shallow risk selector and convex stack reduce pooled mean absolute error by 12.4% and 8.8%, respectively, relative to the evaluated deep router on 1,800 confirmatory queries.
 
-We clarified the conditions supporting these findings, corrected two support-checking defects and one assumption-entry issue in the public application, and added a focused empirical support audit. A further editorial pass simplified the abstract and main text, aligned the figures and tables with the central findings, checked every caption and table note, and inspected both rendered manuscript versions. The bibliography was checked against primary records.
+We clarified the conditions supporting these findings, corrected two support-checking defects and one assumption-entry issue in the public application, and added a focused empirical support audit. A further editorial pass simplified the abstract and main text, aligned the figures and tables with the central findings, checked every caption and table note, and inspected both rendered manuscript versions. The bibliography was checked against primary records. We also expanded the background and method explanations where readers would benefit from a slower introduction: identification versus estimation, a treatment-query walkthrough, routing weights, calibration, and the interpretation of evaluation metrics. The corrected Reviewer 1 comments are addressed with a matched pretraining ablation, router diagnostics, individual development results, explicit acceptance denominators, and a computational-cost audit.
 
 Revision markings
 
 The revised source defines and uses the requested environments:
 1. revisedLanguageStyle: dark grey, grayscale 0.25, for wording and style changes.
 2. minorRevisionContent: medium grey, grayscale 0.43, for modest content clarifications and presentation changes.
-3. majorRevisionContent: blue, RGB 0, 65, 170, for substantive reframing, implementation changes, and the empirical support audit.
+3. majorRevisionContent: blue, RGB 0, 65, 170, for substantive reframing, implementation changes, and added experimental analyses.
 
 The marked manuscript is paper/template.pdf. The matching clean copy is paper/template-clean.pdf. Both use paper/template.tex, with the clean wrapper disabling revision text colors. Captions inherit the enclosing revision category; figures retain their data-series colors. Section, figure, and table numbers below refer to the revised manuscript. Locations are identified by section titles as well as numbers because pagination differs from the original submission.
 
 Scope of additional work
 
-The 1,800-query confirmatory comparison, its calibration and stress streams, and the semi-synthetic energy experiment were already available. We integrated their findings into the main narrative instead of repeating training or those experiments. The only newly added experimental design is the inexpensive CPU audit of the public support functions: 40,000 datasets across 80 cells, with 500 independent replicates per cell. A complete run takes approximately ten seconds in this environment. Numerical support thresholds, neural weights, and released calibration remain unchanged. The new audit reports all cells and is not used to select thresholds.
+The existing confirmatory comparison, its calibration and stress streams, and the semi-synthetic energy experiment remain unchanged. The earlier implementation revision added a direct empirical-support audit of 40,000 datasets. To address the corrected Reviewer 1 comments, we added a matched pretraining ablation and router diagnostics on the existing 1,800-episode confirmatory effect bank, using its separate tuning stream for a fixed-mean-weight control. This post-review analysis took 126.7 seconds on the available GPU and requires no retraining, threshold tuning, or interval recalibration. We also exported all individual results from the saved step-100 development diagnostics and audited model size and training costs. Original result artifacts, neural weights, public application behavior, and released calibration remain unchanged. Reviewer 2 now receives the full detailed responses previously assigned to the duplicated Reviewer 1 section; Reviewer 3's substantive responses are preserved.
 
 REVIEWER 1
+
+Comment 1. Compare the model with and without pretraining and explain its contribution.
+
+Response. We added a matched ablation of the evaluated effect-estimation pathway. The released pretrained checkpoint is compared with five untrained copies of exactly the same architecture, using initialization seeds 1729 to 1733. All models receive the same observed inputs, fitted classical candidates, compatibility masks, and declared gate. The untrained copies receive no optimization or adaptation, and simulator targets are excluded from model inputs. Residual contributions are below 2.1e-7 in all models, so the comparison isolates pretrained encoder and router weights to numerical precision. Classical estimators continue to be fitted to each dataset in both conditions.
+
+On the existing 1,800-episode confirmatory effect bank, pooled mean absolute error (MAE) is 0.1612 with pretraining and 0.1673 averaged across the five untrained initializations, a 3.7% reduction. Individual untrained MAEs range from 0.1654 to 0.1711. The paired reduction is 0.0061, with a 95% bootstrap interval of [0.0047, 0.0076]. Uniform aggregation gives 0.1683. Pretraining reduces the scenario mean in five of six cells; threshold interference favors the untrained and uniform controls. Table 11 reports every scenario, and the released CSV contains every initialization and episode.
+
+This provides direct evidence that pretraining learns useful candidate preferences beyond random initialization and equal weighting. It does not establish superiority over the shallow selector or convex stack, which retain the stronger main results. We identify the ablation as a post-review analysis of an existing bank, not a newly independent confirmatory study. The intervals condition on one trained checkpoint and five fixed initializations. This is an effect-routing ablation, not a repeated-training study or an ablation of the classical regime decision rule. The protocol was specified before the comparison; it changes no checkpoint, calibration, or support threshold.
+
+Locations: Sections 5.8, 6.10, and 7.1; Table 11. Reproduction: python -m cwfm.pretraining_experiment; experiments/pretraining_protocol.json; artifacts/cwfm/pretraining_revision/.
+
+Comment 2. Increase the four episodes per family or report the individual results.
+
+Response. We agree that four episodes cannot support a precise estimate of generalization performance. We took the requested minimally invasive alternative and disclosed every individual result. Table 12 now contains the four absolute effect errors and their mean for each of the six RQ4 development families, covering all 24 effect episodes. The accompanying CSV also supplies the targets, estimates, generation order, reconstructed seeds, and all 12 development regime records.
+
+These values were exported directly from the saved step-100 diagnostics rather than recomputed with the later repaired estimator layer. Thus the new table reproduces the evidence underlying the existing figure exactly. We checked the reconstructed effect seeds against the generator targets. For example, the hinge errors are 0.108, 0.049, 0.117, and 0.355, whereas the nonmonotone-interference errors are 1.863, 1.653, 1.265, and 0.646. Displaying the individual observations makes the variation visible without suggesting that four samples provide narrow uncertainty bounds.
+
+We consistently identify these families as excluded from gradient training but used in checkpoint selection. They are development diagnostics, not an independent generalization test. The limitations now explicitly call for a larger independent study of these families. The separate confirmatory effect comparison already uses 300 episodes per scenario, but we do not present that larger bank as additional evidence for the six RQ4 families.
+
+Locations: Sections 5.4, 6.6, 6.11, and 7.2; Figure 11; Table 12. Data: artifacts/cwfm/pretraining_revision/development_episodes.csv and development_effect_errors.csv.
+
+Comment 3. Assess training stability across runs or state the single-run limitation clearly.
+
+Response. We agree that one optimization run is insufficient to establish training stability. Section 7.2 now states explicitly that the saved training trajectory and reproducible inference do not establish stability across initializations. The evaluated checkpoint comes from one run; assessing variability in both training and checkpoint selection requires repeated optimization runs.
+
+We use the reviewer's permitted alternative of a clear limitation rather than repeating the full training schedule. The five randomly initialized controls in the new ablation are not described as five training runs. Likewise, presentation-stability probes concern transformations of the input at a fixed checkpoint, not optimization stability. The paired intervals in the ablation are explicitly conditional on that checkpoint and the fixed controls. The manuscript retains the supported positive result that pretraining improves this evaluated router, without generalizing it to all training runs or deep architectures.
+
+Locations: Sections 5.8 and 7.2; interpretation in Section 7.1.
+
+Comment 4. Explain and analyze what the router has learned.
+
+Response. We expanded the explanation and added a control that separates average candidate preferences from episode-specific adaptation. During pretraining, simulator effect truth provides a soft target that gives greater mass to candidates with smaller absolute error. The loss also rewards the accuracy of the combined estimate and discourages concentration on too few candidates. At inference, the encoder summarizes the observed dataset and query; the router also receives candidate estimates and standard errors. Its masked scores become nonnegative weights summing to one. No simulator truth enters this calculation.
+
+The new analysis reports candidate weights, normalized entropy, within-group variation, and oracle top-choice diagnostics for every evaluated episode. The trained weights remain broad rather than selecting a single estimator: scenario-average normalized entropy ranges from 0.977 to 0.987, where one is uniform. Static linear and nonlinear episodes give interaction candidates mean weights of 0.238 and 0.236, compared with 0.110 and 0.111 for augmented inverse probability weighting. Network cells give interaction candidates approximately 0.230 to 0.234 and spline candidates 0.114 to 0.126. These weights describe contributions to an estimate, not probabilities that a causal model is true.
+
+We also replace each episode's weights with the pretrained weights averaged over the separate tuning stream, matching task and compatibility mask. This fixed-mean control has pooled MAE 0.1621, compared with 0.1612 for episode-specific routing. The paired improvement is 0.0009, with a 95% interval of [0.0003, 0.0015]. Together with the pretraining ablation, this shows that the evaluated checkpoint mainly learns useful broad aggregation preferences, with a smaller additional benefit from adapting weights to individual datasets. We report that finding constructively and retain the stronger shallow-policy results.
+
+Locations: Sections 4.6, 5.8, 6.10, and 7.1; Table 11. Data: artifacts/cwfm/pretraining_revision/router_weights.csv, router_summary.csv, router_weight_variation.csv, and paired_comparisons.json.
+
+Comment 5. Determine whether accepted-case accuracy results from rejecting difficult samples.
+
+Response. We now report the relevant denominators explicitly. The model answers all 180 answerable effect queries in the original test bank and all 1,800 in the confirmatory effect bank, including all 300 episodes in each of its six scenarios. All 24 RQ4 effect episodes are also retained, including the high-error nonmonotone-interference cases. Thus the reported accuracy within these banks is not obtained by discarding difficult answerable episodes.
+
+The 120 original and 1,200 confirmatory stress queries are separate cells with declared hidden confounding or inadequate support. Their refusals test the shared contract, rather than an error-based selection rule. All aggregation policies share the same answerable episodes and declared gate; their accuracy comparison is not confounded by different refusal sets. Counting answerable and stress effect queries together gives a 60% answer rate and a 40% refusal rate in both designed mixtures, but all refusals belong to the declared-invalid stress cells. Their proportion is set by the benchmark design and is not an estimate of the deployment refusal rate.
+
+The public empirical screen can reject otherwise population-adequate queries in finite samples. We keep that issue separate and retain the direct support audit and its false-refusal and false-acceptance results. The revised wording therefore addresses the benchmark concern without asserting that selection effects are absent in arbitrary deployment settings.
+
+Locations: Sections 5.4, 6.4, 6.8, and 6.11; Table 12. Data: artifacts/cwfm/pretraining_revision/acceptance.csv and the original and confirmatory per-seed records.
+
+Comment 6. Report computational cost, including the total number of parameters.
+
+Response. We counted the parameters directly from the checkpoint architecture. The full model has 917,040 neural parameters, including exploratory heads. Float32 parameter storage is 3,668,160 bytes (3.67 MB), and the checkpoint file is 3,735,574 bytes (3.74 MB), using decimal units. Classical candidate fits are dataset-specific and are not included in this neural parameter count.
+
+The saved training record reports 2,000.5 seconds, or 33.3 minutes, for 1,600 updates with batches of 24 episodes, totaling 38,400 training episodes. The selected step-100 checkpoint follows 2,400 episodes. We distinguish the full-run cost from the point at which the evaluated snapshot was saved. The original run used a GPU, but its model was not recorded; we do not infer that hardware from the present environment.
+
+The new ablation completed in 126.7 seconds on an NVIDIA L40S, using batches of 32 and four CPU threads. It includes the 1,200 tuning episodes and 1,800 test episodes, with classical fits shared across models. Pretrained forward passes across both streams took 31.2 seconds, and generation plus candidate fitting took 3.2 seconds. These are batched audit timings, not per-request latency measurements. Configuration, environment, hashes, counts, and phase timings are recorded in the manifest. The foundation-model terminology remains explicitly limited to reusing a pretrained checkpoint across the implemented tasks; it does not imply a large parameter count or demonstrated universal causal capability.
+
+Locations: Sections 1, 5.4, and 6.10. Data: artifacts/cwfm/checkpoint_manifest.json and artifacts/cwfm/pretraining_revision/manifest.json.
+
+Comment 7. Resolve missing or unresolved reference citations.
+
+Response. We corrected the bibliography build and verified the compiled manuscript. The supplied bibliography style had been a placeholder based on a generic style; the revised source uses the official MDPI numeric style, with a small formatting adaptation for page ranges written using "to." A complete LaTeX and BibTeX build resolves all 59 bibliography entries and all in-text citation links. The final marked and clean PDFs contain no unresolved citation placeholders or undefined-reference warnings.
+
+The earlier reference audit also checked titles, authors, publication status, pagination, article numbers, DOIs, and stable links against primary records. Published replacements were used where established; unavailable metadata was documented rather than invented. We retained those corrections and their audit for this revision. The response letter reproduces the reviewer's comments verbatim, so a quoted reference to a placeholder in that letter should not be confused with an unresolved citation in the manuscript.
+
+Locations: references throughout the manuscript; paper/references.bib, paper/Definitions/mdpi.bst, and paper/REFERENCE_AUDIT.txt.
+
+Round 1 presentation comment. Figures and tables can be improved.
+
+Response. We retained the complete presentation revision and applied the same style to the two new tables. The manuscript now contains 13 figures and 12 tables. All nine diagrams use 10-point text and complete labels; the four quantitative figures are vector PDFs with labels of approximately 9.6 points at manuscript width. Captions identify the content briefly, with detailed explanation in adjacent prose. Every table follows its first mention, uses 10-point body text and increased row spacing, and defines symbols or comparison conventions in a 9-point note below the table.
+
+Table 11 makes the ablation directly comparable across all six scenarios, with the untrained averaging rule and fixed-mean control explained below it. Table 12 discloses the individual development observations rather than adding another small-sample summary figure. Both are marked blue as substantive additions. Existing numerical figures and their editable sources are preserved. We checked the marked and clean PDFs for legibility, clipping, table placement, and resolved cross-references. The response PDF places full reviewer comments in red, indented boxes followed by the detailed replies.
+
+Locations: Figures 1 through 13; Tables 1 through 12; paper/EDITORIAL_AUDIT.txt; paper/RESPONSE.tex.
+
+REVIEWER 2
 
 Comment 1. Zero false answers depend on truthful and complete metadata; this is a fundamental limitation.
 
@@ -34,11 +110,11 @@ Locations: Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, 7.2, and 8; Table 3. Implementat
 
 Comment 2. The shallow selector and convex stack outperform the deep router; this finding should lead the paper.
 
-Response. We reframed the paper around the integrated assumption, support, estimation, and calibration interface. The abstract states the main finding qualitatively: a shallow selector and a convex stack improve accuracy over the evaluated deep router in the confirmatory experiments. The Introduction, first Results subsection, Discussion, and Conclusion develop this finding. Pooled MAEs are 0.141 for the shallow random-forest risk selector, 0.147 for the convex stack, and 0.161 for the frozen router. Figure 10 now compares all nine aggregation policies using the recorded confirmatory results. Table 5 follows the same ordering and supplies paired confidence intervals and coverage. We distinguish the shallow risk selector from random-forest g-computation, which is a different outcome estimator.
+Response. We reframed the paper around the integrated assumption, support, estimation, and calibration interface. The abstract states the main finding qualitatively: a shallow selector and a convex stack improve accuracy over the evaluated deep router in the confirmatory experiments. The Introduction, first Results subsection, Discussion, and Conclusion develop this finding. Pooled MAEs are 0.141 for the shallow random-forest risk selector, 0.147 for the convex stack, and 0.161 for the frozen router. Figure 10 now compares all nine aggregation policies using the recorded confirmatory results. Table 5 follows the same ordering and supplies paired confidence intervals and coverage. We distinguish the shallow risk selector from random-forest g-computation, which is a different outcome estimator. Section 5.5 now explains the policy distinction directly: the shallow selector predicts candidate errors and adapts its choice to each dataset, whereas the convex stack reuses weights learned for each task. Section 4.6 explains the neural baseline's learned preference scores and how they become aggregation weights.
 
 The confirmatory comparison now opens Results. The deep router provides a reproducible neural baseline, and the stronger simple policies demonstrate the value of the shared estimator library and aggregation interface. The released checkpoint and its calibration remain fixed. Packaging a stronger fitted policy with matching calibration is identified as the next implementation step in Sections 7.3 and 7.4. The comparison concerns this evaluated checkpoint and does not establish a general ranking of deep and shallow methods.
 
-Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Figure 10; Table 5; release MODEL_CARD.md.
+Locations: Abstract; Sections 1, 4.6, 5.5, 6.1, 7.1, and 8; Figure 10; Table 5; release MODEL_CARD.md.
 
 Comment 3. Benchmark the finite-sample empirical support statistic used by the application.
 
@@ -48,13 +124,13 @@ The reference is the existing practical-overlap policy applied to a known popula
 
 For linear assignment at slope one, false refusals decrease from 0.528 at n=32 to 0.106 at n=128 and zero at n=512. For quadratic assignment at slope two, all 500 datasets are accepted at both n=128 and n=512 despite failing the population reference. Increasing sample size does not repair a misspecified linear-probability screen. In the network setting at assignment probability 0.3, false refusal remains 0.246 at n=512. The audit also records consistent refusal at linear-assignment slopes four and eight and network probabilities 0.1 and 0.02. It identifies both useful screening behavior and specific settings requiring a more flexible diagnostic.
 
-The audit also motivated two small correctness repairs: a passing exposure check can no longer overwrite an earlier treatment-group support failure, and a missing own-treatment group cannot pass the exposure function. The numerical thresholds are unchanged. The audit evaluates this corrected composition, and regression tests cover both defects.
+The audit also motivated two small correctness repairs: a passing exposure check can no longer overwrite an earlier treatment-group support failure, and a missing own-treatment group cannot pass the exposure function. The numerical thresholds are unchanged. The audit evaluates this corrected composition, and regression tests cover both defects. The revised method separates treatment-score, exposure-quantile, and group-count requirements into readable paragraphs. Discussion explains why additional observations help several settings while a linear score cannot capture symmetric quadratic assignment.
 
 Locations: Sections 4.5, 5.7, 6.8, 7.1, and 7.2; Figure 12; Table 10. Reproduction: experiments/support_protocol.json, cwfm/support_experiment.py, and artifacts/cwfm/support_revision/. The artifacts include all per-replicate decisions, all 80 summaries, intervals, code and data hashes, and environment information.
 
 Comment 4. Describe the encoder as presentation-randomized, not position-blind, and discuss index sensitivity.
 
-Response. We corrected the description. The cell encoder has no separate column-position embedding, but the query vector contains normalized treatment, outcome, and exposure indices. Training and the confirmatory column-permutation probes permute columns within role groups; they do not establish invariance to arbitrary relocation of query-role columns. Named public adapters arrange the query columns, but adding covariates can still change their indices.
+Response. We corrected the description. The cell encoder has no separate column-position embedding, but the query vector contains normalized treatment, outcome, and exposure indices. Training and the confirmatory column-permutation probes permute columns within role groups; they do not establish invariance to arbitrary relocation of query-role columns. Named public adapters arrange the query columns, but adding covariates can still change their indices. Section 4.3 explains invariance and equivariance in plain terms and explains how an added column can shift query-role indices, which are normalized by the fixed column capacity.
 
 We retain the original single-episode changes of 0.170 after covariate reordering and 0.039 after irrelevant-covariate insertion. We explain the classical estimator-layer repairs that preceded the existing confirmatory experiment and avoid attributing those repairs to architectural invariance. The 97.25% confirmatory pass rate is now explicitly restricted to row permutation, within-role covariate permutation, outcome translation, and positive scaling. Negative outcome scaling and treatment-label recoding retain unresolved equivariance errors.
 
@@ -74,35 +150,7 @@ Locations: Section 3.5; references.bib; Definitions/mdpi.bst; paper/REFERENCE_AU
 
 Round 1 presentation comment. Figures and tables can be improved.
 
-Response. We reviewed all 13 figures and all 10 tables. The nine diagrams use 10-point text, complete labels, and explicit inputs, outputs, and connections. The four quantitative figures use vector PDFs with editable SVG exports and labels measuring approximately 9.6 points at the manuscript width. Figure 10 now presents the main confirmatory comparison, with the same method names and ordering as Table 5. Every caption is brief; explanations follow the figures. All tables use 10-point body text, increased row spacing, and 9-point notes defining symbols and abbreviations below the table. Tables follow their first mentions and remain beside their discussion. Both rendered versions were inspected for clipping, crowded labels, broken words in diagrams, and unresolved references.
-
-REVIEWER 2
-
-The five substantive comments match those of Reviewer 1. We address each explicitly below.
-
-Comment 1. The zero false-answer result is conditional on the metadata.
-
-Response. The Introduction, method, property table, Discussion, and Conclusion distinguish contract enforcement from causal correctness. The abstract explicitly conditions causal interpretation on truthful and complete declarations and makes no unconditional correctness claim. False or incomplete declarations can pass the same rules, and the support statistic does not establish population positivity. Section 6.1 explains the 1,200 distinct gate tests and the repeated method labels. The application exposes the confounding declaration and displays the conditional interpretation of accepted answers. A regression test verifies the declaration-dependent decision behavior. Locations: Sections 1, 4.5, 4.8, 6.1, 6.4, 7.1, and 8; Table 3.
-
-Comment 2. Give the stronger shallow selector and convex stack a central position.
-
-Response. The abstract now highlights the accuracy gains from shallow selection and convex stacking in the confirmatory experiments, with the pretrained neural router identified as a comparison baseline. The confirmatory comparison opens Results, and the Introduction and Conclusion report MAEs of 0.141 and 0.147 versus 0.161 for the evaluated deep router. Figure 10 displays all nine aggregation policies; Table 5 supplies uncertainty and coverage. Discussion explains how the framework benefits from these simpler policies while retaining the same candidates and contract. The router remains a reproducible baseline; one selected run does not establish a general disadvantage of deep methods. Locations: Abstract; Sections 1, 6.1, 7.1, and 8; Figure 10; Table 5.
-
-Comment 3. Analyze the empirical support screen across sample sizes and overlap severity.
-
-Response. The new CPU audit covers 40,000 datasets, five sample sizes, two static assignment families, and a network setting. It calls the public functions directly and reports false refusal and false acceptance against explicitly defined population practical-overlap references. All cells and pointwise Wilson intervals are available. The audit finds both conservative small-sample refusal and systematic failure under nonlinear assignment. We report these findings without retuning the screen. Two small support-composition defects were repaired and regression-tested. Locations: Sections 5.7 and 6.8; Figure 12; Table 10; artifacts/cwfm/support_revision/.
-
-Comment 4. Correct position-blind terminology and discuss the probes.
-
-Response. We use presentation-randomized and state that normalized query-column indices remain inputs. Within-role permutation tests do not establish arbitrary column-position invariance. We distinguish prior classical estimator repairs from the unchanged neural architecture and explicitly report the remaining covariate-insertion, negative-scaling, and treatment-recoding errors. No retraining was required for this clarification. Locations: Sections 4.3, 6.1, 6.7, and 7.2; Table 9.
-
-Comment 5. Repair and update the bibliography and add the suggested engineering reference.
-
-Response. All 59 entries were checked against primary records, and published replacements, assigned pagination, DOIs, and stable links were supplied where available. We replaced the placeholder bibliography style with the official MDPI style and verified a complete citation build. The requested Engineering Structures article, DOI 10.1016/j.engstruct.2026.122131, is cited with a limited and explicit connection to hybrid machine-learning integration. Sources and remaining publication-metadata limitations are documented in paper/REFERENCE_AUDIT.txt.
-
-Round 1 presentation comment. Figures and tables can be improved.
-
-Response. All 13 figures and 10 tables received a complete presentation pass. Diagram and table body text use 10 points, and quantitative figure labels measure approximately 9.6 points after scaling. Captions identify the subject briefly; the explanatory text follows each figure. All table notation is defined below the table, and tables follow their first mentions. Figure 10 and Table 5 now foreground the confirmatory aggregation comparison with consistent method labels. Vector exports, editable sources, and the plot-generation script are included.
+Response. We reviewed all 13 figures and all 12 tables. The nine diagrams use 10-point text, complete labels, and explicit inputs, outputs, and connections. The four quantitative figures use vector PDFs with editable SVG exports and labels measuring approximately 9.6 points at the manuscript width. Figure 10 now presents the main confirmatory comparison, with the same method names and ordering as Table 5. Every caption is brief; explanations follow the figures. All tables use 10-point body text, increased row spacing, and 9-point notes defining symbols and abbreviations below the table. Tables follow their first mentions and remain beside their discussion. Both rendered versions were inspected for clipping, crowded labels, broken words in diagrams, and unresolved references.
 
 REVIEWER 3: TECHNICAL CORRECTIONS
 
@@ -116,11 +164,11 @@ Response. We expanded the technical abbreviations at their first substantive use
 
 Technical comment 3. Place Table 1 after its first mention.
 
-Response. Section 3.6 introduces Table 1 before the table itself. All ten tables are now anchored after their first mentions, alongside the relevant discussion. This also prevents a table from interrupting a paragraph continued on the next page. Both rendered PDFs confirm the order. Location: Section 3.6, Table 1; the same placement rule applies throughout.
+Response. Section 3.6 introduces Table 1 before the table itself. All twelve tables are now anchored after their first mentions, alongside the relevant discussion. This also prevents a table from interrupting a paragraph continued on the next page. Both rendered PDFs confirm the order. Location: Section 3.6, Table 1; the same placement rule applies throughout.
 
 Technical comment 4. Explain every equation element below its equation.
 
-Response. The four displayed equations now have their notation explained immediately afterwards. Equation (1) defines the effect, outcome, treatment, intervention, and expectation. Equation (2) defines the episode, query, status, estimate, interval, miscoverage level, reason, and diagnostics. Equation (3) defines the candidate index, number of candidates, estimates, and weights. Equation (4) defines the propensity function, covariate coordinate, assignment severity, logistic function, its argument, and exponential function. Locations: Sections 2.1, 4.2, 4.6, and 5.7.
+Response. The four displayed equations now have their notation explained immediately afterwards, on the same page. The routing equation and its definitions are kept together during pagination. Equation (1) defines the effect, outcome, treatment, intervention, and expectation. Equation (2) defines the episode, query, status, estimate, interval, miscoverage level, reason, and diagnostics. Equation (3) defines the candidate index, number of candidates, estimates, and weights. Equation (4) defines the propensity function, covariate coordinate, assignment severity, logistic function, its argument, and exponential function. Locations: Sections 2.1, 4.2, 4.6, and 5.7.
 
 Technical comment 5. Shorten captions and put explanations in regular text below figures.
 
@@ -140,7 +188,7 @@ Response. We replaced shortened labels with complete terms, including g-computat
 
 Technical comment 9. Put symbol explanations in table footers rather than captions.
 
-Response. Captions now describe only the table subject. Check marks, tildes, blank cells, boldface conventions, confidence intervals, and abbreviations are explained below the relevant tables. The capability table specifically defines its check mark and tilde in a footer. Locations: Table 7, corresponding to the earlier capability table, and the notes below Tables 1 through 10.
+Response. Captions now describe only the table subject. Check marks, tildes, blank cells, boldface conventions, confidence intervals, and abbreviations are explained below the relevant tables. The capability table specifically defines its check mark and tilde in a footer. Locations: Table 7, corresponding to the earlier capability table, and the notes below Tables 1 through 12.
 
 REVIEWER 3: CONTENT CORRECTIONS
 
@@ -182,7 +230,7 @@ Response. Section 3.6 states the implemented combination and its evaluation firs
 
 Content comment 9. Make Preliminaries an accessible, cited Background section.
 
-Response. We renamed the section Background and placed it immediately after the Introduction. Its four subsections define structural causal models and identification, interference and support, regime changes, and amortized inference and calibration. Each subsection cites the foundational sources for its concepts. Location: Section 2.
+Response. We renamed the section Background and placed it immediately after the Introduction. Its four subsections define structural causal models and identification, interference and support, regime changes, and amortized inference and calibration. Section 2.1 now separates the estimand, identification, and estimation, then explains adjustment, consistency, positivity, and the steps of g-computation. Section 2.2 distinguishes own treatment from neighboring exposure, and Section 2.3 distinguishes a covariate-defined regime from a temporal change or an intervention effect. Each subsection cites the foundational sources for its concepts. Location: Section 2.
 
 Content comment 10. Align Equation (1) with its variables; X was not in the equation.
 
@@ -190,7 +238,7 @@ Response. The explanation immediately below Equation (1) now covers only its act
 
 Content comment 11. Separate the treatment example from the formal presentation and include values.
 
-Response. The formal definition and symbol explanations come first. A separate example then gives intervention mean outcomes of 8 and 6, producing an average effect of 2 outcome units. Disease severity X illustrates adjustment without being inserted into the effect equation. Location: Section 2.1.
+Response. The formal definition and symbol explanations come first. A separate example then gives assumed intervention mean outcomes of 8 and 6, producing an average effect of 2 outcome units. The text explicitly identifies these values as an illustration, not observed treatment-group means. Disease severity X illustrates adjustment without being inserted into the effect equation. A following paragraph explains how g-computation compares the same covariate profiles under both treatment assignments. The example is revisited as an input-to-output walkthrough in Section 4.2. Locations: Sections 2.1 and 4.2.
 
 Content comment 12. Use recognizable section names and organization.
 
@@ -198,7 +246,7 @@ Response. The manuscript now follows: Introduction; Background; Related Work; Pr
 
 Content comment 13. Explain "CWFM expert" and the role of humans.
 
-Response. Section 4.3 distinguishes an internal neural module from a candidate classical estimator. The code's term expert refers to software components, not a human expert. Human input consists of selecting a query and declaring assumptions. Fitting, aggregation, and decisions are automated thereafter. Section 5.3 maps those automated steps to Python components.
+Response. Section 4.3 distinguishes an internal neural module from a candidate classical estimator. The code's term expert refers to software components, not a human expert. Human input consists of selecting a query and declaring assumptions. Fitting, aggregation, and decisions are automated thereafter. Section 5.3 maps those automated steps to Python components. Section 4.6 explains that candidate weights describe contributions to the combined estimate, not probabilities that a causal model is true. Section 7.3 explains how an analyst can interpret the resulting record.
 
 Content comment 14. Clarify expert versus specialist terminology.
 
@@ -210,7 +258,7 @@ Response. We removed the "Answer: yes" openings and conversational one-sentence 
 
 Content comment 16. Separate results from discussion and remove unsupported evaluative phrasing.
 
-Response. Results now report numerical findings, uncertainty, and factual scope. Phrases such as "clearly the best" and "far ahead" were removed. Discussion separately interprets the aggregation gains, regime-detection tradeoff, inspectable decisions, and the settings in which the empirical screen succeeds or needs improvement. It then states the limits and practical next steps. Locations: Sections 6 and 7, especially Sections 6.7 and 7.1.
+Response. Results now report numerical findings, uncertainty, and factual scope. Phrases such as "clearly the best" and "far ahead" were removed. Discussion separately interprets the aggregation gains, regime-detection tradeoff, inspectable decisions, and the settings in which the empirical screen succeeds or needs improvement. It then states the limits and practical next steps. Explanations of quadratic-assignment screening errors and persistent network refusals have also been placed in Discussion, leaving their measured rates in Results. Locations: Sections 6 and 7, especially Sections 6.7, 6.8, and 7.1.
 
 Content comment 17. Move tool support before results and connect it to the setup.
 
@@ -218,7 +266,7 @@ Response. Implementation and Tool Support is now Section 5.3 within Experimental
 
 Content comment 18. Provide a component diagram mapping the method to Python tools and routers.
 
-Response. Figure 9 maps example and Streamlit clients, the public runner and adapters, validation and contract policy, classical candidate fitting, the frozen PyTorch encoder/router, calibration and typed results, and the experiment drivers. Figures 3 and 7 explicitly connect fitted candidate effects and standard errors to the risk router, alongside the encoded episode and query. The accompanying text identifies NumPy, SciPy, PyTorch, and scikit-learn roles. This describes the implemented integration rather than suggesting that unrelated cited causal packages are runtime dependencies. Location: Section 5.3, Figure 9.
+Response. Figure 9 maps example and Streamlit clients, the public runner and adapters, validation and contract policy, classical candidate fitting, the frozen PyTorch encoder/router, calibration and typed results, and the experiment drivers. Figures 3 and 7 explicitly connect fitted candidate effects and standard errors to the risk router, alongside the encoded episode and query. The diagrams describe neural outputs as candidate preference scores, consistent with the implementation, and the text distinguishes these from the shallow selector's predicted absolute errors. The accompanying text identifies NumPy, SciPy, PyTorch, and scikit-learn roles. This describes the implemented integration rather than suggesting that unrelated cited causal packages are runtime dependencies. Location: Section 5.3, Figure 9.
 
 Content comment 19. Explain "locked final test bank."
 
@@ -226,15 +274,15 @@ Response. We replaced that phrasing with held-out test bank and explained that i
 
 Content comment 20. Specify data sources, sizes, and characteristics.
 
-Response. Table 4 summarizes the data streams and sample dimensions. The text describes the three synthetic task families, training dimensions, 420 original test episodes, separate confirmatory tuning/calibration/test/stress streams, 19,735 source rows in the energy dataset, 200 calibration and 300 semi-synthetic test episodes, and the new 40,000-dataset support audit. Section 5.6 identifies the eight measured covariates and the synthetic treatment/effect layer. We also state the temporal dependence and row reuse limits of the energy design. Locations: Sections 5.1, 5.4 through 5.7; Table 4.
+Response. Table 4 summarizes the data streams and sample dimensions. The text describes the three synthetic task families, training dimensions, 420 original test episodes, separate confirmatory tuning/calibration/test/stress streams, 19,735 source rows in the energy dataset, 200 calibration and 300 semi-synthetic test episodes, and the new 40,000-dataset support audit. Section 5.6 identifies the eight measured covariates and the synthetic treatment/effect layer. An additional paragraph explains how measured prognostic variation and a simulated treatment contribution provide realistic covariate patterns with a known effect for scoring. We also state the temporal dependence and row reuse limits of the energy design. Locations: Sections 5.1, 5.4 through 5.7; Table 4.
 
 Content comment 21. Explain input, output, expected output, and validation.
 
-Response. The input is an observed table, named formal query, and assumption ledger, with an observed network where needed. Causal output is either a typed refusal with reasons or an effect estimate and calibrated interval. Regime queries return a structural decision. Synthetic generator effects validate point estimates, interval inclusion validates empirical coverage, generator split labels validate structural decisions, and declared metadata validates contract enforcement. The new support audit instead uses a known population practical-overlap reference. Simulator truth is excluded from the public inference input. Locations: Sections 4.2, 5.1, 5.4, and 5.7; Figures 3, 4, and 8.
+Response. The input is an observed table, named formal query, and assumption ledger, with an observed network where needed. Causal output is either a typed refusal with reasons or an effect estimate and calibrated interval. Regime queries return a structural decision. Synthetic generator effects validate point estimates, interval inclusion validates empirical coverage, generator split labels validate structural decisions, and declared metadata validates contract enforcement. The new support audit instead uses a known population practical-overlap reference. Simulator truth is excluded from the public inference input. The treatment walkthrough in Section 4.2 makes the input and output concrete. Section 4.7 describes the calibration sequence, explains that its sampling unit is a whole dataset/query episode, and distinguishes calibration truth from truth used later for evaluation. Section 5.4 explains MAE, effect-interval coverage, and paired uncertainty in method comparisons. Locations: Sections 4.2, 4.7, 5.1, 5.4, and 5.7; Figures 3, 4, and 8.
 
 Content comment 22. Provide a clear workflow with inputs and outputs.
 
-Response. Figure 3 shows the public analysis flow from observed data, named query, and ledger through validation, empirical support, declared identification, candidate fitting, risk routing, aggregation, calibration, and output. The refusal branch explicitly excludes an effect estimate and interval. Figure 4 presents the observed episode, formal query, and assumption ledger as separate inputs to the runner, so observations are not shown as generating assumptions. Figure 6 specifies gate precedence. The text distinguishes effect queries from regime decisions. Locations: Sections 4.1, 4.2, and 4.5.
+Response. Figure 3 shows the public analysis flow from observed data, named query, and ledger through validation, empirical support, declared identification, candidate fitting, risk routing, aggregation, calibration, and output. The refusal branch explicitly excludes an effect estimate and interval. Figure 4 presents the observed episode, formal query, and assumption ledger as separate inputs to the runner, so observations are not shown as generating assumptions. Figure 6 specifies gate precedence. The accompanying treatment example traces validation, declarations, candidate fitting, and an accepted estimate or refusal. It explicitly distinguishes refusal from an estimated effect of zero. The text also distinguishes effect queries from regime decisions. Locations: Sections 4.1, 4.2, and 4.5.
 
 Content comment 23. Relate "Reliability-Gated Foundation Model" to CWFM.
 
@@ -242,11 +290,11 @@ Response. We removed the competing model designation from the title. CWFM consis
 
 Content comment 24. Explain how integration is implemented and used in the experiments.
 
-Response. Sections 4.6 and 5.3 explain the computation and software mapping. Classical candidates are fitted per dataset; a compatibility mask determines eligible estimates; an aggregation policy produces weights; and calibration and result modules construct the output. The public runner coordinates adaptation, support and declaration checks, inference, and serialization. The confirmatory driver reuses candidate fits and declared-contract logic while comparing aggregation policies. The support driver separately calls the public empirical screening functions. Figure 9 maps these responsibilities to concrete modules. No new integration architecture or model retraining was necessary.
+Response. Sections 4.6 and 5.3 explain the computation and software mapping. Classical candidates are fitted per dataset; a compatibility mask determines eligible estimates; an aggregation policy produces weights; and calibration and result modules construct the output. The public runner coordinates adaptation, support and declaration checks, inference, and serialization. The confirmatory driver reuses candidate fits and declared-contract logic while comparing aggregation policies. The support driver separately calls the public empirical screening functions. Figure 9 maps these responsibilities to concrete modules. The additional explanations distinguish dataset-specific candidate fitting from frozen neural parameters, describe nuisance models and cross-fitting, and explain the shallow selector and convex stack. No new integration architecture or model retraining was necessary.
 
 Round 1 language comment. Improve the English to clarify the research.
 
-Response. We revised the full manuscript for clear scientific English, including the abstract, Introduction, Related Work, definitions, method, setup, results, and Discussion. Long sentences were divided, repeated caveats consolidated, and software roles named consistently. The narrative leads with the supported contributions and numerical gains, then explains their conditions and limits. Dialogue-style answers, rhetorical formulations, and ambiguous guarantee claims were removed. Formal definitions precede separate examples; Results and Discussion have distinct roles. Em and en dashes were removed from text and automatically compressed citation ranges; page ranges use "to." Language-only changes use the dark-grey revision environment.
+Response. We revised the full manuscript for clear scientific English, including the abstract, Introduction, Related Work, definitions, method, setup, results, and Discussion. Long sentences were divided, repeated caveats consolidated, and software roles named consistently. We expanded explanations of the causal estimand, adjustment example, network exposure, presentation probes, routing, calibration, comparator policies, semi-synthetic data, and performance metrics. These additions use the existing implementation and evidence, with modest content clarifications marked in medium grey. The narrative leads with the supported contributions and numerical gains, then explains their conditions and limits. Dialogue-style answers, rhetorical formulations, and ambiguous guarantee claims were removed. Formal definitions precede separate examples; Results and Discussion have distinct roles. Em and en dashes were removed from text and automatically compressed citation ranges; page ranges use "to." Language-only changes use the dark-grey revision environment.
 
 Round 1 presentation comment. Figures and tables must be improved.
 
@@ -254,12 +302,14 @@ Response. The changes under Technical Comments 3 and 5 through 9 cover every fig
 
 REPRODUCTION AND VERIFICATION
 
-- Implementation revision: the full Python test suite passed all 34 tests, including four new behavioral checks for support composition, missing treatment groups, declared-assumption dependence, and audit reference/rate handling.
+- Earlier implementation revision: the full Python test suite passed all 34 tests, including four new behavioral checks for support composition, missing treatment groups, declared-assumption dependence, and audit reference/rate handling.
 - A pre-existing interval-endpoint assertion failed at a float32 rounding difference of approximately 5.4e-7. The same failure was reproduced with the original runner and validation code. That assertion now uses explicit relative tolerance 1e-6 and absolute tolerance 1e-7; point-estimate checks were retained.
-- New experiment: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m cwfm.support_experiment.
-- Figure regeneration: python scripts/build_paper_figures.py. This uses recorded results and does not run training. The final editorial pass adds no experiments and changes no reported estimates; the new confirmatory chart reads the existing CSV directly.
+- Support audit added during that implementation revision: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m cwfm.support_experiment.
+- Figure regeneration: python scripts/build_paper_figures.py. This uses recorded results and does not run training. The confirmatory chart reads the existing CSV directly. The subsequent clarity revision changes no reported estimates and runs no experiments, figure-generation script, or software tests; its diagram wording is edited in the LaTeX sources.
 - Manuscript builds, from paper/: latexmk -pdf -interaction=nonstopmode -halt-on-error template.tex; and the same command for template-clean.tex.
+- Both manuscript versions remain within the 39-page limit. The 163-word abstract is preserved.
 - All 59 bibliography entries resolve. The final builds have no undefined references, citation placeholders, or overfull boxes. The manuscript contains no em or en dashes.
+- Pretraining ablation: python -m cwfm.pretraining_experiment. Checks verify unchanged neural states, compatible normalized weights, all 1,800 matched episodes, original prediction agreement within 4.4e-7, and the reconstructed development seeds.
 - Existing neural weights, release calibration, and original/confirmatory numerical result artifacts were not changed. The newly reported empirical support limitations are documented rather than concealed by tuning on the audit.
 
 FILES
@@ -275,3 +325,6 @@ scripts/build_paper_figures.py: reproducible result-plot generation.
 cwfm/support_experiment.py and experiments/support_protocol.json: new empirical support audit.
 artifacts/cwfm/support_revision/: complete support results and provenance.
 tests/test_support_revision.py: regression and audit checks.
+cwfm/pretraining_experiment.py and experiments/pretraining_protocol.json: matched pretraining ablation and router analysis.
+artifacts/cwfm/pretraining_revision/: all ablation and individual-development results, costs, and provenance.
+paper/RESPONSE.tex and paper/RESPONSE.pdf: formatted response with indented red reviewer comments.
