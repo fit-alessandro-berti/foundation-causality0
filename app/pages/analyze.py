@@ -98,10 +98,11 @@ def render() -> None:
             consistency = st.checkbox("Assert consistency", value=True)
             predeclared = st.checkbox("Mapping selected before outcome review", value=True)
             restricted = st.checkbox("Interference restricted to observed W", value=True)
+            no_confounding = st.checkbox("Assert no unmeasured confounding", value=False)
             query = InterferenceQuery("A", "G", outcome, covariates, g0, g1, mapping)
             assumptions = AssumptionLedger(
                 assignment_design=assignment,
-                no_unmeasured_confounding=AssertionState.ASSERTED,
+                no_unmeasured_confounding=AssertionState.ASSERTED if no_confounding else AssertionState.UNKNOWN,
                 consistency=AssertionState.ASSERTED if consistency else AssertionState.UNKNOWN,
                 treatment_support=SupportState.UNKNOWN,
                 exposure_mapping_predeclared=predeclared,
@@ -128,4 +129,3 @@ def render() -> None:
             if all(item.analysis_id != result.analysis_id for item in existing):
                 existing.append(result)
                 st.success("Added to comparison")
-

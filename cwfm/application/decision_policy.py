@@ -1,4 +1,8 @@
-"""Formal, assumption-driven answer and abstention policy."""
+"""Formal, assumption-driven answer and abstention policy.
+
+The policy validates declarations, not their truth. An answered status is not
+a guarantee of causal correctness or detection of undeclared confounding.
+"""
 
 from __future__ import annotations
 
@@ -57,4 +61,3 @@ def decide(
     return AnalysisStatus.ANSWERED_CONDITIONAL_ON_ASSUMPTIONS, [
         "Identified conditional on the declared no-unmeasured-confounding and consistency assumptions."
     ]
-

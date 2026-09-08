@@ -1,0 +1,653 @@
+{
+  "pearl2009causality": {
+    "url": "https://api.crossref.org/works/10.1017/CBO9780511803161",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1017/cbo9780511803161",
+      "title": [
+        "Causality"
+      ],
+      "container-title": [],
+      "volume": null,
+      "issue": null,
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2009,
+            9,
+            14
+          ]
+        ]
+      },
+      "type": "monograph"
+    }
+  },
+  "spirtes2000causation": {
+    "url": "https://api.crossref.org/works/10.7551/mitpress/1754.001.0001",
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.7551/mitpress/1754.001.0001",
+    "metadata": {}
+  },
+  "rosenbaum1983sensitivity": {
+    "url": "https://api.crossref.org/works/10.1111/j.2517-6161.1983.tb01242.x",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1111/j.2517-6161.1983.tb01242.x",
+      "title": [
+        "Assessing Sensitivity to an Unobserved Binary Covariate in an Observational Study with Binary Outcome"
+      ],
+      "container-title": [
+        "Journal of the Royal Statistical Society Series B: Statistical Methodology"
+      ],
+      "volume": "45",
+      "issue": "2",
+      "page": "212-218",
+      "published": {
+        "date-parts": [
+          [
+            1983,
+            1,
+            1
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "damour2021overlap": {
+    "url": "https://api.crossref.org/works/10.1016/j.jeconom.2019.10.014",
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1016/j.jeconom.2019.10.014",
+    "metadata": {}
+  },
+  "crump2009overlap": {
+    "url": "https://api.crossref.org/works/10.1093/biomet/asn055",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1093/biomet/asn055",
+      "title": [
+        "Dealing with limited overlap in estimation of average treatment effects"
+      ],
+      "container-title": [
+        "Biometrika"
+      ],
+      "volume": "96",
+      "issue": "1",
+      "page": "187-199",
+      "published": {
+        "date-parts": [
+          [
+            2009,
+            1,
+            24
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "li2018overlap": {
+    "url": "https://api.crossref.org/works/10.1080/01621459.2016.1260466",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1080/01621459.2016.1260466",
+      "title": [
+        "Balancing Covariates via Propensity Score Weighting"
+      ],
+      "container-title": [
+        "Journal of the American Statistical Association"
+      ],
+      "volume": "113",
+      "issue": "521",
+      "page": "390-400",
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            11,
+            13
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "hudgens2008interference": {
+    "url": "https://api.crossref.org/works/10.1198/016214508000000292",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1198/016214508000000292",
+      "title": [
+        "Toward Causal Inference With Interference"
+      ],
+      "container-title": [
+        "Journal of the American Statistical Association"
+      ],
+      "volume": "103",
+      "issue": "482",
+      "page": "832-842",
+      "published": {
+        "date-parts": [
+          [
+            2008,
+            6,
+            1
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "aronow2017interference": {
+    "url": "https://api.crossref.org/works/10.1214/16-AOAS1005",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1214/16-aoas1005",
+      "title": [
+        "Estimating average causal effects under general interference, with application to a social network experiment"
+      ],
+      "container-title": [
+        "The Annals of Applied Statistics"
+      ],
+      "volume": "11",
+      "issue": "4",
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            12,
+            1
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "savje2024misspecified": {
+    "url": "https://api.crossref.org/works/10.1093/biomet/asad019",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1093/biomet/asad019",
+      "title": [
+        "Causal inference with misspecified exposure mappings: separating definitions and assumptions"
+      ],
+      "container-title": [
+        "Biometrika"
+      ],
+      "volume": "111",
+      "issue": "1",
+      "page": "1-15",
+      "published": {
+        "date-parts": [
+          [
+            2023,
+            3,
+            16
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "peters2016invariant": {
+    "url": "https://api.crossref.org/works/10.1111/rssb.12167",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1111/rssb.12167",
+      "title": [
+        "Causal Inference by using Invariant Prediction: Identification and Confidence Intervals"
+      ],
+      "container-title": [
+        "Journal of the Royal Statistical Society Series B: Statistical Methodology"
+      ],
+      "volume": "78",
+      "issue": "5",
+      "page": "947-1012",
+      "published": {
+        "date-parts": [
+          [
+            2016,
+            10,
+            11
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "runge2019pcmci": {
+    "url": "https://api.crossref.org/works/10.1126/sciadv.aau4996",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1126/sciadv.aau4996",
+      "title": [
+        "Detecting and quantifying causal associations in large nonlinear time series datasets"
+      ],
+      "container-title": [
+        "Science Advances"
+      ],
+      "volume": "5",
+      "issue": "11",
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2019,
+            11
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "hollmann2025tabpfn": {
+    "url": "https://api.crossref.org/works/10.1038/s41586-024-08328-6",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1038/s41586-024-08328-6",
+      "title": [
+        "Accurate predictions on small data with a tabular foundation model"
+      ],
+      "container-title": [
+        "Nature"
+      ],
+      "volume": "637",
+      "issue": "8045",
+      "page": "319-326",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            8
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "nie2021rlearner": {
+    "url": "https://api.crossref.org/works/10.1093/biomet/asaa076",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1093/biomet/asaa076",
+      "title": [
+        "Quasi-oracle estimation of heterogeneous treatment effects"
+      ],
+      "container-title": [
+        "Biometrika"
+      ],
+      "volume": "108",
+      "issue": "2",
+      "page": "299-319",
+      "published": {
+        "date-parts": [
+          [
+            2020,
+            9,
+            24
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "cui2024selective": {
+    "url": "https://api.crossref.org/works/10.1093/biomet/asad055",
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1093/biomet/asad055",
+    "metadata": {}
+  },
+  "zeileis2008mob": {
+    "url": "https://api.crossref.org/works/10.1198/106186008X319331",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1198/106186008x319331",
+      "title": [
+        "Model-Based Recursive Partitioning"
+      ],
+      "container-title": [
+        "Journal of Computational and Graphical Statistics"
+      ],
+      "volume": "17",
+      "issue": "2",
+      "page": "492-514",
+      "published": {
+        "date-parts": [
+          [
+            2008,
+            6
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "athey2016recursive": {
+    "url": "https://api.crossref.org/works/10.1073/pnas.1510489113",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1073/pnas.1510489113",
+      "title": [
+        "Recursive partitioning for heterogeneous causal effects"
+      ],
+      "container-title": [
+        "Proceedings of the National Academy of Sciences"
+      ],
+      "volume": "113",
+      "issue": "27",
+      "page": "7353-7360",
+      "published": {
+        "date-parts": [
+          [
+            2016,
+            7,
+            5
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "vovk2005conformal": {
+    "url": "https://api.crossref.org/works/10.1007/b106715",
+    "error": "429 Client Error: Too Many Requests for url: https://api.crossref.org/works/10.1007/b106715",
+    "metadata": {}
+  },
+  "lei2018distribution": {
+    "url": "https://api.crossref.org/works/10.1080/01621459.2017.1307116",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1080/01621459.2017.1307116",
+      "title": [
+        "Distribution-Free Predictive Inference for Regression"
+      ],
+      "container-title": [
+        "Journal of the American Statistical Association"
+      ],
+      "volume": "113",
+      "issue": "523",
+      "page": "1094-1111",
+      "published": {
+        "date-parts": [
+          [
+            2018,
+            6,
+            8
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "lei2021conformal": {
+    "url": "https://api.crossref.org/works/10.1111/rssb.12445",
+    "error": null,
+    "metadata": {
+      "DOI": "10.1111/rssb.12445",
+      "title": [
+        "Conformal Inference of Counterfactuals and Individual Treatment Effects"
+      ],
+      "container-title": [
+        "Journal of the Royal Statistical Society Series B: Statistical Methodology"
+      ],
+      "volume": "83",
+      "issue": "5",
+      "page": "911-938",
+      "published": {
+        "date-parts": [
+          [
+            2021,
+            10,
+            7
+          ]
+        ]
+      },
+      "type": "journal-article"
+    }
+  },
+  "alaa2019validating": {
+    "url": "https://proceedings.mlr.press/v97/alaa19a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Validating Causal Inference Models via Influence Functions\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v97/alaa19a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"http://proceedings.mlr.press/v97/alaa19a/alaa19a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"191\">",
+        "<meta name=\"citation_lastpage\" content=\"201\">",
+        "<meta name=\"citation_author\" content=\"Ahmed Alaa\">",
+        "<meta name=\"citation_author\" content=\"Mihaela Van Der Schaar\">",
+        "<meta name=\"citation_publication_date\" content=\"2019/05/24\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "saito2020counterfactualcv": {
+    "url": "https://proceedings.mlr.press/v119/saito20a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Counterfactual Cross-Validation: Stable Model Selection Procedure for Causal Inference Models\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v119/saito20a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"http://proceedings.mlr.press/v119/saito20a/saito20a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"8398\">",
+        "<meta name=\"citation_lastpage\" content=\"8407\">",
+        "<meta name=\"citation_author\" content=\"Yuta Saito\">",
+        "<meta name=\"citation_author\" content=\"Shota Yasui\">",
+        "<meta name=\"citation_publication_date\" content=\"2020/11/21\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "ma2021networked": {
+    "url": "https://proceedings.mlr.press/v130/ma21c.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\" Causal Inference under Networked Interference and Intervention Policy Enhancement \"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v130/ma21c.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"http://proceedings.mlr.press/v130/ma21c/ma21c.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"3700\">",
+        "<meta name=\"citation_lastpage\" content=\"3708\">",
+        "<meta name=\"citation_author\" content=\"Yunpu Ma\">",
+        "<meta name=\"citation_author\" content=\"Volker Tresp\">",
+        "<meta name=\"citation_publication_date\" content=\"2021/03/18\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "curth2023search": {
+    "url": "https://proceedings.mlr.press/v202/curth23a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Adaptive Identification of Populations with Treatment Benefit in Clinical Trials: Machine Learning Challenges and Solutions\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v202/curth23a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"https://proceedings.mlr.press/v202/curth23a/curth23a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"6603\">",
+        "<meta name=\"citation_lastpage\" content=\"6622\">",
+        "<meta name=\"citation_author\" content=\"Alicia Curth\">",
+        "<meta name=\"citation_author\" content=\"Alihan H\u00fcy\u00fck\">",
+        "<meta name=\"citation_author\" content=\"Mihaela Van Der Schaar\">",
+        "<meta name=\"citation_publication_date\" content=\"2023/07/03\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "faller2024selfcompatibility": {
+    "url": "https://proceedings.mlr.press/v238/faller24a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Self-Compatibility: Evaluating Causal Discovery without Ground Truth\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v238/faller24a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"https://proceedings.mlr.press/v238/faller24a/faller24a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"4132\">",
+        "<meta name=\"citation_lastpage\" content=\"4140\">",
+        "<meta name=\"citation_author\" content=\"Philipp M. Faller\">",
+        "<meta name=\"citation_author\" content=\"Leena C. Vankadara\">",
+        "<meta name=\"citation_author\" content=\"Atalanti A. Mastakouri\">",
+        "<meta name=\"citation_author\" content=\"Francesco Locatello\">",
+        "<meta name=\"citation_author\" content=\"Dominik Janzing\">",
+        "<meta name=\"citation_publication_date\" content=\"2024/04/18\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "vanderlaan2023isotonic": {
+    "url": "https://proceedings.mlr.press/v202/van-der-laan23a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Causal Isotonic Calibration for Heterogeneous Treatment Effects\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v202/van-der-laan23a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"https://proceedings.mlr.press/v202/van-der-laan23a/van-der-laan23a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"34831\">",
+        "<meta name=\"citation_lastpage\" content=\"34854\">",
+        "<meta name=\"citation_author\" content=\"Lars Van Der Laan\">",
+        "<meta name=\"citation_author\" content=\"Ernesto Ulloa-Perez\">",
+        "<meta name=\"citation_author\" content=\"Marco Carone\">",
+        "<meta name=\"citation_author\" content=\"Alex Luedtke\">",
+        "<meta name=\"citation_publication_date\" content=\"2023/07/03\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "lan2024qaggregation": {
+    "url": "https://proceedings.mlr.press/v238/lan24a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"Causal Q-Aggregation for CATE Model Selection\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v238/lan24a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"https://proceedings.mlr.press/v238/lan24a/lan24a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"4366\">",
+        "<meta name=\"citation_lastpage\" content=\"4374\">",
+        "<meta name=\"citation_author\" content=\"Hui Lan\">",
+        "<meta name=\"citation_author\" content=\"Vasilis Syrgkanis\">",
+        "<meta name=\"citation_publication_date\" content=\"2024/04/18\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Artificial Intelligence and Statistics\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "vanderschueren2025autocate": {
+    "url": "https://proceedings.mlr.press/v267/vanderschueren25a.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_publisher\" content=\"PMLR\"/>",
+        "<meta name=\"citation_title\" content=\"AutoCATE: End-to-End, Automated Treatment Effect Estimation\"/>",
+        "<meta name=\"citation_language\" content=\"en\"/>",
+        "<meta name=\"citation_abstract_html_url\" content=\"https://proceedings.mlr.press/v267/vanderschueren25a.html\"/>",
+        "<meta name=\"citation_pdf_url\" content=\"https://raw.githubusercontent.com/mlresearch/v267/main/assets/vanderschueren25a/vanderschueren25a.pdf\">",
+        "<meta name=\"citation_firstpage\" content=\"60880\">",
+        "<meta name=\"citation_lastpage\" content=\"60904\">",
+        "<meta name=\"citation_author\" content=\"Toon Vanderschueren\">",
+        "<meta name=\"citation_author\" content=\"Tim Verdonck\">",
+        "<meta name=\"citation_author\" content=\"Mihaela Van Der Schaar\">",
+        "<meta name=\"citation_author\" content=\"Wouter Verbeke\">",
+        "<meta name=\"citation_publication_date\" content=\"2025/10/06\">",
+        "<meta name=\"citation_inbook_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_conference_title\" content=\"International Conference on Machine Learning\"/>",
+        "<meta name=\"citation_issn\" content=\"2640-3498\">"
+      ]
+    }
+  },
+  "blobaum2024dowhygcm": {
+    "url": "https://jmlr.org/papers/v25/22-1258.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_title\" content=\"DoWhy-GCM: An Extension of DoWhy for Causal Inference in Graphical Causal Models\">",
+        "<meta name=\"citation_author\" content=\"Patrick Bl\u00c3\u00b6baum\">",
+        "<meta name=\"citation_author\" content=\"Peter G\u00c3\u00b6tz\">",
+        "<meta name=\"citation_author\" content=\"Kailash Budhathoki\">",
+        "<meta name=\"citation_author\" content=\"Atalanti A. Mastakouri\">",
+        "<meta name=\"citation_author\" content=\"Dominik Janzing\">",
+        "<meta name=\"citation_journal_title\" content=\"Journal of Machine Learning Research\">",
+        "<meta name=\"citation_volume\" content=\"25\">",
+        "<meta name=\"citation_issue\" content=\"147\">",
+        "<meta name=\"citation_firstpage\" content=\"1\">",
+        "<meta name=\"citation_lastpage\" content=\"7\">",
+        "<meta name=\"citation_pdf_url\" content=\"http://jmlr.org/papers/volume25/22-1258/22-1258.pdf\">",
+        "<meta name=\"citation_publication_date\" content=\"2024\">",
+        "<meta name=\"citation_public_url\" content=\"http://jmlr.org/papers/v25/22-1258.html\">",
+        "<meta name=\"citation_abstract_html_url\" content=\"http://jmlr.org/papers/v25/22-1258.html\">",
+        "<meta name=\"citation_issn\" content=\"1533-7928\">"
+      ]
+    }
+  },
+  "huang2020heterogeneous": {
+    "url": "https://jmlr.org/papers/v21/19-232.html",
+    "error": null,
+    "metadata": {
+      "meta": [
+        "<meta name=\"citation_title\" content=\"Causal Discovery from Heterogeneous/Nonstationary Data\">",
+        "<meta name=\"citation_author\" content=\"Biwei Huang\">",
+        "<meta name=\"citation_author\" content=\"Kun Zhang\">",
+        "<meta name=\"citation_author\" content=\"Jiji Zhang\">",
+        "<meta name=\"citation_author\" content=\"Joseph Ramsey\">",
+        "<meta name=\"citation_author\" content=\"Ruben Sanchez-Romero\">",
+        "<meta name=\"citation_author\" content=\"Clark Glymour\">",
+        "<meta name=\"citation_author\" content=\"Bernhard Sch\u00c3\u00b6lkopf\">",
+        "<meta name=\"citation_journal_title\" content=\"Journal of Machine Learning Research\">",
+        "<meta name=\"citation_volume\" content=\"21\">",
+        "<meta name=\"citation_issue\" content=\"89\">",
+        "<meta name=\"citation_firstpage\" content=\"1\">",
+        "<meta name=\"citation_lastpage\" content=\"53\">",
+        "<meta name=\"citation_pdf_url\" content=\"http://jmlr.org/papers/volume21/19-232/19-232.pdf\">",
+        "<meta name=\"citation_publication_date\" content=\"2020\">",
+        "<meta name=\"citation_public_url\" content=\"http://jmlr.org/papers/v21/19-232.html\">",
+        "<meta name=\"citation_abstract_html_url\" content=\"http://jmlr.org/papers/v21/19-232.html\">",
+        "<meta name=\"citation_issn\" content=\"1533-7928\">"
+      ]
+    }
+  },
+  "hernan2020whatif": {
+    "url": "https://miguelhernan.org/whatifbook",
+    "error": null,
+    "metadata": {
+      "meta": []
+    }
+  },
+  "geffner2022deci": {
+    "url": "https://api2.openreview.net/notes?id=e6sqttxEGX",
+    "error": "403 Client Error: Forbidden for url: https://api2.openreview.net/notes?id=e6sqttxEGX",
+    "metadata": {}
+  },
+  "candanedo2017appliances": {
+    "url": "https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction",
+    "error": null,
+    "metadata": {
+      "meta": []
+    }
+  }
+}

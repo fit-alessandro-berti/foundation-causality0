@@ -127,8 +127,14 @@ class PublicApplicationTests(unittest.TestCase):
         self.assertAlmostEqual(public.final_estimate, legacy["final"], places=6)
         self.assertAlmostEqual(public.compiled_estimate, legacy["compiled"], places=6)
         expected_half_width = 0.5 * legacy["raw_scale"]
-        self.assertAlmostEqual(public.interval[0], legacy["final"] - expected_half_width, places=6)
-        self.assertAlmostEqual(public.interval[1], legacy["final"] + expected_half_width, places=6)
+        # Both inference paths use float32; the interval also propagates its
+        # scale rounding. Use an explicit relative tolerance for these endpoints.
+        np.testing.assert_allclose(
+            public.interval,
+            [legacy["final"] - expected_half_width, legacy["final"] + expected_half_width],
+            rtol=1e-6,
+            atol=1e-7,
+        )
 
     def test_observed_collator_drops_every_oracle_plane(self) -> None:
         episode = generate_ate(91, "randomized")

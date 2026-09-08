@@ -1,0 +1,52 @@
+{
+  "protocol": {
+    "seed": 9102026,
+    "sample_sizes": [
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "covariates": 5,
+    "replicates": 500,
+    "ate_families": [
+      "linear_logistic",
+      "quadratic_logistic"
+    ],
+    "ate_severities": [
+      0.0,
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      8.0
+    ],
+    "network_assignment_probabilities": [
+      0.5,
+      0.3,
+      0.1,
+      0.02
+    ],
+    "threshold_policy": "Existing public thresholds retained; every cell is reported."
+  },
+  "protocol_sha256": "8fcd620e3f3f1ddc3513b9d02f248977c3667bd0d65aa27a50162bd787f0e54a",
+  "experiment_sha256": "b15dce35b0047639390da0160967e9cd878580f5e43089c7a7c20e005bb4b07b",
+  "validation_sha256": "3c8244ca7a8cddc02dab9771ff61719a92ba2863cc107c7513b6ee7810b8b496",
+  "runner_sha256": "03fe3d62fc9fd2757b2f93858cadeede1b1ec9b2c1c27171e94f6173a7481f94",
+  "python": "3.12.13",
+  "numpy": "2.5.2",
+  "pandas": "3.0.5",
+  "scipy": "1.18.0",
+  "episodes": 40000,
+  "elapsed_seconds": 9.544053870951757,
+  "neural_training": false,
+  "thresholds_tuned": false,
+  "reference": "Known population practical-overlap policy, not strict positivity or causal correctness",
+  "intervals": "Pointwise 95 percent Wilson intervals over independent episode replicates",
+  "network_reference": "Population 5th/95th quantiles of Binomial(4,p)/4; count conditions are finite-sample only",
+  "artifact_sha256": {
+    "per_seed.csv": "3593cc2e5b812b106ba249f8bced9153ad1419c112a2cafd766b1835b9327770",
+    "summary.csv": "8b2bf2440bfe7a5801573ac888be381621590ed343cafb1d5f65349c303b8c85"
+  }
+}

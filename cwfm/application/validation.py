@@ -239,6 +239,9 @@ def evaluate_exposure_support(
                 "p95": float(q95),
                 "targets_inside": group_ok,
             }
+        else:
+            adequate_by_treatment = False
+            by_treatment[str(int(level))] = {"count": 0, "targets_inside": False}
     adequate = bool(
         p05 <= low < high <= p95
         and near_low >= minimum_nearby
@@ -251,6 +254,9 @@ def evaluate_exposure_support(
             "Requested exposure targets do not have adequate observed support in both own-treatment groups."
         )
     diagnostics = {
+        "rule": "exposure_quantiles_and_nearby_counts_v1",
+        "minimum_nearby": minimum_nearby,
+        "interpretation": "Finite-sample screening rule; does not establish population positivity or validate the exposure mapping.",
         "g0": low,
         "g1": high,
         "tolerance": tolerance,
@@ -267,7 +273,12 @@ def evaluate_exposure_support(
 def evaluate_ate_support(
     case: ObservedCase,
 ) -> tuple[bool, dict[str, Any], list[str]]:
-    """Approximate overlap check using a deterministic ridge propensity fit."""
+    """Screen overlap with a clipped ridge linear-probability fit.
+
+    This is a heuristic, not a calibrated positivity test. In particular, a
+    nonlinear assignment mechanism can have poor overlap despite a flat fitted
+    score. The fixed thresholds are audited by ``cwfm.support_experiment``.
+    """
 
     treatment_index = int(np.flatnonzero(case.roles == ROLE_TREATMENT)[0])
     excluded = (case.roles == ROLE_TREATMENT) | (case.roles == ROLE_OUTCOME)
@@ -288,6 +299,8 @@ def evaluate_ate_support(
     p01, p05, p50, p95, p99 = np.quantile(propensity, [0.01, 0.05, 0.5, 0.95, 0.99])
     adequate = bool(outside.mean() <= 0.10 and p05 > 0.01 and p95 < 0.99)
     diagnostics = {
+        "rule": "ridge_linear_probability_v1",
+        "interpretation": "Heuristic overlap screen; passing does not establish population positivity or correct treatment-model specification.",
         "propensity_p01": float(p01),
         "propensity_p05": float(p05),
         "propensity_median": float(p50),
@@ -297,6 +310,6 @@ def evaluate_ate_support(
         "adequate": adequate,
     }
     reasons = [] if adequate else [
-        "The discovery-only propensity diagnostic indicates inadequate treatment overlap."
+        "The empirical ridge overlap screen fails the configured support rule."
     ]
     return adequate, diagnostics, reasons

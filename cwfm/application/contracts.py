@@ -135,7 +135,12 @@ AnalysisQuery = ATEQuery | RegimeQuery | InterferenceQuery
 
 @dataclass(frozen=True)
 class AssumptionLedger:
-    """Declarations used by the formal answer/abstention gate."""
+    """User declarations used by the formal answer/abstention gate.
+
+    These fields are assumptions, not facts established from the observed data.
+    An answered status certifies compliance with the implemented rules only;
+    incomplete or incorrect declarations can still produce invalid estimates.
+    """
 
     assignment_design: AssignmentDesign = AssignmentDesign.UNKNOWN
     no_unmeasured_confounding: AssertionState = AssertionState.UNKNOWN

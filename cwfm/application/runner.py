@@ -279,10 +279,10 @@ class CWFMRunner:
             validation.support_adequate = support_adequate
             validation_warnings = validation.warnings + overlap_reasons
         elif isinstance(query, InterferenceQuery) and validation.valid:
-            support_adequate, exposure_support, support_reasons = evaluate_exposure_support(
+            exposure_adequate, exposure_support, support_reasons = evaluate_exposure_support(
                 observed, query.exposure_low, query.exposure_high
             )
-            validation.issues.extend([])
+            support_adequate = support_adequate and exposure_adequate
             validation.diagnostics["exposure_support"] = exposure_support
             validation.support_adequate = support_adequate
             validation_warnings = validation.warnings + support_reasons

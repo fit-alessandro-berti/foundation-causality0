@@ -1,0 +1,10 @@
+{
+  "seed": 9102026,
+  "sample_sizes": [32, 64, 128, 256, 512],
+  "covariates": 5,
+  "replicates": 500,
+  "ate_families": ["linear_logistic", "quadratic_logistic"],
+  "ate_severities": [0.0, 0.5, 1.0, 2.0, 4.0, 8.0],
+  "network_assignment_probabilities": [0.5, 0.3, 0.1, 0.02],
+  "threshold_policy": "Existing public thresholds retained; every cell is reported."
+}

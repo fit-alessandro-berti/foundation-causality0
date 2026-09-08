@@ -38,9 +38,9 @@ See `examples/README.md` for the full list and options.
 
 The reference CWFM implements three tasks:
 
-- **Static ATE** — average treatment effects on tabular data
-- **Observed regimes** — detecting shifts in causal mechanisms
-- **Network interference** — effects with spillovers on graphs
+- **Static ATE**: average treatment effects on tabular data
+- **Observed regimes**: detecting shifts in causal mechanisms
+- **Network interference**: effects with spillovers on graphs
 
 It is **not** the full proposed system (high-dimensional latents, full temporal modeling, partial identification). That distinction is documented in `docs/foundation_model/`.
 
@@ -63,6 +63,26 @@ python -m cwfm.experiment \
 ```
 
 Full methodology, seeds, and results: [`docs/foundation_model/experimental_results.md`](docs/foundation_model/experimental_results.md).
+
+The confirmatory comparison favors the shallow risk selector and convex stack
+over the frozen neural router. Gate compliance is conditional on the declared
+assumptions; it does not verify their truth. The empirical support screen can
+both reject adequate samples and accept poor overlap under nonlinear assignment.
+The release checkpoint and calibration remain unchanged.
+
+The reviewer revision adds a small, CPU-only audit of the actual application
+support functions, with no model training or threshold tuning:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m cwfm.support_experiment
+```
+
+Its fixed protocol is `experiments/support_protocol.json`; complete rates,
+pointwise Wilson intervals, per-seed outcomes, and provenance are in
+`artifacts/cwfm/support_revision/`. The full 40,000-episode run took about ten
+seconds in the revision environment. See [`RESPONSE.txt`](RESPONSE.txt) for the
+point-by-point reviewer response and [`paper/README.md`](paper/README.md) for
+manuscript builds and figure regeneration.
 
 ## Qualitative benchmark examples
 
