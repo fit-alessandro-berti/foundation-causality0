@@ -499,5 +499,7 @@
       "doi_final_url": "https://linkinghub.elsevier.com/retrieve/pii/S014102962600043X",
       "doi_ok": true
     }
-  }
+  },
+  "superseded_by": "paper/reference_evidence/publication_audit.json",
+  "scope_note": "Historical 8 September metadata audit of the pre-revision 59-entry bibliography. See the 16 September publication-status revision for the current 51-entry manuscript."
 }
