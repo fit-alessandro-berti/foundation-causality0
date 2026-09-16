@@ -1,261 +1,503 @@
 {
   "checked": "2026-09-08",
+  "doi_runs": 2,
+  "doi_keys": 40,
+  "doi_failures": 0,
+  "metadata_entries": 59,
+  "metadata_mismatches": 0,
   "entries": {
     "pearl2009causality": {
-      "source": "https://api.crossref.org/works/10.1017/CBO9780511803161",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
+      "source": "https://api.crossref.org/works/10.1017/cbo9780511803161",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.cambridge.org/core/books/causality/B0046844FAE10CBF274D4ACBDAEB5F5B",
+      "doi_ok": true
     },
     "hernan2020whatif": {
       "source": "https://miguelhernan.org/whatifbook",
-      "checked": "primary publication or dataset record; no DOI invented when none assigned"
-    },
-    "rosenbaum1983sensitivity": {
-      "source": "https://api.crossref.org/works/10.1111/j.2517-6161.1983.tb01242.x",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "crump2009overlap": {
-      "source": "https://api.crossref.org/works/10.1093/biomet/asn055",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "li2018overlap": {
-      "source": "https://api.crossref.org/works/10.1080/01621459.2016.1260466",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "hudgens2008interference": {
-      "source": "https://api.crossref.org/works/10.1198/016214508000000292",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "aronow2017interference": {
-      "source": "https://api.crossref.org/works/10.1214/16-AOAS1005",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "savje2024misspecified": {
-      "source": "https://api.crossref.org/works/10.1093/biomet/asad019",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "ma2021networked": {
-      "source": "https://proceedings.mlr.press/v130/ma21c.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "sharma2020dowhy": {
-      "source": "https://arxiv.org/abs/2011.04216",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "blobaum2024dowhygcm": {
-      "source": "https://jmlr.org/papers/v25/22-1258.html",
-      "checked": "primary publication or dataset record; no DOI invented when none assigned"
-    },
-    "geffner2022deci": {
-      "source": "https://openreview.net/pdf?id=e6sqttxEGX",
-      "checked": "published TMLR June 2024; stable article URL, no assigned DOI/page range"
-    },
-    "candanedo2017appliances": {
-      "source": "https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction",
-      "checked": "primary publication or dataset record; no DOI invented when none assigned"
-    },
-    "peters2016invariant": {
-      "source": "https://api.crossref.org/works/10.1111/rssb.12167",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "huang2020heterogeneous": {
-      "source": "https://jmlr.org/papers/v21/19-232.html",
-      "checked": "primary publication or dataset record; no DOI invented when none assigned"
-    },
-    "runge2019pcmci": {
-      "source": "https://api.crossref.org/works/10.1126/sciadv.aau4996",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "hollmann2025tabpfn": {
-      "source": "https://api.crossref.org/works/10.1038/s41586-024-08328-6",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "ma2025causalfm": {
-      "source": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/7f8cabaf2de70e1a9d3eb187f02bd58c-Abstract-Conference.html",
-      "checked": "official ICLR 2026 record; unpaginated conference article"
-    },
-    "robertson2025dopfn": {
-      "source": "https://proceedings.neurips.cc/paper_files/paper/28555-/bibtex",
-      "checked": "official NeurIPS 2025 BibTeX; published DOI and page range; official author names/order"
-    },
-    "balazadeh2025causalpfn": {
-      "source": "https://proceedings.neurips.cc/paper_files/paper/32528-/bibtex",
-      "checked": "official NeurIPS 2025 BibTeX; published DOI and page range; official author names/order"
-    },
-    "sauter2025activa": {
-      "source": "https://arxiv.org/abs/2503.01290",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "reuter2026partialgraphs": {
-      "source": "https://arxiv.org/abs/2602.14972",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": [
-        "ICML 2026"
-      ]
-    },
-    "thompson2026arrow": {
-      "source": "https://arxiv.org/abs/2605.07204",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "li2026tabcausal": {
-      "source": "https://arxiv.org/abs/2605.31156",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "qiao2026cdfm": {
-      "source": "https://arxiv.org/abs/2607.11508",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "thumm2026causaltimeprior": {
-      "source": "https://openreview.net/forum?id=JbTgx2L9Z2",
-      "checked": "Published ICLR 2026 Time Series in the Age of Large Models workshop paper; authors and title verified"
-    },
-    "zare2026causallongpfn": {
-      "source": "https://arxiv.org/abs/2606.05797",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "javurek2026sensitivitypfn": {
-      "source": "https://arxiv.org/abs/2605.10590",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "alaa2019validating": {
-      "source": "https://proceedings.mlr.press/v97/alaa19a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "saito2020counterfactualcv": {
-      "source": "https://proceedings.mlr.press/v119/saito20a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "nie2021rlearner": {
-      "source": "https://api.crossref.org/works/10.1093/biomet/asaa076",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "han2022ensemble": {
-      "source": "https://arxiv.org/abs/2202.12445",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "lan2024qaggregation": {
-      "source": "https://proceedings.mlr.press/v238/lan24a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "vanderschueren2025autocate": {
-      "source": "https://proceedings.mlr.press/v267/vanderschueren25a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "zeileis2008mob": {
-      "source": "https://api.crossref.org/works/10.1198/106186008X319331",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "athey2016recursive": {
-      "source": "https://api.crossref.org/works/10.1073/pnas.1510489113",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "tcpfn2026reliability": {
-      "source": "https://arxiv.org/abs/2606.20889",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "causalguard2026": {
-      "source": "https://arxiv.org/abs/2605.21928",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "ospc2026correction": {
-      "source": "https://arxiv.org/abs/2603.12037",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": [
-        "Proceedings of the 43-rd International Conference on Machine Learning, Seoul, South Korea, PMLR 306, 2026"
-      ]
-    },
-    "mourao2026pfnsim": {
-      "source": "https://arxiv.org/abs/2603.15928",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "sawarni2026crb": {
-      "source": "https://arxiv.org/abs/2602.20571",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "leban2026causalds": {
-      "source": "https://arxiv.org/abs/2607.08093",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "geng2026causalt5k": {
-      "source": "https://arxiv.org/abs/2602.08939",
-      "checked": "arXiv title, author list, date, identifier and reported publication status",
-      "publication": []
-    },
-    "faller2024selfcompatibility": {
-      "source": "https://proceedings.mlr.press/v238/faller24a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "lei2018distribution": {
-      "source": "https://api.crossref.org/works/10.1080/01621459.2017.1307116",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "lei2021conformal": {
-      "source": "https://api.crossref.org/works/10.1111/rssb.12445",
-      "checked": "title, authors, journal, volume, issue and pagination where assigned; publication year retains issue year"
-    },
-    "vanderlaan2023isotonic": {
-      "source": "https://proceedings.mlr.press/v202/van-der-laan23a.html",
-      "checked": "official proceedings BibTeX"
-    },
-    "curth2023search": {
-      "source": "https://proceedings.mlr.press/v202/curth23b.html",
-      "checked": "official PMLR record and pagination"
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
     },
     "spirtes2000causation": {
-      "source": "https://api.crossref.org/works?query.title=Causation%20Prediction%20and%20Search",
-      "checked": "publisher metadata; DOI verified"
-    },
-    "damour2021overlap": {
-      "source": "https://www.sciencedirect.com/science/article/pii/S0304407620302694",
-      "checked": "publisher metadata; DOI verified"
-    },
-    "cui2024selective": {
-      "source": "https://academic.oup.com/biomet/article/111/2/517/7282948",
-      "checked": "publisher metadata; DOI verified"
-    },
-    "vovk2005conformal": {
-      "source": "https://link.springer.com/book/10.1007/b106715",
-      "checked": "publisher metadata; DOI verified"
-    },
-    "muller2022pfns": {
-      "source": "https://openreview.net/forum?id=KSugKcbNf9",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
-    },
-    "mahajan2024empirical": {
-      "source": "https://openreview.net/forum?id=yuy6cGt3KL",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
+      "source": "https://api.crossref.org/works/10.7551/mitpress/1754.001.0001",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://direct.mit.edu/books/book/2057/Causation-Prediction-and-Search",
+      "doi_ok": true
     },
     "shpitser2006identification": {
       "source": "https://aaai.org/papers/01219-aaai06-191-identification-of-joint-interventional-distributions-in-recursive-semi-markovian-causal-models/",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
     },
     "manski1990bounds": {
-      "source": "https://www.jstor.org/stable/2006592",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
+      "source": "https://econpapers.repec.org/RePEc:aea:aecrev:v:80:y:1990:i:2:p:319-23",
+      "authority": "openalex",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "rosenbaum1983sensitivity": {
+      "source": "https://api.crossref.org/works/10.1111/j.2517-6161.1983.tb01242.x",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/jrsssb/article/45/2/212/7027731",
+      "doi_ok": true
+    },
+    "damour2021overlap": {
+      "source": "https://api.crossref.org/works/10.1016/j.jeconom.2019.10.014",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://linkinghub.elsevier.com/retrieve/pii/S0304407620302694",
+      "doi_ok": true
+    },
+    "crump2009overlap": {
+      "source": "https://api.crossref.org/works/10.1093/biomet/asn055",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/biomet/article-lookup/doi/10.1093/biomet/asn055",
+      "doi_ok": true
+    },
+    "li2018overlap": {
+      "source": "https://api.crossref.org/works/10.1080/01621459.2016.1260466",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.tandfonline.com/doi/full/10.1080/01621459.2016.1260466",
+      "doi_ok": true
+    },
+    "hudgens2008interference": {
+      "source": "https://api.crossref.org/works/10.1198/016214508000000292",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.tandfonline.com/doi/full/10.1198/016214508000000292",
+      "doi_ok": true
+    },
+    "aronow2017interference": {
+      "source": "https://api.crossref.org/works/10.1214/16-aoas1005",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://projecteuclid.org/journals/annals-of-applied-statistics/volume-11/issue-4/Estimating-average-causal-effects-under-general-interference-with-application-to/10.1214/16-AOAS1005.full",
+      "doi_ok": true
+    },
+    "savje2024misspecified": {
+      "source": "https://api.crossref.org/works/10.1093/biomet/asad019",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/biomet/article/111/1/1/7078801",
+      "doi_ok": true
+    },
+    "ma2021networked": {
+      "source": "https://proceedings.mlr.press/v130/ma21c.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "sharma2020dowhy": {
+      "source": "https://arxiv.org/abs/2011.04216",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2011.04216",
+      "doi_ok": true
+    },
+    "blobaum2024dowhygcm": {
+      "source": "https://jmlr.org/papers/v25/22-1258.html",
+      "authority": "jmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "geffner2022deci": {
+      "source": "https://arxiv.org/abs/2202.02195",
+      "authority": "arxiv-search",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "candanedo2017appliances": {
+      "source": "https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction",
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction",
+      "doi_ok": true
+    },
+    "peters2016invariant": {
+      "source": "https://api.crossref.org/works/10.1111/rssb.12167",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/jrsssb/article/78/5/947/7040653",
+      "doi_ok": true
     },
     "zheng2018notears": {
       "source": "https://proceedings.neurips.cc/paper/2018/hash/e347c51419ffb23ca3fd5050202f9c3d-Abstract.html",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "huang2020heterogeneous": {
+      "source": "https://jmlr.org/papers/v21/19-232.html",
+      "authority": "jmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "runge2019pcmci": {
+      "source": "https://api.crossref.org/works/10.1126/sciadv.aau4996",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.science.org/doi/10.1126/sciadv.aau4996",
+      "doi_ok": true
+    },
+    "muller2022pfns": {
+      "source": "https://arxiv.org/abs/2112.10510",
+      "authority": "arxiv-search",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "hollmann2025tabpfn": {
+      "source": "https://api.crossref.org/works/10.1038/s41586-024-08328-6",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.nature.com/articles/s41586-024-08328-6",
+      "doi_ok": true
+    },
+    "ma2025causalfm": {
+      "source": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/7f8cabaf2de70e1a9d3eb187f02bd58c-Abstract-Conference.html",
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "robertson2025dopfn": {
+      "source": "https://api.crossref.org/works/10.52202/085713-5814",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.proceedings.com/085713-5814.html",
+      "doi_ok": true
+    },
+    "balazadeh2025causalpfn": {
+      "source": "https://api.crossref.org/works/10.52202/085713-5184",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.proceedings.com/085713-5184.html",
+      "doi_ok": true
+    },
+    "sauter2025activa": {
+      "source": "https://arxiv.org/abs/2503.01290",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2503.01290",
+      "doi_ok": true
+    },
+    "reuter2026partialgraphs": {
+      "source": "https://arxiv.org/abs/2602.14972",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2602.14972",
+      "doi_ok": true
+    },
+    "thompson2026arrow": {
+      "source": "https://arxiv.org/abs/2605.07204",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2605.07204",
+      "doi_ok": true
+    },
+    "li2026tabcausal": {
+      "source": "https://arxiv.org/abs/2605.31156",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2605.31156",
+      "doi_ok": true
+    },
+    "qiao2026cdfm": {
+      "source": "https://arxiv.org/abs/2607.11508",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2607.11508",
+      "doi_ok": true
+    },
+    "thumm2026causaltimeprior": {
+      "source": "https://arxiv.org/abs/2603.11090",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2603.11090",
+      "doi_ok": true
+    },
+    "zare2026causallongpfn": {
+      "source": "https://arxiv.org/abs/2606.05797",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2606.05797",
+      "doi_ok": true
+    },
+    "javurek2026sensitivitypfn": {
+      "source": "https://arxiv.org/abs/2605.10590",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2605.10590",
+      "doi_ok": true
+    },
+    "alaa2019validating": {
+      "source": "https://proceedings.mlr.press/v97/alaa19a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "saito2020counterfactualcv": {
+      "source": "https://proceedings.mlr.press/v119/saito20a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "nie2021rlearner": {
+      "source": "https://api.crossref.org/works/10.1093/biomet/asaa076",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/biomet/article/108/2/299/5911092",
+      "doi_ok": true
+    },
+    "han2022ensemble": {
+      "source": "https://arxiv.org/abs/2202.12445",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2202.12445",
+      "doi_ok": true
+    },
+    "lan2024qaggregation": {
+      "source": "https://proceedings.mlr.press/v238/lan24a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "curth2023search": {
+      "source": "https://proceedings.mlr.press/v202/curth23b.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "mahajan2024empirical": {
+      "source": "https://arxiv.org/abs/2211.01939",
+      "authority": "arxiv-search",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "cui2024selective": {
+      "source": "https://api.crossref.org/works/10.1093/biomet/asad055",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/biomet/article/111/2/517/7282948",
+      "doi_ok": true
+    },
+    "vanderschueren2025autocate": {
+      "source": "https://proceedings.mlr.press/v267/vanderschueren25a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "zeileis2008mob": {
+      "source": "https://api.crossref.org/works/10.1198/106186008x319331",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.tandfonline.com/doi/abs/10.1198/106186008X319331",
+      "doi_ok": true
+    },
+    "athey2016recursive": {
+      "source": "https://api.crossref.org/works/10.1073/pnas.1510489113",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://pnas.org/doi/full/10.1073/pnas.1510489113",
+      "doi_ok": true
+    },
+    "tcpfn2026reliability": {
+      "source": "https://arxiv.org/abs/2606.20889",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2606.20889",
+      "doi_ok": true
+    },
+    "causalguard2026": {
+      "source": "https://arxiv.org/abs/2605.21928",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2605.21928",
+      "doi_ok": true
+    },
+    "ospc2026correction": {
+      "source": "https://arxiv.org/abs/2603.12037",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2603.12037",
+      "doi_ok": true
+    },
+    "mourao2026pfnsim": {
+      "source": "https://arxiv.org/abs/2603.15928",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2603.15928",
+      "doi_ok": true
+    },
+    "sawarni2026crb": {
+      "source": "https://arxiv.org/abs/2602.20571",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2602.20571",
+      "doi_ok": true
+    },
+    "leban2026causalds": {
+      "source": "https://arxiv.org/abs/2607.08093",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2607.08093",
+      "doi_ok": true
+    },
+    "geng2026causalt5k": {
+      "source": "https://arxiv.org/abs/2602.08939",
+      "authority": "arxiv",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://arxiv.org/abs/2602.08939",
+      "doi_ok": true
+    },
+    "faller2024selfcompatibility": {
+      "source": "https://proceedings.mlr.press/v238/faller24a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
+    },
+    "vovk2005conformal": {
+      "source": "https://api.crossref.org/works/10.1007/b106715",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://link.springer.com/book/10.1007/b106715",
+      "doi_ok": true
+    },
+    "lei2018distribution": {
+      "source": "https://api.crossref.org/works/10.1080/01621459.2017.1307116",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://www.tandfonline.com/doi/full/10.1080/01621459.2017.1307116",
+      "doi_ok": true
+    },
+    "lei2021conformal": {
+      "source": "https://api.crossref.org/works/10.1111/rssb.12445",
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://academic.oup.com/jrsssb/article/83/5/911/7056131",
+      "doi_ok": true
+    },
+    "vanderlaan2023isotonic": {
+      "source": "https://proceedings.mlr.press/v202/van-der-laan23a.html",
+      "authority": "pmlr",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
     },
     "geifman2017selective": {
       "source": "https://proceedings.neurips.cc/paper/2017/hash/4a8423d5e91fda00bb7e46540e2b0cf1-Abstract.html",
-      "checked": "primary record; supplied pagination retained; stable URL where no DOI/pagination is assigned"
+      "authority": "publisher_page",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers"
     },
     "zhang2026bridge": {
       "source": "https://api.crossref.org/works/10.1016/j.engstruct.2026.122131",
-      "checked": "publisher-deposited title, all seven authors, volume 352, article number 122131 and DOI; cited only as engineering integration context"
+      "authority": "crossref",
+      "exists": true,
+      "mismatches": [],
+      "checked": "live title, authors, year, venue, volume, issue, pages, identifiers",
+      "doi_final_url": "https://linkinghub.elsevier.com/retrieve/pii/S014102962600043X",
+      "doi_ok": true
     }
   }
 }
